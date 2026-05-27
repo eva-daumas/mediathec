@@ -1,6 +1,7 @@
 package com.mediathec.webApp.service;
 
-import com.mediathec.webApp.feign.MemberFeignClient;
+import com.mediathec.webApp.model.Member;
+import com.mediathec.webApp.service.client.MemberFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,19 +17,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        // Appel à member-service via Feign
-        String memberJson = memberFeignClient.getMemberByEmail(email);
+        Member member = memberFeignClient.getMemberByEmail(email);
 
-        if (memberJson == null || memberJson.isEmpty()) {
+        if (member == null) {
             throw new UsernameNotFoundException("Member not found with email: " + email);
         }
 
-        // Pour l'instant, on retourne un User simple
-        // Tu pourras parser le JSON plus tard
         return User.builder()
-                .username(email)
-                .password("password")
-                .roles("USER")
+                .username(member.getEmail())
+                .password(member.getPassword())
+                .roles(member.getRole())
                 .build();
     }
 }
