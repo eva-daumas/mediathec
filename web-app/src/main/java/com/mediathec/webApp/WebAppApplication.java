@@ -1,15 +1,13 @@
-package com.mediathec.memberservice;
+package com.mediathec.webApp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import static org.springframework.boot.SpringApplication.*;
-
 @SpringBootApplication
-public class MemberServiceApplication {
+public class WebAppApplication {
 
     public static void main(String[] args) {
-        run(MemberServiceApplication.class, args);
+        SpringApplication.run(WebAppApplication.class, args);
     }
 
 }

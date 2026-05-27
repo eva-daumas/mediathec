@@ -1,10 +1,10 @@
-package com.mediathec.loanservice;
+package com.mediathec.memberService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class LoanServiceApplicationTests {
+class MemberServiceApplicationTests {
 
     @Test
     void contextLoads() {

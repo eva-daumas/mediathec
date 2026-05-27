@@ -1,10 +1,10 @@
-package com.mediathec.memberservice;
+package com.mediathec.webApp;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MemberServiceApplicationTests {
+class WebAppApplicationTests {
 
     @Test
     void contextLoads() {

@@ -1,4 +1,4 @@
-package com.mediathec.bookservice;
+package com.mediathec.bookService;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
