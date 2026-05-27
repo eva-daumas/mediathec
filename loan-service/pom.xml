@@ -73,6 +73,17 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <!-- Plugin Jib pour créer l'image Docker -->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.3.2</version>
+                <configuration>
+                    <to>
+                        <image>evadaumas/mediathec/loan-service/${project.artifactId}</image>
+                    </to>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
