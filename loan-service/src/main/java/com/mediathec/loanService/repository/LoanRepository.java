@@ -1,4 +1,15 @@
 package com.mediathec.loanService.repository;
 
-public class LoanRepository {
+import com.mediathec.loanService.entity.Loan;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.List;
+
+@Repository
+public interface LoanRepository extends JpaRepository<Loan, Long> {
+    List<Loan> findByMemberId(Long memberId);
+    List<Loan> findByBookId(Long bookId);
+    List<Loan> findByStatus(String status);
+    List<Loan> findByMemberIdAndStatus(Long memberId, String status);
+    boolean existsByBookIdAndStatus(Long bookId, String status);
 }
