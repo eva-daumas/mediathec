@@ -3,63 +3,62 @@ package com.mediathec.loanService.controller;
 import com.mediathec.loanService.entity.Loan;
 import com.mediathec.loanService.service.LoanService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/loans")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class LoanController {
 
     private final LoanService loanService;
 
-    @PostMapping("/borrow")
-    public ResponseEntity<Loan> borrowBook(@Valid @RequestBody Loan loan) {
-        Loan savedLoan = loanService.borrowBook(loan);
-        return savedLoan != null
-                ? new ResponseEntity<>(savedLoan, HttpStatus.CREATED)
-                : ResponseEntity.status(HttpStatus.CONFLICT).build();
+    @PostMapping("/add")
+    public ResponseEntity<Loan> addLoan(@Valid @RequestBody Loan loan) {
+        try {
+            Loan savedLoan = loanService.save(loan);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedLoan);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
     }
 
-    @PostMapping("/return/{id}")
-    public ResponseEntity<Loan> returnBook(@PathVariable Long id) {
-        Loan returnedLoan = loanService.returnBook(id);
-        return returnedLoan != null
-                ? ResponseEntity.ok(returnedLoan)
-                : ResponseEntity.notFound().build();
+    @GetMapping("/api/findByMemberId/{memberId}")
+    public List<Loan> findLoansByMemberId(@PathVariable Long memberId) {
+        return loanService.findByMemberId(memberId);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Loan>> getAllLoans() {
-        return ResponseEntity.ok(loanService.getAllLoans());
+    @GetMapping("/api/findByBookId/{bookId}")
+    public List<Loan> findLoansByBookId(@PathVariable Long bookId) {
+        return loanService.findByBookId(bookId);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Loan> getLoanById(@PathVariable Long id) {
-        Loan loan = loanService.getLoanById(id);
-        return loan != null ? ResponseEntity.ok(loan) : ResponseEntity.notFound().build();
+    @GetMapping("/api/getAll")
+    public List<Loan> getAllLoans() {
+        return loanService.findAll();
     }
 
-    @GetMapping("/member/{memberId}")
-    public ResponseEntity<List<Loan>> getLoansByMember(@PathVariable Long memberId) {
-        return ResponseEntity.ok(loanService.getLoansByMember(memberId));
+    @GetMapping("/api/findById/{id}")
+    public Loan findLoanById(@PathVariable Long id) {
+        return loanService.findById(id);
     }
 
-    @GetMapping("/member/{memberId}/active")
-    public ResponseEntity<List<Loan>> getActiveLoansByMember(@PathVariable Long memberId) {
-        return ResponseEntity.ok(loanService.getActiveLoansByMember(memberId));
+    @PutMapping("/api/return/{id}")
+    public ResponseEntity<Loan> returnLoan(@PathVariable Long id) {
+        Loan returnedLoan = loanService.returnLoan(id);
+        if (returnedLoan != null) {
+            return ResponseEntity.ok(returnedLoan);
+        }
+        return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/active")
-    public ResponseEntity<List<Loan>> getActiveLoans() {
-        return ResponseEntity.ok(loanService.getActiveLoans());
-    }
-
-    @GetMapping("/returned")
-    public ResponseEntity<List<Loan>> getReturnedLoans() {
-        return ResponseEntity.ok(loanService.getReturnedLoans());
+    @DeleteMapping("/api/delete/{id}")
+    public ResponseEntity<Void> deleteLoan(@PathVariable Long id) {
+        loanService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

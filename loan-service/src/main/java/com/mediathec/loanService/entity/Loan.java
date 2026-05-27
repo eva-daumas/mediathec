@@ -1,38 +1,35 @@
 package com.mediathec.loanService.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "loans")
-@Data
 public class Loan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull(message = "Member ID is required")
+    @Column(name = "member_id", nullable = false)
     private Long memberId;
 
-    @NotNull(message = "Book ID is required")
+    @Column(name = "book_id", nullable = false)
     private Long bookId;
 
-    @NotNull(message = "Loan date is required")
+    @Column(name = "loan_date")
     private LocalDateTime loanDate;
 
+    @Column(name = "return_date")
     private LocalDateTime returnDate;
 
-    private String status = "BORROWED";  // BORROWED, RETURNED, LATE
-
-    @Column(name = "loan_date")
-    private LocalDateTime createdAt;
+    private String status;  // BORROWED, RETURNED
 
     @PrePersist
     protected void onCreate() {
         loanDate = LocalDateTime.now();
-        createdAt = LocalDateTime.now();
+        status = "BORROWED";
     }
 }
