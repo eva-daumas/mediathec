@@ -1,13 +1,13 @@
 package com.mediathec.bookService.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+@Data
 @Entity
 @Table(name = "books")
-@Data
 public class Book {
 
     @Id
@@ -15,18 +15,19 @@ public class Book {
     private Long id;
 
     @NotBlank(message = "Title is required")
+    @Column(nullable = false)
     private String title;
 
     private String author;
 
     private String category;  // Livre, Film, Jeu
 
+    @Column(length = 2000)
     private String description;
 
     @Column(name = "cover_image")
     private String coverImage;
 
-    @Column(name = "available")
     private boolean available = true;
 
     @Column(name = "created_at")

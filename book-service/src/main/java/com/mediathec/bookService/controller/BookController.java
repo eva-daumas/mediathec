@@ -3,66 +3,78 @@ package com.mediathec.bookService.controller;
 import com.mediathec.bookService.entity.Book;
 import com.mediathec.bookService.service.BookService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/books")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class BookController {
 
     private final BookService bookService;
 
-    @PostMapping
-    public ResponseEntity<Book> createBook(@Valid @RequestBody Book book) {
-        Book savedBook = bookService.createBook(book);
-        return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
+    @PostMapping("/add")
+    public ResponseEntity<Book> addBook(@Valid @RequestBody Book book) {
+        try {
+            Book savedBook = bookService.createBook(book);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
     }
 
-    @GetMapping
-    public ResponseEntity<List<Book>> getAllBooks() {
-        return ResponseEntity.ok(bookService.getAllBooks());
+    @GetMapping("/api/findByTitle")
+    public Book findBookByTitle(@RequestParam String title) {
+        // Cette méthode n'existe pas dans BookService
+        // Il faut l'ajouter ou utiliser searchBooks
+        List<Book> books = bookService.searchBooks(title);
+        return books.isEmpty() ? null : books.get(0);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        Book book = bookService.getBookById(id);
-        return book != null ? ResponseEntity.ok(book) : ResponseEntity.notFound().build();
+    @GetMapping("/api/findByCategory/{category}")
+    public List<Book> findBooksByCategory(@PathVariable String category) {
+        return bookService.getBooksByCategory(category);
     }
 
-    @GetMapping("/category/{category}")
-    public ResponseEntity<List<Book>> getBooksByCategory(@PathVariable String category) {
-        return ResponseEntity.ok(bookService.getBooksByCategory(category));
+    @GetMapping("/api/getAll")
+    public List<Book> getAllBooks() {
+        return bookService.getAllBooks();
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<List<Book>> searchBooks(@RequestParam String keyword) {
-        return ResponseEntity.ok(bookService.searchBooks(keyword));
+    @GetMapping("/api/findById/{id}")
+    public Book findBookById(@PathVariable Long id) {
+        return bookService.getBookById(id);
     }
 
-    @GetMapping("/available")
-    public ResponseEntity<List<Book>> getAvailableBooks() {
-        return ResponseEntity.ok(bookService.getAvailableBooks());
+    @GetMapping("/api/available")
+    public List<Book> getAvailableBooks() {
+        return bookService.getAvailableBooks();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/api/update/{id}")
     public ResponseEntity<Book> updateBook(@PathVariable Long id, @Valid @RequestBody Book book) {
         Book updatedBook = bookService.updateBook(id, book);
         return updatedBook != null ? ResponseEntity.ok(updatedBook) : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/api/delete/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
         bookService.deleteBook(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/availability")
+    @PatchMapping("/api/updateAvailability/{id}")
     public ResponseEntity<Book> updateAvailability(@PathVariable Long id, @RequestParam boolean available) {
         Book updatedBook = bookService.updateAvailability(id, available);
         return updatedBook != null ? ResponseEntity.ok(updatedBook) : ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/api/search")
+    public List<Book> searchBooks(@RequestParam String keyword) {
+        return bookService.searchBooks(keyword);
     }
 }

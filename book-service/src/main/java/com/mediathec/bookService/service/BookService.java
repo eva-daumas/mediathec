@@ -62,4 +62,8 @@ public class BookService {
         }
         return null;
     }
+    public Book findByTitle(String title) {
+        List<Book> books = bookRepository.findByTitleContainingIgnoreCase(title);
+        return books.isEmpty() ? null : books.get(0);
+    }
 }
