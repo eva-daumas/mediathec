@@ -1,0 +1,31 @@
+server:
+  port: 9011
+
+spring:
+  application:
+    name: "web-app"
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+      discovery:
+        enabled: true
+        service-name: web-app
+        instance-id: ${spring.application.name}:${random.value}
+        health-check-path: /actuator/health
+        health-check-interval: 15s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
