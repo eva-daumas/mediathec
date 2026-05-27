@@ -1,6 +1,6 @@
 package com.mediathec.webapp.config;
 
-import com.mediathec.webapp.service.CustomUserDetailsService;
+import com.mediathec.webapp.service.CustomMemberDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -44,7 +44,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new CustomUserDetailsService();
+        return new CustomMemberDetailsService();
     }
 
     @Bean
