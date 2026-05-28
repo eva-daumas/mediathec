@@ -3,7 +3,7 @@ package com.mediathec.loanService.controller;
 import com.mediathec.loanService.entity.Loan;
 import com.mediathec.loanService.service.LoanService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+
 public class LoanController {
 
     private final LoanService loanService;
+
+    // Constructeur
+    public LoanController(LoanService loanService) {
+        this.loanService = loanService;
+    }
 
     @PostMapping("/add")
     public ResponseEntity<Loan> addLoan(@Valid @RequestBody Loan loan) {

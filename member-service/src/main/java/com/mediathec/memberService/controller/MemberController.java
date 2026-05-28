@@ -3,7 +3,7 @@ package com.mediathec.memberService.controller;
 import com.mediathec.memberService.entity.Member;
 import com.mediathec.memberService.service.MemberService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@AllArgsConstructor
+
 public class MemberController {
 
     private final MemberService memberService;
+
+    // Constructeur
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     @PostMapping("/add")
     public ResponseEntity<Member> addMember(@Valid @RequestBody Member member) {

@@ -36,4 +36,7 @@ public class Member {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+
+    public void setId(Long id) { this.id = id; }
+    public Long getId() { return id; }
 }

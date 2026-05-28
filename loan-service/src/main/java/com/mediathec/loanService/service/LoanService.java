@@ -2,17 +2,22 @@ package com.mediathec.loanService.service;
 
 import com.mediathec.loanService.entity.Loan;
 import com.mediathec.loanService.repository.LoanRepository;
-import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+
 public class LoanService {
 
     private final LoanRepository loanRepository;
+
+    // Constructeur
+    public LoanService(LoanRepository loanRepository) {
+        this.loanRepository = loanRepository;
+    }
 
     public Loan save(Loan loan) {
         loan.setLoanDate(LocalDateTime.now());

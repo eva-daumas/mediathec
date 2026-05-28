@@ -1,10 +1,9 @@
 package com.mediathec.loanService.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
-@Data
 @Entity
 @Table(name = "loans")
 public class Loan {
@@ -13,23 +12,37 @@ public class Loan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "member_id", nullable = false)
+    @NotNull
     private Long memberId;
 
-    @Column(name = "book_id", nullable = false)
+    @NotNull
     private Long bookId;
 
-    @Column(name = "loan_date")
     private LocalDateTime loanDate;
-
-    @Column(name = "return_date")
     private LocalDateTime returnDate;
-
-    private String status;  // BORROWED, RETURNED
+    private String status = "BORROWED";
 
     @PrePersist
     protected void onCreate() {
         loanDate = LocalDateTime.now();
-        status = "BORROWED";
     }
+
+    // Getters et Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public Long getMemberId() { return memberId; }
+    public void setMemberId(Long memberId) { this.memberId = memberId; }
+
+    public Long getBookId() { return bookId; }
+    public void setBookId(Long bookId) { this.bookId = bookId; }
+
+    public LocalDateTime getLoanDate() { return loanDate; }
+    public void setLoanDate(LocalDateTime loanDate) { this.loanDate = loanDate; }
+
+    public LocalDateTime getReturnDate() { return returnDate; }
+    public void setReturnDate(LocalDateTime returnDate) { this.returnDate = returnDate; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

@@ -2,15 +2,20 @@ package com.mediathec.bookService.service;
 
 import com.mediathec.bookService.entity.Book;
 import com.mediathec.bookService.repository.BookRepository;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
+
 public class BookService {
 
     private final BookRepository bookRepository;
+
+    // Constructeur
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     public Book createBook(Book book) {
         book.setAvailable(true);

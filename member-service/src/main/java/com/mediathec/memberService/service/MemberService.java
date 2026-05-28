@@ -2,16 +2,21 @@ package com.mediathec.memberService.service;
 
 import com.mediathec.memberService.entity.Member;
 import com.mediathec.memberService.repository.MemberRepository;
-import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+
 public class MemberService {
 
     private final MemberRepository memberRepository;
+
+    // Constructeur
+    public MemberService(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
 
     public Member save(Member member) {
         return memberRepository.save(member);
