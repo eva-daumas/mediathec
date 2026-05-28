@@ -87,7 +87,7 @@ services:
       - mediathec-network
 
   web-app:
-    image: "evadaumas/web-app:latest"
+    image: "evadaumas/mediathec/web-app:latest"
     container_name: web-app-ms
     ports:
       - "9011:9011"

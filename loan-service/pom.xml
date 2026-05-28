@@ -82,6 +82,9 @@
                     <to>
                         <image>evadaumas/mediathec/loan-service/${project.artifactId}</image>
                     </to>
+                    <container>
+                        <mainClass>com.mediathec.loanService.LoanServiceApplication</mainClass>
+                    </container>
                 </configuration>
             </plugin>
         </plugins>

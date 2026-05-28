@@ -82,6 +82,9 @@
                     <to>
                         <image>evadaumas/mediathec/member-service/${project.artifactId}</image>
                     </to>
+                    <container>
+                        <mainClass>com.mediathec.memberService.MemberApplication</mainClass>
+                    </container>
                 </configuration>
             </plugin>
         </plugins>

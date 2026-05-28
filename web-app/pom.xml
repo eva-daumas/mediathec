@@ -106,6 +106,9 @@
                     <to>
                         <image>evadaumas/mediathec/web-app/${project.artifactId}</image>
                     </to>
+                    <container>
+                        <mainClass>com.mediathec.webApp.WebAppApplication</mainClass>
+                    </container>
                 </configuration>
             </plugin>
         </plugins>
