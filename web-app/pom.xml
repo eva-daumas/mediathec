@@ -104,10 +104,10 @@
                 <version>3.3.2</version>
                 <configuration>
                     <to>
-                        <image>evadaumas/mediathec/web-app/${project.artifactId}</image>
+                        <table>evadaumas/mediathec/member-service/member-service:latest</table>
                     </to>
                     <container>
-                        <mainClass>com.mediathec.webApp.WebAppApplication</mainClass>
+                        <mainClass>com.mediathec.memberService.MemberApplication</mainClass>
                     </container>
                 </configuration>
             </plugin>

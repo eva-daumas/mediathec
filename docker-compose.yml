@@ -33,7 +33,7 @@ services:
       - mediathec-network
 
   member-service:
-    image: "evadaumas/member-service:latest"
+    image: "evadaumas/mediathec/member-service/member-service:latest"
     container_name: member-ms
     ports:
       - "8085:8085"
@@ -51,7 +51,7 @@ services:
       - mediathec-network
 
   book-service:
-    image: "evadaumas/book-service:latest"
+    image: "evadaumas/mediathec/book-service/book-service:latest"
     container_name: book-ms
     ports:
       - "8086:8086"
@@ -69,7 +69,7 @@ services:
       - mediathec-network
 
   loan-service:
-    image: "evadaumas/loan-service:latest"
+    image: "evadaumas/mediathec/loan-service/loan-service:latest"
     container_name: loan-ms
     ports:
       - "8087:8087"
@@ -87,7 +87,7 @@ services:
       - mediathec-network
 
   web-app:
-    image: "evadaumas/mediathec/web-app:latest"
+    image: "evadaumas/mediathec/web-app/web-app:latest"
     container_name: web-app-ms
     ports:
       - "9011:9011"
