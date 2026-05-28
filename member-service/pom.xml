@@ -3,9 +3,6 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    C:\Users\Hp\IdeaProjects\mediathec\member-service\src\main\java\com\mediathec\memberService\repository\MemberRepository.java:10:8
-    java: cannot access org.springframework.data.repository.ListCrudRepository
-    class file for org.springframework.data.repository.ListCrudRepository not found
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>

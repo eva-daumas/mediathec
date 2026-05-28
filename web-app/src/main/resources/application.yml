@@ -1,18 +1,13 @@
 server:
   port: 9011
-
 spring:
   application:
-    name: "web-app"
+    name: "web-app-ms"
   profiles:
     active: "prod"
   mvc:
     format:
       date: yyyy-MM-dd
-  thymeleaf:
-    cache: false
-    prefix: classpath:/templates/
-    suffix: .html
 
   cloud:
     consul:
@@ -20,32 +15,22 @@ spring:
       port: 8500
       discovery:
         enabled: true
-        service-name: web-app
-        instance-id: ${spring.application.name}:${random.value}
         health-check-path: /actuator/health
         health-check-interval: 15s
-        prefer-ip-address: false
-        hostname: localhost
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info
-      base-path: /actuator
-  endpoint:
-    health:
-      show-details: always
-      enabled: true
-      probes:
-        enabled: true
-    shutdown:
-      enabled: true
+
+
   health:
     readiness-state:
       enabled: true
     liveness-state:
       enabled: true
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
   info:
     env:
       enabled: true
