@@ -32,18 +32,14 @@ services:
     networks:
       - mediathec-network
 
-  member-service:
-    image: "evadaumas/mediathec/member-service/member-service:latest"
+  members-service:
+    image: "evadaumas/mediathec-members-service"
     container_name: member-ms
     ports:
       - "8085:8085"
     environment:
-      SPRING_APPLICATION_NAME: "member-service"
       SPRING_DATASOURCE_URL: "jdbc:mysql://mediathec-db:3306/mediathec_db"
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "root"
       SPRING_CLOUD_CONSUL_HOST: "consul"
-      SPRING_CLOUD_CONSUL_PORT: "8500"
     depends_on:
       - mediathec-db
       - consul
@@ -87,7 +83,7 @@ services:
       - mediathec-network
 
   web-app:
-    image: "evadaumas/mediathec/web-app/web-app:latest"
+    image: "evadaumas/mediathec-web-app"
     container_name: web-app-ms
     ports:
       - "9011:9011"
@@ -99,7 +95,7 @@ services:
       SPRING_CLOUD_CONSUL_DISCOVERY_PREFER_IP_ADDRESS: "true"
     depends_on:
       - consul
-      - member-service
+      - members-service
       - book-service
       - loan-service
     networks:

@@ -104,14 +104,10 @@
                 <version>3.3.2</version>
                 <configuration>
                     <to>
-                        <image>evadaumas/mediathec/web-app/web-app:latest</image>
+                        <image>evadaumas/mediathec-${project.artifactId}</image>
                     </to>
-                    <container>
-                        <mainClass>com.mediathec.webApp.WebAppApplication</mainClass>
-                    </container>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -1,9 +1,8 @@
-package com.mediathec.memberService.controller;
+package com.mediathec.membersservice.controller;
 
-import com.mediathec.memberService.entity.Member;
-import com.mediathec.memberService.service.MemberService;
+import com.mediathec.membersservice.entity.Member;
+import com.mediathec.membersservice.service.MemberService;
 import jakarta.validation.Valid;
-
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-
 public class MemberController {
 
     private final MemberService memberService;

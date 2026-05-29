@@ -1,14 +1,12 @@
-package com.mediathec.memberService.service;
+package com.mediathec.membersservice.service;
 
-import com.mediathec.memberService.entity.Member;
-import com.mediathec.memberService.repository.MemberRepository;
-
+import com.mediathec.membersservice.entity.Member;
+import com.mediathec.membersservice.repository.MemberRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-
 public class MemberService {
 
     private final MemberRepository memberRepository;

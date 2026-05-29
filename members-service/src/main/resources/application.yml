@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-    name: "member-service"
+    name: "members-service"
 
   datasource:
     url: jdbc:mysql://localhost:3308/mediathec_db
@@ -26,7 +26,7 @@ spring:
       port: 8500
       discovery:
         enabled: true
-        service-name: member-service
+        service-name: members-service
         instance-id: ${spring.application.name}:${random.value}
 
 management:

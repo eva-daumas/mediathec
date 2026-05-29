@@ -1,8 +1,11 @@
-package com.mediathec.memberService.entity;
+package com.mediathec.membersservice.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Entity
@@ -37,6 +40,4 @@ public class Member {
         createdAt = LocalDateTime.now();
     }
 
-    public void setId(Long id) { this.id = id; }
-    public Long getId() { return id; }
 }
