@@ -1,11 +1,451 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/css/admin.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediathec - Administration</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
+<body class="admin-body">
+
+<!-- Barre latérale -->
+<div class="admin-sidebar">
+    <div class="admin-logo">
+        <h2>Mediathec</h2>
+        <p>Administration</p>
+    </div>
+    <div class="admin-nav">
+        <a href="#" class="active" data-tab="dashboard">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Tableau de bord</span>
+        </a>
+        <a href="#" data-tab="members">
+            <i class="fas fa-users"></i>
+            <span>Membres</span>
+        </a>
+        <a href="#" data-tab="loans">
+            <i class="fas fa-book"></i>
+            <span>Emprunts</span>
+        </a>
+        <a href="#" data-tab="medias">
+            <i class="fas fa-database"></i>
+            <span>Médias</span>
+        </a>
+        <a href="#" data-tab="stats">
+            <i class="fas fa-chart-bar"></i>
+            <span>Statistiques</span>
+        </a>
+        <a th:href="@{/}">
+            <i class="fas fa-home"></i>
+            <span>Accueil</span>
+        </a>
+        <a th:href="@{/logout}">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Déconnexion</span>
+        </a>
+    </div>
+</div>
+
+<!-- Contenu principal -->
+<div class="admin-main">
+
+    <!-- En-tête -->
+    <div class="admin-header">
+        <h1>Tableau de bord</h1>
+        <div class="admin-user">
+            <i class="fas fa-user-circle fa-2x"></i>
+            <span th:text="${userLogin}">Administrateur</span>
+        </div>
+    </div>
+
+    <!-- Section Tableau de bord -->
+    <div id="dashboard" class="admin-section active">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 th:text="${totalMembers}">0</h3>
+                    <p>Membres inscrits</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 th:text="${totalLoans}">0</h3>
+                    <p>Emprunts en cours</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-undo-alt"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 th:text="${totalReturns}">0</h3>
+                    <p>Retours ce mois</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 th:text="${totalMedias}">0</h3>
+                    <p>Médias disponibles</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-table">
+            <div class="admin-table-header">
+                <i class="fas fa-clock"></i> Derniers emprunts
+            </div>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Membre</th>
+                    <th>Média</th>
+                    <th>Date d'emprunt</th>
+                    <th>Date de retour</th>
+                    <th>Statut</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="loan : ${recentLoans}">
+                    <td th:text="${loan.memberName}">-</td>
+                    <td th:text="${loan.mediaTitle}">-</td>
+                    <td th:text="${loan.borrowDate}">-</td>
+                    <td th:text="${loan.returnDate}">-</td>
+                    <td>
+                        <span class="badge" th:class="${loan.status == 'EN_COURS'} ? 'badge-borrowed' : 'badge-returned'" th:text="${loan.status}">-</span>
+                    </td>
+                </tr>
+                <tr th:if="${recentLoans == null or recentLoans.isEmpty()}">
+                    <td colspan="5" style="text-align: center;">Aucun emprunt récent</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section Membres -->
+    <div id="members" class="admin-section">
+        <div class="admin-header">
+            <h1>Gestion des membres</h1>
+            <button class="btn btn-primary" onclick="showAddMemberModal()">
+                <i class="fas fa-user-plus"></i> Nouveau membre
+            </button>
+        </div>
+
+        <div class="admin-table">
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Date d'inscription</th>
+                    <th>Emprunts actifs</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="member : ${members}">
+                    <td th:text="${member.id}">-</td>
+                    <td th:text="${member.name}">-</td>
+                    <td th:text="${member.email}">-</td>
+                    <td th:text="${member.registrationDate}">-</td>
+                    <td th:text="${member.activeLoans}">0</td>
+                    <td class="action-buttons">
+                        <button class="btn-sm btn-edit" th:onclick="'editMember(' + ${member.id} + ')'">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn-sm btn-delete" th:onclick="'deleteMember(' + ${member.id} + ')'">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr th:if="${members == null or members.isEmpty()}">
+                    <td colspan="6" style="text-align: center;">Aucun membre inscrit</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section Emprunts -->
+    <div id="loans" class="admin-section">
+        <div class="admin-header">
+            <h1>Gestion des emprunts</h1>
+            <button class="btn btn-primary" onclick="showNewLoanModal()">
+                <i class="fas fa-plus"></i> Nouvel emprunt
+            </button>
+        </div>
+
+        <div class="admin-tabs">
+            <button class="tab-btn active" onclick="filterLoans('all')">Tous</button>
+            <button class="tab-btn" onclick="filterLoans('current')">En cours</button>
+            <button class="tab-btn" onclick="filterLoans('late')">En retard</button>
+            <button class="tab-btn" onclick="filterLoans('returned')">Retournés</button>
+        </div>
+
+        <div class="admin-table">
+            <table class="data-table" id="loansTable">
+                <thead>
+                <tr>
+                    <th>Membre</th>
+                    <th>Média</th>
+                    <th>Date d'emprunt</th>
+                    <th>Date limite</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="loan : ${allLoans}">
+                    <td th:text="${loan.memberName}">-</td>
+                    <td th:text="${loan.mediaTitle}">-</td>
+                    <td th:text="${loan.borrowDate}">-</td>
+                    <td th:text="${loan.dueDate}">-</td>
+                    <td>
+                        <span class="badge" th:class="${loan.status == 'EN_COURS'} ? 'badge-borrowed' : 'badge-returned'" th:text="${loan.status}">-</span>
+                    </td>
+                    <td class="action-buttons">
+                        <button th:if="${loan.status == 'EN_COURS'}" class="btn-sm btn-edit" th:onclick="'returnLoan(' + ${loan.id} + ')'">
+                            <i class="fas fa-undo-alt"></i> Retour
+                        </button>
+                        <button class="btn-sm btn-delete" th:onclick="'deleteLoan(' + ${loan.id} + ')'">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr th:if="${allLoans == null or allLoans.isEmpty()}">
+                    <td colspan="6" style="text-align: center;">Aucun emprunt</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Section Médias -->
+    <div id="medias" class="admin-section">
+        <div class="admin-header">
+            <h1>Catalogue des médias</h1>
+            <button class="btn btn-primary" onclick="showAddMediaModal()">
+                <i class="fas fa-plus"></i> Ajouter un média
+            </button>
+        </div>
+
+        <div class="media-grid">
+            <div class="media-card" th:each="media : ${medias}">
+                <div class="media-card-content">
+                    <h3 class="media-title" th:text="${media.title}">-</h3>
+                    <div class="media-meta">
+                        <span th:text="${media.type}">Type</span> |
+                        <span th:text="${media.author}">Auteur</span>
+                    </div>
+                    <p class="media-description" th:text="${media.description}">-</p>
+                    <div class="action-buttons" style="margin-top: 15px;">
+                        <button class="btn-sm btn-edit" th:onclick="'editMedia(' + ${media.id} + ')'">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="btn-sm btn-delete" th:onclick="'deleteMedia(' + ${media.id} + ')'">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${medias == null or medias.isEmpty()}" class="media-card">
+                <div class="media-card-content">
+                    <p>Aucun média disponible</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section Statistiques -->
+    <div id="stats" class="admin-section">
+        <div class="admin-header">
+            <h1>Statistiques détaillées</h1>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-pie"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 th:text="${stats.totalMembers}">0</h3>
+                    <p>Total membres</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 th:text="${stats.monthlyLoans}">0</h3>
+                    <p>Emprunts ce mois</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-percent"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 th:text="${stats.returnRate}">0%</h3>
+                    <p>Taux de retour</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="stat-info">
+                    <h3 th:text="${stats.averageLoanDuration}">0</h3>
+                    <p>Durée moyenne (jours)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-table" style="margin-top: 30px;">
+            <div class="admin-table-header">
+                <i class="fas fa-trophy"></i> Top emprunteurs
+            </div>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Membre</th>
+                    <th>Nombre d'emprunts</th>
+                    <th>Retours à temps</th>
+                    <th>Score</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="top : ${topBorrowers}">
+                    <td th:text="${top.name}">-</td>
+                    <td th:text="${top.totalLoans}">0</td>
+                    <td th:text="${top.onTimeReturns}">0</td>
+                    <td th:text="${top.score}">0</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Gestion des onglets
+    document.querySelectorAll('.admin-nav a').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            if(!this.getAttribute('data-tab')) return;
+
+            e.preventDefault();
+            var tabId = this.getAttribute('data-tab');
+
+            document.querySelectorAll('.admin-nav a').forEach(function(l) {
+                l.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            document.querySelectorAll('.admin-section').forEach(function(section) {
+                section.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+
+            var titles = {
+                'dashboard': 'Tableau de bord',
+                'members': 'Gestion des membres',
+                'loans': 'Gestion des emprunts',
+                'medias': 'Catalogue des médias',
+                'stats': 'Statistiques'
+            };
+            var headerTitle = document.querySelector('.admin-main > .admin-header h1');
+            if(headerTitle) {
+                headerTitle.textContent = titles[tabId];
+            }
+        });
+    });
+
+    // Filtrage des emprunts
+    function filterLoans(filter) {
+        var rows = document.querySelectorAll('#loansTable tbody tr');
+        rows.forEach(function(row) {
+            if(row.cells && row.cells[4]) {
+                var status = row.cells[4].innerText;
+                if(filter === 'all') {
+                    row.style.display = '';
+                } else if(filter === 'current' && status === 'EN_COURS') {
+                    row.style.display = '';
+                } else if(filter === 'late' && status === 'EN_RETARD') {
+                    row.style.display = '';
+                } else if(filter === 'returned' && status === 'RETOURNE') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+
+        var btns = document.querySelectorAll('.tab-btn');
+        btns.forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        if(event && event.target) {
+            event.target.classList.add('active');
+        }
+    }
+
+    // Fonctions CRUD
+    function showAddMemberModal() {
+        alert('Formulaire d\'ajout de membre à implémenter');
+    }
+
+    function editMember(id) {
+        alert('Modification du membre ' + id);
+    }
+
+    function deleteMember(id) {
+        if(confirm('Supprimer ce membre ?')) {
+            window.location.href = '/admin/members/delete/' + id;
+        }
+    }
+
+    function showNewLoanModal() {
+        alert('Formulaire de nouvel emprunt à implémenter');
+    }
+
+    function returnLoan(id) {
+        if(confirm('Confirmer le retour de cet emprunt ?')) {
+            window.location.href = '/admin/loans/return/' + id;
+        }
+    }
+
+    function deleteLoan(id) {
+        if(confirm('Supprimer cet emprunt ?')) {
+            window.location.href = '/admin/loans/delete/' + id;
+        }
+    }
+
+    function showAddMediaModal() {
+        alert('Formulaire d\'ajout de média à implémenter');
+    }
+
+    function editMedia(id) {
+        alert('Modification du média ' + id);
+    }
+
+    function deleteMedia(id) {
+        if(confirm('Supprimer ce média ?')) {
+            window.location.href = '/admin/medias/delete/' + id;
+        }
+    }
+</script>
 
 </body>
 </html>

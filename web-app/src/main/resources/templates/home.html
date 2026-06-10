@@ -1,11 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediathec - Accueil</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="container nav-container">
+        <a th:href="@{/}" class="nav-brand">
+            <span>Mediathec</span>
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/members}" class="nav-link">Mes membres</a>
+            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
+            <div th:if="${userLogin != null}">
+                <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
+                <a th:href="@{/logout}" class="btn-outline">Se déconnecter</a>
+            </div>
+            <div th:unless="${userLogin != null}">
+                <a th:href="@{/login}" class="btn-outline">Se connecter</a>
+            </div>
+        </div>
+    </div>
+</nav>
 
+<!-- Hero Section -->
+<div class="container">
+    <div class="hero-section">
+        <div class="hero-content">
+            <h1>Gestion des emprunts</h1>
+            <p class="hero-description">Mediathec vous permet de gérer vos membres et leurs emprunts en toute sécurité.</p>
+            <div class="hero-buttons">
+                <a th:href="@{/signup}" class="btn btn-primary">Commencer</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="stats-card">
+                <i class="fas fa-users fa-3x"></i>
+                <h3>+500 références</h3>
+                <p>A découvrir</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <div class="features-section">
+        <h2 class="section-title">Fonctionnalités</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-notes-medical"></i>
+                </div>
+                <h3>Dossiers membres</h3>
+                <p>Accédez à l'historique complet de vos membres</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <h3>Gestion des emprunts</h3>
+                <p>Planifiez et suivez vos emprunts</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Scoring média</h3>
+                <p>Analysez les données membres</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h2 class="section-title">Actions rapides</h2>
+        <div class="actions-grid">
+            <a th:href="@{/members/new}" class="action-card">
+                <i class="fas fa-user-plus"></i>
+                <span>Nouveau membre</span>
+            </a>
+            <a th:href="@{/loans/new}" class="action-card">
+                <i class="fas fa-book"></i>
+                <span>Nouvel emprunt</span>
+            </a>
+            <a th:href="@{/loans}" class="action-card">
+                <i class="fas fa-calendar-check"></i>
+                <span>Mes emprunts</span>
+            </a>
+            <a th:href="@{/returns}" class="action-card">
+                <i class="fas fa-undo-alt"></i>
+                <span>Retours</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>© 2024 Mediathec - Plateforme de gestion d'emprunts de médias</p>
+        <p class="text-muted">Sécurisé · Conforme RGPD · Données hébergées en France</p>
+    </div>
+</footer>
 </body>
 </html>
