@@ -1,11 +1,16 @@
 package com.mediathec.webApp.service;
 
 import com.mediathec.webApp.model.Member;
+import com.mediathec.webApp.service.client.MemberFeignClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MemberService {
+    @Autowired
+    private MemberFeignClient memberFeignClient;
+
     public void register(Member member) {
-        System.out.println("Inscription: " + member.getEmail());
+       memberFeignClient.createMember(member);
     }
 }

@@ -16,18 +16,18 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50)
+
+
     @Column(unique = true, nullable = false)
     private String username;
 
-    @NotBlank(message = "Email is required")
+
     @Email
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotBlank(message = "Password is required")
-    @Size(min = 6)
+
+
     private String password;
 
     private String role = "USER";
@@ -35,9 +35,9 @@ public class Member {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
+   // @PrePersist
+  //  protected void onCreate() {
+     //   createdAt = LocalDateTime.now();
+  //  }
 
 }

@@ -21,13 +21,10 @@ public class MemberController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<Member> addMember(@Valid @RequestBody Member member) {
-        try {
-            Member savedMember = memberService.save(member);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedMember);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        }
+    public Member addMember(@RequestBody Member member) {
+
+            return memberService.save(member);
+
     }
 
     @GetMapping("/api/findByEmail")

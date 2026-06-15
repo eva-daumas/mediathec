@@ -10,6 +10,6 @@ public interface MemberFeignClient {
     @GetMapping("/api/members/email/{email}")
     Member getMemberByEmail(@PathVariable("email") String email);
 
-    @PostMapping("/api/members")
+    @PostMapping("/add")
     Member createMember(@RequestBody Member member);
 }
