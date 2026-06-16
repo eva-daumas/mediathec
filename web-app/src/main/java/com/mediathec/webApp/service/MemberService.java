@@ -11,6 +11,9 @@ public class MemberService {
     private MemberFeignClient memberFeignClient;
 
     public void register(Member member) {
+
+
+
        memberFeignClient.createMember(member);
     }
 

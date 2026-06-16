@@ -59,4 +59,23 @@ public class WebAppController {
         model.addAttribute("userLogin", member.getUsername());
         return "profile";
     }
+
+    @GetMapping("/members")
+    public String getMembersPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        // Récupère la liste des membres
+        model.addAttribute("userLogin", userDetails.getUsername());
+        return "member/member-list";
+    }
+
+    @GetMapping("/loans")
+    public String getLoansPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("userLogin", userDetails.getUsername());
+        return "loans";
+    }
 }
