@@ -1,11 +1,167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediathec - Liste des membres</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+<!-- Navigation -->
+<nav class="navbar">
+    <div class="container nav-container">
+        <a th:href="@{/}" class="nav-brand">
+            <span>Mediathec</span>
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/members}" class="nav-link active">Mes membres</a>
+            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
+            <div th:if="${userLogin != null}">
+                <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
+                <a th:href="@{/logout}" class="btn-outline">Se déconnecter</a>
+            </div>
+            <div th:unless="${userLogin != null}">
+                <a th:href="@{/login}" class="btn-outline">Se connecter</a>
+            </div>
+        </div>
+    </div>
+</nav>
 
+<!-- Main Content -->
+<div class="container">
+    <div class="page-header">
+        <h1>Liste des membres</h1>
+        <div class="header-actions">
+            <a th:href="@{/members/new}" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Nouveau membre
+            </a>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="search-section">
+        <form th:action="@{/members/search}" method="get" class="search-form">
+            <div class="search-group">
+                <input type="text" name="keyword" class="form-control" placeholder="Rechercher un membre..." th:value="${keyword}">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+            </div>
+            <div class="filter-group">
+                <a th:href="@{/members}" class="btn btn-outline">Tous</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Members Table -->
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Email</th>
+                    <th>Rôle</th>
+                    <th>Date d'inscription</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="member : ${members}">
+                    <td th:text="${member.id}">1</td>
+                    <td th:text="${member.username}">Jean Dupont</td>
+                    <td th:text="${member.email}">jean.dupont@email.com</td>
+                    <td>
+                            <span class="badge" th:text="${member.role}" th:classappend="${member.role == 'ADMIN'} ? 'badge-admin' : 'badge-user'">
+                                USER
+                            </span>
+                    </td>
+                    <td th:text="${#temporals.format(member.createdAt, 'dd/MM/yyyy HH:mm')}">16/06/2026 10:00</td>
+                    <td>
+                        <div class="action-buttons">
+                            <a th:href="@{/members/{id}(id=${member.id})}" class="btn btn-sm btn-info" title="Voir">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a th:href="@{/members/{id}/edit(id=${member.id})}" class="btn btn-sm btn-warning" title="Modifier">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button class="btn btn-sm btn-danger" title="Supprimer" th:onclick="'deleteMember(' + ${member.id} + ')'">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <div class="empty-state">
+                            <i class="fas fa-users fa-3x"></i>
+                            <p>Aucun membre trouvé</p>
+                            <a th:href="@{/members/new}" class="btn btn-primary">Ajouter un membre</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-section" th:if="${totalPages != null and totalPages > 1}">
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/members(page=${currentPage - 1}, size=${pageSize})}" aria-label="Précédent">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${page == currentPage} ? 'active' : ''">
+                    <a class="page-link" th:href="@{/members(page=${page}, size=${pageSize})}" th:text="${page + 1}">1</a>
+                </li>
+                <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
+                    <a class="page-link" th:href="@{/members(page=${currentPage + 1}, size=${pageSize})}" aria-label="Suivant">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <p>© 2024 Mediathec - Plateforme de gestion d'emprunts de médias</p>
+        <p class="text-muted">Sécurisé · Conforme RGPD · Données hébergées en France</p>
+    </div>
+</footer>
+
+<!-- JavaScript pour la suppression -->
+<script>
+    function deleteMember(id) {
+        if (confirm('Êtes-vous sûr de vouloir supprimer ce membre ?')) {
+            fetch('/members/' + id, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]')?.value || ''
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Erreur lors de la suppression du membre');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Erreur lors de la suppression du membre');
+                });
+        }
+    }
+</script>
 </body>
 </html>

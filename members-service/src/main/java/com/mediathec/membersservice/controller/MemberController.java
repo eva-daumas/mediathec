@@ -27,8 +27,8 @@ public class MemberController {
 
     }
 
-    @GetMapping("/api/findByEmail")
-    public Member findMemberByEmail(@RequestParam String email) {
+    @GetMapping("/api/members/email/{email}")
+    public Member findMemberByEmail(@PathVariable("email") String email) {
         return memberService.findByEmail(email);
     }
 
@@ -43,7 +43,7 @@ public class MemberController {
     }
 
     @PutMapping("/api/update/{id}")
-    public ResponseEntity<Member> updateMember(@PathVariable Long id, @Valid @RequestBody Member member) {
+    public ResponseEntity<Member> updateMember(@PathVariable Long id, @RequestBody Member member) {
         member.setId(id);
         Member updatedMember = memberService.update(member);
         return ResponseEntity.ok(updatedMember);

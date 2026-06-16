@@ -4,7 +4,7 @@ import com.mediathec.webApp.model.Member;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(name = "members-service", url = "http://localhost:8085")
+@FeignClient(name = "members-service")
 public interface MemberFeignClient {
 
     @GetMapping("/api/members/email/{email}")

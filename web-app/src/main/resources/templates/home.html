@@ -20,6 +20,7 @@
             <a th:href="@{/loans}" class="nav-link">Emprunts</a>
             <div th:if="${userLogin != null}">
                 <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
+                <a th:href="@{/profile}" class="nav-link">Mon profil</a>
                 <a th:href="@{/logout}" class="btn-outline">Se déconnecter</a>
             </div>
             <div th:unless="${userLogin != null}">

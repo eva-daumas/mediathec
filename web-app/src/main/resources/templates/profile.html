@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediathec - Mon profil</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container nav-container">
+        <a th:href="@{/}" class="nav-brand"><span>Mediathec</span></a>
+        <div class="nav-links">
+            <a th:href="@{/members}" class="nav-link">Mes membres</a>
+            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
+            <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
+            <a th:href="@{/profile}" class="nav-link active">Mon profil</a>
+            <a th:href="@{/logout}" class="btn-outline">Se déconnecter</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="profile-container">
+        <div class="profile-header">
+            <div class="profile-avatar">
+                <i class="fas fa-user-circle fa-5x"></i>
+            </div>
+            <div class="profile-info">
+                <h1 th:text="${member.username}">Utilisateur</h1>
+                <p class="email" th:text="${member.email}">email@exemple.com</p>
+                <span class="badge" th:text="${member.role}">USER</span>
+            </div>
+        </div>
+
+        <div class="profile-details">
+            <h2>Informations personnelles</h2>
+            <div class="detail-row">
+                <span class="label">ID :</span>
+                <span th:text="${member.id}">1</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Nom d'utilisateur :</span>
+                <span th:text="${member.username}">username</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Email :</span>
+                <span th:text="${member.email}">email</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Rôle :</span>
+                <span th:text="${member.role}">USER</span>
+            </div>
+            <div class="detail-row">
+                <span class="label">Date d'inscription :</span>
+                <span th:text="${#temporals.format(member.createdAt, 'dd/MM/yyyy HH:mm')}">16/06/2026 10:00</span>
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <a th:href="@{/members/{id}/edit(id=${member.id})}" class="btn btn-primary">
+                <i class="fas fa-edit"></i> Modifier mon profil
+            </a>
+            <a th:href="@{/}" class="btn btn-outline">
+                <i class="fas fa-arrow-left"></i> Retour
+            </a>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2024 Mediathec - Plateforme de gestion d'emprunts de médias</p>
+    </div>
+</footer>
+</body>
+</html>

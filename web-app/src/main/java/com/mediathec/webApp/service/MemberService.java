@@ -13,4 +13,9 @@ public class MemberService {
     public void register(Member member) {
        memberFeignClient.createMember(member);
     }
+
+    public Member getMemberByEmail(String email) {
+        return memberFeignClient.getMemberByEmail(email);
+
+    }
 }

@@ -47,4 +47,16 @@ public class WebAppController {
         memberService.register(member);
         return "redirect:/login";
     }
+
+    @GetMapping("/profile")
+    public String getProfilePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        String email = userDetails.getUsername();
+        Member member = memberService.getMemberByEmail(email);
+        model.addAttribute("member", member);
+        model.addAttribute("userLogin", member.getUsername());
+        return "profile";
+    }
 }
