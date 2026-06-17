@@ -16,8 +16,8 @@
             <span>Mediathec</span>
         </a>
         <div class="nav-links">
-            <a th:href="@{/members}" class="nav-link">Mes membres</a>
-            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
+            <!-- ✅ SUPPRIMÉ : Mes membres -->
+            <!-- ✅ SUPPRIMÉ : Emprunts -->
             <div th:if="${userLogin != null}">
                 <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
                 <a th:href="@{/profile}" class="nav-link">Mon profil</a>
@@ -63,8 +63,7 @@
                 <div class="feature-icon">
                     <i class="fas fa-notes-medical"></i>
                 </div>
-                <h3>Dossiers membres</h3>
-                <p>Accédez à l'historique complet de vos membres</p>
+
             </div>
             <div class="feature-card">
                 <div class="feature-icon">
@@ -77,34 +76,14 @@
                 <div class="feature-icon">
                     <i class="fas fa-chart-line"></i>
                 </div>
-                <h3>Scoring média</h3>
-                <p>Analysez les données membres</p>
+
             </div>
         </div>
     </div>
 
-    <!-- Quick Actions -->
-    <div class="quick-actions">
-        <h2 class="section-title">Actions rapides</h2>
-        <div class="actions-grid">
-            <a th:href="@{/members/new}" class="action-card">
-                <i class="fas fa-user-plus"></i>
-                <span>Nouveau membre</span>
-            </a>
-            <a th:href="@{/loans/new}" class="action-card">
-                <i class="fas fa-book"></i>
-                <span>Nouvel emprunt</span>
-            </a>
-            <a th:href="@{/loans}" class="action-card">
-                <i class="fas fa-calendar-check"></i>
-                <span>Mes emprunts</span>
-            </a>
-            <a th:href="@{/returns}" class="action-card">
-                <i class="fas fa-undo-alt"></i>
-                <span>Retours</span>
-            </a>
-        </div>
-    </div>
+    <!-- ✅ SECTION ACTIONS RAPIDES COMPLÈTEMENT SUPPRIMÉE -->
+    <!-- Les boutons "Nouveau membre", "Nouvel emprunt", "Mes emprunts", "Retours" ont été retirés -->
+
 </div>
 
 <!-- Footer -->
