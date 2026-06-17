@@ -61,9 +61,40 @@ public class WebAppController {
         }
         String email = userDetails.getUsername();
         Member member = memberService.getMemberByEmail(email);
+
+        //  SI L'UTILISATEUR EST ADMIN → REDIRIGER VERS /admin
+        if (member != null && "ADMIN".equals(member.getRole())) {
+            return "redirect:/admin";
+        }
         model.addAttribute("member", member);
         model.addAttribute("userLogin", member.getUsername());
         return "profile";
+    }
+
+    @GetMapping("/admin")
+    public String getAdminPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+
+        String email = userDetails.getUsername();
+        Member member = memberService.getMemberByEmail(email);
+
+        // Vérifier que c'est bien un admin
+        if (member == null || !"ADMIN".equals(member.getRole())) {
+            return "redirect:/profile";
+        }
+
+        model.addAttribute("userLogin", member.getUsername());
+
+        // Récupérer les données pour le tableau de bord
+        // (À implémenter plus tard avec les appels aux autres services)
+        model.addAttribute("totalMembers", 0);
+        model.addAttribute("totalLoans", 0);
+        model.addAttribute("totalReturns", 0);
+        model.addAttribute("totalMedias", 0);
+
+        return "admin";
     }
 
     @GetMapping("/members")

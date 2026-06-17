@@ -41,10 +41,13 @@
             <i class="fas fa-home"></i>
             <span>Accueil</span>
         </a>
-        <a th:href="@{/logout}">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Déconnexion</span>
-        </a>
+        <form th:action="@{/logout}" method="post" style="display: inline; width: 100%;">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <button type="submit" style="background: none; border: none; color: #ff6b6b; cursor: pointer; width: 100%; text-align: left; padding: 12px 20px; font-size: 16px; display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Déconnexion</span>
+            </button>
+        </form>
     </div>
 </div>
 
@@ -68,7 +71,7 @@
                     <i class="fas fa-users"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 th:text="${totalMembers}">0</h3>
+                    <h3>0</h3>
                     <p>Membres inscrits</p>
                 </div>
             </div>
@@ -77,7 +80,7 @@
                     <i class="fas fa-book"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 th:text="${totalLoans}">0</h3>
+                    <h3>0</h3>
                     <p>Emprunts en cours</p>
                 </div>
             </div>
@@ -86,7 +89,7 @@
                     <i class="fas fa-undo-alt"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 th:text="${totalReturns}">0</h3>
+                    <h3>0</h3>
                     <p>Retours ce mois</p>
                 </div>
             </div>
@@ -95,7 +98,7 @@
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 th:text="${totalMedias}">0</h3>
+                    <h3>0</h3>
                     <p>Médias disponibles</p>
                 </div>
             </div>
@@ -116,16 +119,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="loan : ${recentLoans}">
-                    <td th:text="${loan.memberName}">-</td>
-                    <td th:text="${loan.mediaTitle}">-</td>
-                    <td th:text="${loan.borrowDate}">-</td>
-                    <td th:text="${loan.returnDate}">-</td>
-                    <td>
-                        <span class="badge" th:class="${loan.status == 'EN_COURS'} ? 'badge-borrowed' : 'badge-returned'" th:text="${loan.status}">-</span>
-                    </td>
-                </tr>
-                <tr th:if="${recentLoans == null or recentLoans.isEmpty()}">
+                <tr>
                     <td colspan="5" style="text-align: center;">Aucun emprunt récent</td>
                 </tr>
                 </tbody>
@@ -155,22 +149,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="member : ${members}">
-                    <td th:text="${member.id}">-</td>
-                    <td th:text="${member.name}">-</td>
-                    <td th:text="${member.email}">-</td>
-                    <td th:text="${member.registrationDate}">-</td>
-                    <td th:text="${member.activeLoans}">0</td>
-                    <td class="action-buttons">
-                        <button class="btn-sm btn-edit" th:onclick="'editMember(' + ${member.id} + ')'">
-                            <i class="fas fa-edit"></i>
-                        </button>
-                        <button class="btn-sm btn-delete" th:onclick="'deleteMember(' + ${member.id} + ')'">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr th:if="${members == null or members.isEmpty()}">
+                <tr>
                     <td colspan="6" style="text-align: center;">Aucun membre inscrit</td>
                 </tr>
                 </tbody>
@@ -207,24 +186,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="loan : ${allLoans}">
-                    <td th:text="${loan.memberName}">-</td>
-                    <td th:text="${loan.mediaTitle}">-</td>
-                    <td th:text="${loan.borrowDate}">-</td>
-                    <td th:text="${loan.dueDate}">-</td>
-                    <td>
-                        <span class="badge" th:class="${loan.status == 'EN_COURS'} ? 'badge-borrowed' : 'badge-returned'" th:text="${loan.status}">-</span>
-                    </td>
-                    <td class="action-buttons">
-                        <button th:if="${loan.status == 'EN_COURS'}" class="btn-sm btn-edit" th:onclick="'returnLoan(' + ${loan.id} + ')'">
-                            <i class="fas fa-undo-alt"></i> Retour
-                        </button>
-                        <button class="btn-sm btn-delete" th:onclick="'deleteLoan(' + ${loan.id} + ')'">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-                <tr th:if="${allLoans == null or allLoans.isEmpty()}">
+                <tr>
                     <td colspan="6" style="text-align: center;">Aucun emprunt</td>
                 </tr>
                 </tbody>
@@ -242,25 +204,7 @@
         </div>
 
         <div class="media-grid">
-            <div class="media-card" th:each="media : ${medias}">
-                <div class="media-card-content">
-                    <h3 class="media-title" th:text="${media.title}">-</h3>
-                    <div class="media-meta">
-                        <span th:text="${media.type}">Type</span> |
-                        <span th:text="${media.author}">Auteur</span>
-                    </div>
-                    <p class="media-description" th:text="${media.description}">-</p>
-                    <div class="action-buttons" style="margin-top: 15px;">
-                        <button class="btn-sm btn-edit" th:onclick="'editMedia(' + ${media.id} + ')'">
-                            <i class="fas fa-edit"></i> Modifier
-                        </button>
-                        <button class="btn-sm btn-delete" th:onclick="'deleteMedia(' + ${media.id} + ')'">
-                            <i class="fas fa-trash"></i> Supprimer
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <div th:if="${medias == null or medias.isEmpty()}" class="media-card">
+            <div class="media-card">
                 <div class="media-card-content">
                     <p>Aucun média disponible</p>
                 </div>
@@ -280,7 +224,7 @@
                     <i class="fas fa-chart-pie"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 th:text="${stats.totalMembers}">0</h3>
+                    <h3>0</h3>
                     <p>Total membres</p>
                 </div>
             </div>
@@ -289,7 +233,7 @@
                     <i class="fas fa-chart-line"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 th:text="${stats.monthlyLoans}">0</h3>
+                    <h3>0</h3>
                     <p>Emprunts ce mois</p>
                 </div>
             </div>
@@ -298,7 +242,7 @@
                     <i class="fas fa-percent"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 th:text="${stats.returnRate}">0%</h3>
+                    <h3>0%</h3>
                     <p>Taux de retour</p>
                 </div>
             </div>
@@ -307,7 +251,7 @@
                     <i class="fas fa-clock"></i>
                 </div>
                 <div class="stat-info">
-                    <h3 th:text="${stats.averageLoanDuration}">0</h3>
+                    <h3>0</h3>
                     <p>Durée moyenne (jours)</p>
                 </div>
             </div>
@@ -327,11 +271,8 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="top : ${topBorrowers}">
-                    <td th:text="${top.name}">-</td>
-                    <td th:text="${top.totalLoans}">0</td>
-                    <td th:text="${top.onTimeReturns}">0</td>
-                    <td th:text="${top.score}">0</td>
+                <tr>
+                    <td colspan="4" style="text-align: center;">Aucune donnée disponible</td>
                 </tr>
                 </tbody>
             </table>

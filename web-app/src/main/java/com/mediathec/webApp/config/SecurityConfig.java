@@ -24,6 +24,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(request -> request
                         .requestMatchers("/css/style.css", "/images/**", "/signup", "/login", "/home").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")  // ← NOUVEAU : /admin réservé aux ADMIN
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
