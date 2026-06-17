@@ -18,4 +18,10 @@ public interface MemberFeignClient {
 
     @GetMapping("/api/getAll")
     List<Member> getAllMembers();
+
+    @PutMapping("/api/update/{id}")
+    Member updateMember(@PathVariable("id") Long id, @RequestBody Member member);
+
+    @GetMapping("/api/findById/{id}")
+    Member getMemberById(@PathVariable("id") Long id);
 }

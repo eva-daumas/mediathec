@@ -120,4 +120,25 @@ public class WebAppController {
         model.addAttribute("userLogin", userDetails.getUsername());
         return "returns";  // ← Crée ce fichier plus tard
     }
+
+    @GetMapping("/members/{id}/edit")
+    public String editMemberForm(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        Member member = memberService.getMemberById(id);
+        model.addAttribute("member", member);
+        model.addAttribute("userLogin", userDetails.getUsername());
+        return "member/member-edit";
+    }
+
+    @PostMapping("/members/{id}/edit")
+    public String updateMember(@PathVariable Long id, @ModelAttribute Member member, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        // À implémenter : appeler members-service pour mettre à jour
+        // memberService.updateMember(id, member);
+        return "redirect:/profile";
+    }
 }

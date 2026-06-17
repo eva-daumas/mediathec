@@ -27,4 +27,8 @@ public class MemberService {
     public List<Member> getAllMembers() {
         return memberFeignClient.getAllMembers();
     }
+
+    public Member getMemberById(Long id) {
+        return memberFeignClient.getMemberById(id);
+    }
 }
