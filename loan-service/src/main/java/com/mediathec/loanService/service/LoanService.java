@@ -1,8 +1,11 @@
 package com.mediathec.loanService.service;
 
+import com.mediathec.loanService.client.BookFeignClient;
+import com.mediathec.loanService.client.MemberFeignClient;
 import com.mediathec.loanService.entity.Loan;
 import com.mediathec.loanService.repository.LoanRepository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -13,6 +16,12 @@ import java.util.List;
 public class LoanService {
 
     private final LoanRepository loanRepository;
+
+    @Autowired  // ← AJOUTE CES INJECTIONS
+    private MemberFeignClient memberFeignClient;
+
+    @Autowired
+    private BookFeignClient bookFeignClient;
 
     // Constructeur
     public LoanService(LoanRepository loanRepository) {

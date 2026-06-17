@@ -4,6 +4,8 @@ import com.mediathec.webApp.model.Member;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @FeignClient(name = "members-service", url = "http://localhost:8085")
 public interface MemberFeignClient {
 
@@ -12,4 +14,7 @@ public interface MemberFeignClient {
 
     @PostMapping("/add")
     Member createMember(@RequestBody Member member);
+
+    @GetMapping("/api/getAll")
+    List<Member> getAllMembers();
 }

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediathec - Retours</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container nav-container">
+        <a th:href="@{/}" class="nav-brand">
+            <span>Mediathec</span>
+        </a>
+        <div class="nav-links">
+            <a th:href="@{/members}" class="nav-link">Mes membres</a>
+            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
+            <a th:href="@{/returns}" class="nav-link active">Retours</a>
+            <div th:if="${userLogin != null}">
+                <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
+                <a th:href="@{/profile}" class="nav-link">Mon profil</a>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit" class="btn-outline" style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 8px 16px; font-size: 16px;">
+                        Se déconnecter
+                    </button>
+                </form>
+            </div>
+            <div th:unless="${userLogin != null}">
+                <a th:href="@{/login}" class="btn-outline">Se connecter</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-header">
+        <h1>Gestion des retours</h1>
+    </div>
+
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Membre</th>
+                    <th>Livre</th>
+                    <th>Date d'emprunt</th>
+                    <th>Date de retour</th>
+                    <th>Statut</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="loan : ${loans}">
+                    <td th:text="${loan.id}">1</td>
+                    <td th:text="${loan.memberId}">1</td>
+                    <td th:text="${loan.bookId}">1</td>
+                    <td th:text="${loan.loanDate}">2026-06-17</td>
+                    <td th:text="${loan.returnDate}">-</td>
+                    <td>
+                            <span class="badge" th:class="${loan.status == 'BORROWED'} ? 'badge-borrowed' : 'badge-returned'">
+                                <span th:text="${loan.status}">BORROWED</span>
+                            </span>
+                    </td>
+                    <td>
+                        <button th:if="${loan.status == 'BORROWED'}" class="btn btn-sm btn-success" th:onclick="'returnLoan(' + ${loan.id} + ')'">
+                            <i class="fas fa-undo-alt"></i> Retourner
+                        </button>
+                        <span th:unless="${loan.status == 'BORROWED'}" class="text-muted">Déjà retourné</span>
+                    </td>
+                </tr>
+                <tr th:if="${loans == null or loans.isEmpty()}">
+                    <td colspan="7" class="text-center">
+                        <div class="empty-state">
+                            <i class="fas fa-undo-alt fa-3x"></i>
+                            <p>Aucun emprunt à retourner</p>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2024 Mediathec - Plateforme de gestion d'emprunts de médias</p>
+    </div>
+</footer>
+
+<script>
+    function returnLoan(id) {
+        if (confirm('Confirmer le retour de cet emprunt ?')) {
+            fetch('/loans/return/' + id, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]')?.value || ''
+                }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Erreur lors du retour');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur:', error);
+                    alert('Erreur lors du retour');
+                });
+        }
+    }
+</script>
+</body>
+</html>

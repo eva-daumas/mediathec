@@ -1,6 +1,8 @@
 package com.mediathec.webApp.controller;
 
+import com.mediathec.webApp.model.Loan;
 import com.mediathec.webApp.model.Member;
+import com.mediathec.webApp.service.LoanService;
 import com.mediathec.webApp.service.MemberService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,13 +10,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 public class WebAppController {
 
     private final MemberService memberService;
+    private final LoanService loanService;
 
-    public WebAppController(MemberService memberService) {
+    public WebAppController(MemberService memberService, LoanService loanService) {
         this.memberService = memberService;
+        this.loanService = loanService;
     }
 
     @GetMapping("/home")
@@ -65,9 +71,22 @@ public class WebAppController {
         if (userDetails == null) {
             return "redirect:/login";
         }
-        // Récupère la liste des membres
+        List<Member> members = memberService.getAllMembers();
+        model.addAttribute("members", members);
         model.addAttribute("userLogin", userDetails.getUsername());
         return "member/member-list";
+    }
+
+    @GetMapping("/members/new")
+    public String getNewMemberPage(Model model) {
+        model.addAttribute("member", new Member());
+        return "member/member-form";
+    }
+
+    @PostMapping("/members")
+    public String saveMember(@ModelAttribute Member member) {
+        memberService.register(member);  // ← Utilise register
+        return "redirect:/members";       // ← Redirige vers la liste
     }
 
     @GetMapping("/loans")
@@ -75,7 +94,30 @@ public class WebAppController {
         if (userDetails == null) {
             return "redirect:/login";
         }
+        List<Loan> loans = loanService.getAllLoans();
+        model.addAttribute("loans", loans);
         model.addAttribute("userLogin", userDetails.getUsername());
         return "loans";
+    }
+
+    @GetMapping("/loans/new")
+    public String getNewLoanPage(Model model) {  // ← Supprime @NotNull
+        model.addAttribute("loan", new Loan());
+        return "loan-form";
+    }
+
+    @PostMapping("/loans")
+    public String saveLoan(@ModelAttribute Loan loan) {
+        // À implémenter
+        return "redirect:/loans";
+    }
+
+    @GetMapping("/returns")
+    public String getReturnsPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("userLogin", userDetails.getUsername());
+        return "returns";  // ← Crée ce fichier plus tard
     }
 }

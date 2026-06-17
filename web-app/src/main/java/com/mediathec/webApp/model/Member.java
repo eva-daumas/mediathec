@@ -19,6 +19,8 @@ public class Member {
 
     private String role = "USER";
 
+    private String createdAt;
+
     // Constructeur par défaut
     public Member() {
     }
@@ -71,5 +73,13 @@ public class Member {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

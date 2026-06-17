@@ -5,6 +5,8 @@ import com.mediathec.webApp.service.client.MemberFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MemberService {
     @Autowired
@@ -20,5 +22,9 @@ public class MemberService {
     public Member getMemberByEmail(String email) {
         return memberFeignClient.getMemberByEmail(email);
 
+    }
+
+    public List<Member> getAllMembers() {
+        return memberFeignClient.getAllMembers();
     }
 }

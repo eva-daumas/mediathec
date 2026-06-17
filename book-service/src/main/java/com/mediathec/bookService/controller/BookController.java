@@ -32,7 +32,7 @@ public class BookController {
         // Cette méthode n'existe pas dans BookService
         // Il faut l'ajouter ou utiliser searchBooks
         List<Book> books = bookService.searchBooks(title);
-        return books.isEmpty() ? null : books.get(0);
+        return bookService.findByTitle(title);
     }
 
     @GetMapping("/api/findByCategory/{category}")
