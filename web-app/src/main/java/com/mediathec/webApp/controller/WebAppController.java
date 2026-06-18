@@ -1,9 +1,12 @@
 package com.mediathec.webApp.controller;
 
+import com.mediathec.webApp.model.Book;
 import com.mediathec.webApp.model.Loan;
 import com.mediathec.webApp.model.Member;
+import com.mediathec.webApp.service.CustomBookService;
 import com.mediathec.webApp.service.LoanService;
 import com.mediathec.webApp.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -13,16 +16,21 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class WebAppController {
 
     private final MemberService memberService;
     private final LoanService loanService;
+    private CustomBookService customBookService;
 
-    public WebAppController(MemberService memberService, LoanService loanService) {
+    //ConstructeurS
+    @Autowired
+    public WebAppController(MemberService memberService, LoanService loanService, CustomBookService customBookService) {
         this.memberService = memberService;
         this.loanService = loanService;
+        this.customBookService = customBookService;
     }
 
     @GetMapping("/home")
@@ -82,22 +90,24 @@ public class WebAppController {
         String email = userDetails.getUsername();
         Member member = memberService.getMemberByEmail(email);
 
-        // Vérifier que c'est bien un admin
         if (member == null || !"ADMIN".equals(member.getRole())) {
             return "redirect:/profile";
         }
 
         model.addAttribute("userLogin", member.getUsername());
 
-        // ✅ AJOUT : Récupérer la liste des membres
+        // Récupérer les membres
         List<Member> members = memberService.getAllMembers();
         model.addAttribute("members", members);
 
-        // Statistiques
+        //  Récupérer les médias
+        List<Book> medias = customBookService.getAllBooks();
+        model.addAttribute("medias", medias);
+
         model.addAttribute("totalMembers", members != null ? members.size() : 0);
+        model.addAttribute("totalMedias", medias != null ? medias.size() : 0);
         model.addAttribute("totalLoans", 0);
         model.addAttribute("totalReturns", 0);
-        model.addAttribute("totalMedias", 0);
 
         return "admin";
     }
@@ -179,7 +189,6 @@ public class WebAppController {
     }
 
 
-
     @DeleteMapping("/admin/members/delete/{id}")
     @ResponseBody
     public ResponseEntity<String> deleteMember(@PathVariable Long id) {
@@ -202,5 +211,24 @@ public class WebAppController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/admin/medias/new")
+    public String showAddMediaForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("media", new Book());
+        model.addAttribute("userLogin", userDetails.getUsername());
+        return "media-form";
+    }
+
+    @PostMapping("/admin/medias")
+    public String addMedia(@ModelAttribute Book book, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        customBookService.createBook(book);
+        return "redirect:/admin#medias";
     }
 }

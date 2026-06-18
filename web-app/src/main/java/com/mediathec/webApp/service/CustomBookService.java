@@ -31,4 +31,8 @@ public class CustomBookService {
     public List<Book> getAvailableBooks() {
         return bookFeignClient.getAvailableBooks();
     }
+
+    public Book createBook(Book book) {
+        return bookFeignClient.createBook(book);
+    }
 }

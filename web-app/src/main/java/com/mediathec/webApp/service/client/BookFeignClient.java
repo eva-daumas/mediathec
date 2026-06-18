@@ -22,4 +22,7 @@ public interface BookFeignClient {
 
     @GetMapping("/api/available")
     List<Book> getAvailableBooks();
+
+    @PostMapping("/add")
+    Book createBook(@RequestBody Book book);
 }

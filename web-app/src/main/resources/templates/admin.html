@@ -16,7 +16,7 @@
 <!-- MODALE ÉDITION -->
 <div class="modal-overlay" id="editModal">
     <div class="modal-box">
-        <h2>✏️ Modifier le membre</h2>
+        <h2> Modifier le membre</h2>
         <form id="editForm">
             <input type="hidden" id="editId" />
             <div class="form-group">
@@ -49,7 +49,7 @@
 <!-- MODALE SUPPRESSION -->
 <div class="modal-overlay" id="deleteModal">
     <div class="modal-box">
-        <h2>🗑️ Supprimer le membre</h2>
+        <h2> Supprimer le membre</h2>
         <p>Êtes-vous sûr de vouloir supprimer définitivement le membre <strong id="deleteName"></strong> ?</p>
         <p style="color: #dc3545; font-size: 14px;">⚠️ Cette action est irréversible.</p>
         <input type="hidden" id="deleteId" />
@@ -265,13 +265,31 @@
     <div id="medias" class="admin-section">
         <div class="admin-header">
             <h1>Catalogue des médias</h1>
-            <button class="btn btn-primary" onclick="showAddMediaModal()">
+            <a th:href="@{/admin/medias/new}" class="btn btn-primary">
                 <i class="fas fa-plus"></i> Ajouter un média
-            </button>
+            </a>
         </div>
 
         <div class="media-grid">
-            <div class="media-card">
+            <div class="media-card" th:each="media : ${medias}">
+                <div class="media-card-content">
+                    <h3 class="media-title" th:text="${media.title}">-</h3>
+                    <div class="media-meta">
+                        <span th:text="${media.category}">Type</span> |
+                        <span th:text="${media.author}">Auteur</span>
+                    </div>
+                    <p class="media-description" th:text="${media.description}">-</p>
+                    <div class="action-buttons" style="margin-top: 15px;">
+                        <button class="btn-sm btn-edit" th:onclick="'editMedia(' + ${media.id} + ')'">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="btn-sm btn-delete" th:onclick="'deleteMedia(' + ${media.id} + ')'">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${medias == null or medias.isEmpty()}" class="media-card">
                 <div class="media-card-content">
                     <p>Aucun média disponible</p>
                 </div>
@@ -396,7 +414,7 @@
             data.password = password;
         }
 
-        // ✅ Récupérer le token CSRF
+        //  Récupérer le token CSRF
         var csrfToken = getCsrfToken();
 
         fetch('/admin/members/update/' + id, {
@@ -413,11 +431,11 @@
                     closeEditModal();
                     location.reload();
                 } else {
-                    alert('❌ Erreur lors de la modification (code: ' + response.status + ')');
+                    alert(' Erreur lors de la modification (code: ' + response.status + ')');
                 }
             })
             .catch(error => {
-                alert('❌ Erreur de connexion: ' + error.message);
+                alert(' Erreur de connexion: ' + error.message);
             });
     });
 
@@ -444,26 +462,26 @@
     function confirmDelete() {
         var id = document.getElementById('deleteId').value;
 
-        // ✅ Récupérer le token CSRF
+        //  Récupérer le token CSRF
         var csrfToken = getCsrfToken();
 
         fetch('/admin/members/delete/' + id, {
             method: 'DELETE',
             headers: {
-                'X-CSRF-TOKEN': csrfToken  // ✅ TOKEN CSRF
+                'X-CSRF-TOKEN': csrfToken  //  TOKEN CSRF
             }
         })
             .then(response => {
                 if (response.ok) {
-                    alert('✅ Membre supprimé avec succès !');
+                    alert(' Membre supprimé avec succès !');
                     closeDeleteModal();
                     location.reload();
                 } else {
-                    alert('❌ Erreur lors de la suppression (code: ' + response.status + ')');
+                    alert(' Erreur lors de la suppression (code: ' + response.status + ')');
                 }
             })
             .catch(error => {
-                alert('❌ Erreur de connexion: ' + error.message);
+                alert(' Erreur de connexion: ' + error.message);
             });
     }
 
@@ -534,11 +552,11 @@
     }
 
     function showNewLoanModal() {
-        alert('📝 Fonctionnalité "Nouvel emprunt" à implémenter plus tard');
+        alert(' Fonctionnalité "Nouvel emprunt" à implémenter plus tard');
     }
 
     function showAddMediaModal() {
-        alert('📝 Fonctionnalité "Ajouter un média" à implémenter plus tard');
+        alert(' Fonctionnalité "Ajouter un média" à implémenter plus tard');
     }
 </script>
 
