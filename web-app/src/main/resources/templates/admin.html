@@ -14,7 +14,7 @@
 
 <div class="modal-overlay" id="editModal">
     <div class="modal-box">
-        <h2>✏️ Modifier le membre</h2>
+        <h2> Modifier le membre</h2>
         <form id="editForm">
             <input type="hidden" id="editId" />
             <div class="form-group">
@@ -38,7 +38,7 @@
             </div>
             <div class="modal-actions">
                 <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Annuler</button>
-                <button type="submit" class="btn btn-primary">💾 Enregistrer</button>
+                <button type="submit" class="btn btn-primary"> Enregistrer</button>
             </div>
         </form>
     </div>
@@ -46,13 +46,13 @@
 
 <div class="modal-overlay" id="deleteModal">
     <div class="modal-box">
-        <h2>🗑️ Supprimer le membre</h2>
+        <h2> Supprimer le membre</h2>
         <p>Êtes-vous sûr de vouloir supprimer définitivement le membre <strong id="deleteName"></strong> ?</p>
         <p style="color: #dc3545; font-size: 14px;">⚠️ Cette action est irréversible.</p>
         <input type="hidden" id="deleteId" />
         <div class="modal-actions">
             <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Annuler</button>
-            <button type="button" class="btn btn-danger" onclick="confirmDelete()">🗑️ Supprimer</button>
+            <button type="button" class="btn btn-danger" onclick="confirmDelete()"> Supprimer</button>
         </div>
     </div>
 </div>
@@ -429,15 +429,15 @@
         })
             .then(function(response) {
                 if (response.ok) {
-                    alert('✅ Membre modifié avec succès !');
+                    alert(' Membre modifié avec succès !');
                     closeEditModal();
                     location.reload();
                 } else {
-                    alert('❌ Erreur lors de la modification (code: ' + response.status + ')');
+                    alert(' Erreur lors de la modification (code: ' + response.status + ')');
                 }
             })
             .catch(function(error) {
-                alert('❌ Erreur de connexion: ' + error.message);
+                alert(' Erreur de connexion: ' + error.message);
             });
     });
 
@@ -471,15 +471,15 @@
         })
             .then(function(response) {
                 if (response.ok) {
-                    alert('✅ Membre supprimé avec succès !');
+                    alert(' Membre supprimé avec succès !');
                     closeDeleteModal();
                     location.reload();
                 } else {
-                    alert('❌ Erreur lors de la suppression (code: ' + response.status + ')');
+                    alert(' Erreur lors de la suppression (code: ' + response.status + ')');
                 }
             })
             .catch(function(error) {
-                alert('❌ Erreur de connexion: ' + error.message);
+                alert(' Erreur de connexion: ' + error.message);
             });
     }
 
@@ -488,7 +488,7 @@
     });
 
     function returnLoan(id) {
-        if (confirm('✅ Confirmer le retour de l\'emprunt ID: ' + id + ' ?')) {
+        if (confirm(' Confirmer le retour de l\'emprunt ID: ' + id + ' ?')) {
             var csrfToken = getCsrfToken();
 
             fetch('/admin/loans/return/' + id, {
@@ -500,14 +500,14 @@
             })
                 .then(function(response) {
                     if (response.ok) {
-                        alert('✅ Emprunt retourné avec succès !');
+                        alert(' Emprunt retourné avec succès !');
                         location.reload();
                     } else {
-                        alert('❌ Erreur lors du retour (code: ' + response.status + ')');
+                        alert(' Erreur lors du retour (code: ' + response.status + ')');
                     }
                 })
                 .catch(function(error) {
-                    alert('❌ Erreur de connexion: ' + error.message);
+                    alert(' Erreur de connexion: ' + error.message);
                 });
         }
     }
@@ -524,14 +524,14 @@
             })
                 .then(function(response) {
                     if (response.ok) {
-                        alert('✅ Emprunt supprimé avec succès !');
+                        alert(' Emprunt supprimé avec succès !');
                         location.reload();
                     } else {
-                        alert('❌ Erreur lors de la suppression (code: ' + response.status + ')');
+                        alert(' Erreur lors de la suppression (code: ' + response.status + ')');
                     }
                 })
                 .catch(function(error) {
-                    alert('❌ Erreur de connexion: ' + error.message);
+                    alert(' Erreur de connexion: ' + error.message);
                 });
         }
     }
@@ -541,8 +541,8 @@
     }
 
     function deleteMedia(id) {
-        if (confirm('⚠️ Supprimer le média ID: ' + id + ' ?')) {
-            alert('🗑️ Suppression du média ID: ' + id + ' - À implémenter');
+        if (confirm(' Supprimer le média ID: ' + id + ' ?')) {
+            alert(' Suppression du média ID: ' + id + ' - À implémenter');
         }
     }
 
