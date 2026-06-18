@@ -31,4 +31,12 @@ public class MemberService {
     public Member getMemberById(Long id) {
         return memberFeignClient.getMemberById(id);
     }
+
+    public void deleteMember(Long id) {
+        memberFeignClient.deleteMember(id);
+    }
+
+    public void updateMember(Long id, Member member) {
+        memberFeignClient.updateMember(id, member);
+    }
 }

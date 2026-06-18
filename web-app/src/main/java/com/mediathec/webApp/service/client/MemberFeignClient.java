@@ -9,9 +9,8 @@ import java.util.List;
 @FeignClient(name = "members-service", url = "http://localhost:8085")
 public interface MemberFeignClient {
 
-    @GetMapping("/api/members/email/{email}")  // ← Cette URL
+    @GetMapping("/api/members/email/{email}")
     Member getMemberByEmail(@PathVariable("email") String email);
-
 
     @PostMapping("/add")
     Member createMember(@RequestBody Member member);
@@ -24,4 +23,8 @@ public interface MemberFeignClient {
 
     @GetMapping("/api/findById/{id}")
     Member getMemberById(@PathVariable("id") Long id);
+
+    @DeleteMapping("/api/delete/{id}")
+    void deleteMember(@PathVariable("id") Long id);
+
 }

@@ -4,6 +4,8 @@ import com.mediathec.webApp.model.Loan;
 import com.mediathec.webApp.model.Member;
 import com.mediathec.webApp.service.LoanService;
 import com.mediathec.webApp.service.MemberService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -87,9 +89,12 @@ public class WebAppController {
 
         model.addAttribute("userLogin", member.getUsername());
 
-        // Récupérer les données pour le tableau de bord
-        // (À implémenter plus tard avec les appels aux autres services)
-        model.addAttribute("totalMembers", 0);
+        // ✅ AJOUT : Récupérer la liste des membres
+        List<Member> members = memberService.getAllMembers();
+        model.addAttribute("members", members);
+
+        // Statistiques
+        model.addAttribute("totalMembers", members != null ? members.size() : 0);
         model.addAttribute("totalLoans", 0);
         model.addAttribute("totalReturns", 0);
         model.addAttribute("totalMedias", 0);
@@ -171,5 +176,31 @@ public class WebAppController {
         // À implémenter : appeler members-service pour mettre à jour
         // memberService.updateMember(id, member);
         return "redirect:/profile";
+    }
+
+
+
+    @DeleteMapping("/admin/members/delete/{id}")
+    @ResponseBody
+    public ResponseEntity<String> deleteMember(@PathVariable Long id) {
+        try {
+            memberService.deleteMember(id);
+            return ResponseEntity.ok("Membre supprimé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur: " + e.getMessage());
+        }
+    }
+
+    @PutMapping("/admin/members/update/{id}")
+    @ResponseBody
+    public ResponseEntity<String> updateMember(@PathVariable Long id, @RequestBody Member member) {
+        try {
+            memberService.updateMember(id, member);
+            return ResponseEntity.ok("Membre modifié avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur: " + e.getMessage());
+        }
     }
 }
