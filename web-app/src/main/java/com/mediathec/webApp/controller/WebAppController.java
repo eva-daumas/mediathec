@@ -100,13 +100,17 @@ public class WebAppController {
         List<Member> members = memberService.getAllMembers();
         model.addAttribute("members", members);
 
-        //  Récupérer les médias
+        // Récupérer les médias
         List<Book> medias = customBookService.getAllBooks();
         model.addAttribute("medias", medias);
 
+        //  Récupérer les emprunts
+        List<Loan> loans = loanService.getAllLoans();
+        model.addAttribute("allLoans", loans);
+
         model.addAttribute("totalMembers", members != null ? members.size() : 0);
         model.addAttribute("totalMedias", medias != null ? medias.size() : 0);
-        model.addAttribute("totalLoans", 0);
+        model.addAttribute("totalLoans", loans != null ? loans.size() : 0);
         model.addAttribute("totalReturns", 0);
 
         return "admin";
@@ -230,5 +234,50 @@ public class WebAppController {
         }
         customBookService.createBook(book);
         return "redirect:/admin#medias";
+    }
+
+    @GetMapping("/admin/loans/new")
+    public String showAddLoanForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("loan", new Loan());
+        model.addAttribute("userLogin", userDetails.getUsername());
+        return "loan-form";
+    }
+
+    @PostMapping("/admin/loans")
+    public String addLoan(@ModelAttribute Loan loan, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        loanService.createLoan(loan);
+        return "redirect:/admin#loans";
+    }
+
+    //  RETOURNER UN EMPRUNT
+    @PutMapping("/admin/loans/return/{id}")
+    @ResponseBody
+    public ResponseEntity<String> returnLoan(@PathVariable Long id) {
+        try {
+            loanService.returnLoan(id);
+            return ResponseEntity.ok("Emprunt retourné avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur: " + e.getMessage());
+        }
+    }
+
+    //  SUPPRIMER UN EMPRUNT
+    @DeleteMapping("/admin/loans/delete/{id}")
+    @ResponseBody
+    public ResponseEntity<String> deleteLoan(@PathVariable Long id) {
+        try {
+            loanService.deleteLoan(id);
+            return ResponseEntity.ok("Emprunt supprimé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur: " + e.getMessage());
+        }
     }
 }
