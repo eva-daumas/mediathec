@@ -35,4 +35,12 @@ public class CustomBookService {
     public Book createBook(Book book) {
         return bookFeignClient.createBook(book);
     }
+
+    public Book updateBook(Long id, Book book) {
+        return bookFeignClient.updateBook(id, book);
+    }
+
+    public void deleteBook(Long id) {
+        bookFeignClient.deleteBook(id);
+    }
 }

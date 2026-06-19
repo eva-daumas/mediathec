@@ -25,4 +25,11 @@ public interface BookFeignClient {
 
     @PostMapping("/add")
     Book createBook(@RequestBody Book book);
+
+    @PutMapping("/api/update/{id}")
+    Book updateBook(@PathVariable("id") Long id, @RequestBody Book book);
+
+
+    @DeleteMapping("/api/delete/{id}")
+    void deleteBook(@PathVariable("id") Long id);
 }

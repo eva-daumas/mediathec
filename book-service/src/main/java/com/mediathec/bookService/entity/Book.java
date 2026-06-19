@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "books")
+@Table(name = "book")
 public class Book {
 
     @Id
@@ -22,6 +22,8 @@ public class Book {
     private String coverImage;
     private boolean available = true;
     private LocalDateTime createdAt;
+
+
 
     @PrePersist
     protected void onCreate() {
@@ -44,8 +46,8 @@ public class Book {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public String getCoverImage() { return coverImage; }
-    public void setCoverImage(String coverImage) { this.coverImage = coverImage; }
+    public String getCoverImage() { return coverImage; }  // ← UNE SEULE FOIS
+    public void setCoverImage(String coverImage) { this.coverImage = coverImage; }  // ← UNE SEULE FOIS
 
     public boolean isAvailable() { return available; }
     public void setAvailable(boolean available) { this.available = available; }

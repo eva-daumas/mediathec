@@ -280,4 +280,36 @@ public class WebAppController {
                     .body("Erreur: " + e.getMessage());
         }
     }
+
+    @GetMapping("/admin/medias/edit/{id}")
+    public String showEditMediaForm(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        Book book = customBookService.getBookById(id);
+        model.addAttribute("media", book);
+        model.addAttribute("userLogin", userDetails.getUsername());
+        return "media-form-edit";  // ← Nouveau fichier
+    }
+
+    @PostMapping("/admin/medias/update/{id}")
+    public String updateMedia(@PathVariable Long id, @ModelAttribute Book book, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        customBookService.updateBook(id, book);
+        return "redirect:/admin#medias";
+    }
+
+    @DeleteMapping("/admin/medias/delete/{id}")
+    @ResponseBody
+    public ResponseEntity<String> deleteMedia(@PathVariable Long id) {
+        try {
+            customBookService.deleteBook(id);
+            return ResponseEntity.ok("Média supprimé avec succès");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur: " + e.getMessage());
+        }
+    }
 }

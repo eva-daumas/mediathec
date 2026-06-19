@@ -17,6 +17,7 @@ public class LoanService {
 
     private final LoanRepository loanRepository;
 
+
     @Autowired  // ← AJOUTE CES INJECTIONS
     private MemberFeignClient memberFeignClient;
 

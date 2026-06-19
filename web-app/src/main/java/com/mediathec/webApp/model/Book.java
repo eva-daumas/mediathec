@@ -1,8 +1,10 @@
 package com.mediathec.webApp.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Book {
     private Long id;
     private String title;
@@ -21,7 +23,7 @@ public class Book {
         this.author = author;
         this.category = category;
         this.description = description;
-        this.coverImage = coverImage;
+        this.coverImage = coverImage;  // ← AJOUTER
         this.available = available;
     }
 
@@ -65,6 +67,7 @@ public class Book {
         this.description = description;
     }
 
+    // AJOUT GETTER ET SETTER POUR coverImage
     public String getCoverImage() {
         return coverImage;
     }
