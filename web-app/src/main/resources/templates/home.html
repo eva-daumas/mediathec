@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
 </head>
 <body>
+
 <!-- Navigation -->
 <nav class="navbar">
     <div class="container nav-container">
@@ -17,12 +18,11 @@
             <span>Mediathec</span>
         </a>
         <div class="nav-links">
-            <!-- ✅ SUPPRIMÉ : Mes membres -->
-            <!-- ✅ SUPPRIMÉ : Emprunts -->
+            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
+            <a th:href="@{/returns}" class="nav-link">Retours</a>
             <div th:if="${userLogin != null}">
                 <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
                 <a th:href="@{/profile}" class="nav-link">Mon profil</a>
-                <!-- ⭐ FORMULAIRE DE DÉCONNEXION ⭐ -->
                 <form th:action="@{/logout}" method="post" style="display: inline;">
                     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
                     <button type="submit" class="btn-outline" style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 8px 16px; font-size: 16px;">
@@ -41,46 +41,90 @@
 <div class="container">
     <div class="hero-section">
         <div class="hero-content">
-            <h1>Gestion des emprunts</h1>
-            <p class="hero-description">Mediathec vous permet de gérer vos membres et leurs emprunts en toute sécurité.</p>
+            <h1>Bienvenue sur Mediathec</h1>
+            <p class="hero-description">Découvrez notre catalogue de livres et empruntez-les en toute simplicité.</p>
             <div class="hero-buttons">
                 <a th:href="@{/signup}" class="btn btn-primary">Commencer</a>
             </div>
         </div>
         <div class="hero-image">
             <div class="stats-card">
-                <i class="fas fa-users fa-3x"></i>
-                <h3>+500 références</h3>
-                <p>A découvrir</p>
+                <i class="fas fa-book fa-3x"></i>
+                <h3 th:text="${medias != null ? medias.size() : 0}">0</h3>
+                <p>Livres disponibles</p>
             </div>
         </div>
     </div>
 
-    <!-- Features -->
-    <div class="features-section">
-        <h2 class="section-title">Fonctionnalités</h2>
-        <div class="features-grid">
-            <div class="feature-card">
+    <!-- ==================== CATALOGUE DES MÉDIAS ==================== -->
+    <h2 class="section-title">📚 Catalogue des médias</h2>
+    <p class="section-subtitle" style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 30px;">Parcourez notre collection et empruntez vos livres préférés</p>
 
-
+    <div class="media-grid">
+        <!-- Carte d'un média -->
+        <div class="media-card" th:each="media : ${medias}" style="position: relative;">
+            <!-- IMAGE DE COUVERTURE -->
+            <div class="media-image">
+                <img th:if="${media.coverImage}"
+                     th:src="${media.coverImage}"
+                     th:alt="'Couverture de ' + ${media.title}"
+                     style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;" />
+                <div th:unless="${media.coverImage}"
+                     style="width: 100%; height: 200px; background: linear-gradient(135deg, #1a1a2e, #2d2d44); display: flex; align-items: center; justify-content: center; border-radius: 12px 12px 0 0;">
+                    <i class="fas fa-book fa-4x" style="color: rgba(255,255,255,0.15);"></i>
+                </div>
+                <!-- Statut en badge sur l'image -->
+                <div class="media-status">
+                    <span class="badge" th:class="${media.available} ? 'badge-available' : 'badge-borrowed'">
+                        <span th:text="${media.available} ? 'Disponible' : 'Emprunté'">Disponible</span>
+                    </span>
+                </div>
             </div>
-            <div class="feature-card">
 
-                <h3>Gestion des emprunts</h3>
-                <p>Planifiez et suivez vos emprunts</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">
-                    <i class="fas fa-chart-line"></i>
+            <div class="media-card-content">
+                <!-- Titre -->
+                <h3 class="media-title" th:text="${media.title}">Titre du livre</h3>
+
+                <!-- Métadonnées -->
+                <div class="media-meta">
+                    <span><i class="fas fa-user"></i> <span th:text="${media.author}">Auteur</span></span>
+                    <span><i class="fas fa-tag"></i> <span th:text="${media.category}">Catégorie</span></span>
                 </div>
 
+                <!-- Description -->
+                <p class="media-description" th:text="${media.description}">Description du livre</p>
+
+                <!-- Actions -->
+                <div class="media-actions">
+                    <!-- Bouton Emprunter (visible si disponible) -->
+                    <button th:if="${media.available}"
+                            class="btn btn-primary btn-sm"
+                            th:onclick="'borrowMedia(' + ${media.id} + ')'">
+                        <i class="fas fa-hand-holding-heart"></i> Emprunter
+                    </button>
+
+                    <!-- Bouton Retourner (visible si emprunté) -->
+                    <button th:if="${!media.available}"
+                            class="btn btn-secondary btn-sm"
+                            th:onclick="'returnMedia(' + ${media.id} + ')'">
+                        <i class="fas fa-undo-alt"></i> Retourner
+                    </button>
+
+                    <!-- Message si emprunté -->
+                    <span th:if="${!media.available}" class="text-muted" style="font-size: 13px; display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.5);">
+                        <i class="fas fa-user"></i> Déjà emprunté
+                    </span>
+                </div>
             </div>
         </div>
+
+        <!-- Message si aucun média -->
+        <div th:if="${medias == null or medias.isEmpty()}" class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.03); border-radius: 20px; border: 2px dashed rgba(255,255,255,0.08);">
+            <i class="fas fa-book-open fa-4x" style="color: rgba(255,255,255,0.15); margin-bottom: 16px;"></i>
+            <h3 style="color: rgba(255,255,255,0.6); font-weight: 600;">Aucun média disponible</h3>
+            <p style="color: rgba(255,255,255,0.4);">Revenez plus tard pour découvrir notre catalogue.</p>
+        </div>
     </div>
-
-    <!-- ✅ SECTION ACTIONS RAPIDES COMPLÈTEMENT SUPPRIMÉE -->
-    <!-- Les boutons "Nouveau membre", "Nouvel emprunt", "Mes emprunts", "Retours" ont été retirés -->
-
 </div>
 
 <!-- Footer -->
@@ -90,5 +134,69 @@
         <p class="text-muted">Sécurisé · Conforme RGPD · Données hébergées en France</p>
     </div>
 </footer>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+    // Récupérer le token CSRF
+    function getCsrfToken() {
+        var tokenInput = document.querySelector('input[name="_csrf"]');
+        return tokenInput ? tokenInput.value : '';
+    }
+
+    function borrowMedia(mediaId) {
+        if (!confirm('Confirmer l\'emprunt de ce média ?')) return;
+
+        // 🔧 À adapter : récupérer l'ID du membre connecté depuis le backend
+        const memberId = 1;
+
+        fetch('/api/loans', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken()
+            },
+            body: JSON.stringify({
+                memberId: memberId,
+                bookId: mediaId
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('✅ Emprunt effectué avec succès !');
+                    window.location.reload();
+                } else {
+                    response.text().then(text => alert('❌ Erreur: ' + text));
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('❌ Erreur lors de l\'emprunt');
+            });
+    }
+
+    function returnMedia(mediaId) {
+        if (!confirm('Confirmer le retour de ce média ?')) return;
+
+        fetch('/api/loans/return/' + mediaId, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken()
+            }
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('✅ Retour effectué avec succès !');
+                    window.location.reload();
+                } else {
+                    response.text().then(text => alert('❌ Erreur: ' + text));
+                }
+            })
+            .catch(error => {
+                console.error('Erreur:', error);
+                alert('❌ Erreur lors du retour');
+            });
+    }
+</script>
 </body>
 </html>

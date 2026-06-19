@@ -16,16 +16,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 @Controller
 public class WebAppController {
 
     private final MemberService memberService;
     private final LoanService loanService;
-    private CustomBookService customBookService;
+    private final CustomBookService customBookService;
 
-    //ConstructeurS
     @Autowired
     public WebAppController(MemberService memberService, LoanService loanService, CustomBookService customBookService) {
         this.memberService = memberService;
@@ -33,17 +31,14 @@ public class WebAppController {
         this.customBookService = customBookService;
     }
 
-    @GetMapping("/home")
-    public String getHomePage() {
-        return "home";
-    }
+    // ======================== PAGES PUBLIQUES ========================
 
-    @GetMapping("/")
-    public String getBookPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping({"/", "/home"})
+    public String getHomePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails != null) {
-            String username = userDetails.getUsername();
-            model.addAttribute("userLogin", username);
+            model.addAttribute("userLogin", userDetails.getUsername());
         }
+        model.addAttribute("medias", customBookService.getAllBooks());
         return "home";
     }
 
@@ -64,6 +59,8 @@ public class WebAppController {
         return "redirect:/login";
     }
 
+    // ======================== PROFIL ========================
+
     @GetMapping("/profile")
     public String getProfilePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
@@ -72,14 +69,17 @@ public class WebAppController {
         String email = userDetails.getUsername();
         Member member = memberService.getMemberByEmail(email);
 
-        //  SI L'UTILISATEUR EST ADMIN → REDIRIGER VERS /admin
+        // Si admin, rediriger vers admin
         if (member != null && "ADMIN".equals(member.getRole())) {
             return "redirect:/admin";
         }
+
         model.addAttribute("member", member);
         model.addAttribute("userLogin", member.getUsername());
         return "profile";
     }
+
+    // ======================== ADMIN ========================
 
     @GetMapping("/admin")
     public String getAdminPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -94,35 +94,29 @@ public class WebAppController {
             return "redirect:/profile";
         }
 
-        model.addAttribute("userLogin", member.getUsername());
-
-        // Récupérer les membres
         List<Member> members = memberService.getAllMembers();
-        model.addAttribute("members", members);
-
-        // Récupérer les médias
         List<Book> medias = customBookService.getAllBooks();
-        model.addAttribute("medias", medias);
-
-        //  Récupérer les emprunts
         List<Loan> loans = loanService.getAllLoans();
-        model.addAttribute("allLoans", loans);
 
+        model.addAttribute("userLogin", member.getUsername());
+        model.addAttribute("members", members);
+        model.addAttribute("medias", medias);
+        model.addAttribute("allLoans", loans);
         model.addAttribute("totalMembers", members != null ? members.size() : 0);
         model.addAttribute("totalMedias", medias != null ? medias.size() : 0);
         model.addAttribute("totalLoans", loans != null ? loans.size() : 0);
-        model.addAttribute("totalReturns", 0);
 
         return "admin";
     }
+
+    // ======================== GESTION DES MEMBRES ========================
 
     @GetMapping("/members")
     public String getMembersPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return "redirect:/login";
         }
-        List<Member> members = memberService.getAllMembers();
-        model.addAttribute("members", members);
+        model.addAttribute("members", memberService.getAllMembers());
         model.addAttribute("userLogin", userDetails.getUsername());
         return "member/member-list";
     }
@@ -135,40 +129,8 @@ public class WebAppController {
 
     @PostMapping("/members")
     public String saveMember(@ModelAttribute Member member) {
-        memberService.register(member);  // ← Utilise register
-        return "redirect:/members";       // ← Redirige vers la liste
-    }
-
-    @GetMapping("/loans")
-    public String getLoansPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return "redirect:/login";
-        }
-        List<Loan> loans = loanService.getAllLoans();
-        model.addAttribute("loans", loans);
-        model.addAttribute("userLogin", userDetails.getUsername());
-        return "loans";
-    }
-
-    @GetMapping("/loans/new")
-    public String getNewLoanPage(Model model) {  // ← Supprime @NotNull
-        model.addAttribute("loan", new Loan());
-        return "loan-form";
-    }
-
-    @PostMapping("/loans")
-    public String saveLoan(@ModelAttribute Loan loan) {
-        // À implémenter
-        return "redirect:/loans";
-    }
-
-    @GetMapping("/returns")
-    public String getReturnsPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return "redirect:/login";
-        }
-        model.addAttribute("userLogin", userDetails.getUsername());
-        return "returns";  // ← Crée ce fichier plus tard
+        memberService.register(member);
+        return "redirect:/members";
     }
 
     @GetMapping("/members/{id}/edit")
@@ -176,22 +138,16 @@ public class WebAppController {
         if (userDetails == null) {
             return "redirect:/login";
         }
-        Member member = memberService.getMemberById(id);
-        model.addAttribute("member", member);
+        model.addAttribute("member", memberService.getMemberById(id));
         model.addAttribute("userLogin", userDetails.getUsername());
         return "member/member-edit";
     }
 
     @PostMapping("/members/{id}/edit")
-    public String updateMember(@PathVariable Long id, @ModelAttribute Member member, @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return "redirect:/login";
-        }
-        // À implémenter : appeler members-service pour mettre à jour
-        // memberService.updateMember(id, member);
-        return "redirect:/profile";
+    public String updateMember(@PathVariable Long id, @ModelAttribute Member member) {
+        memberService.updateMember(id, member);
+        return "redirect:/members";
     }
-
 
     @DeleteMapping("/admin/members/delete/{id}")
     @ResponseBody
@@ -205,37 +161,40 @@ public class WebAppController {
         }
     }
 
-    @PutMapping("/admin/members/update/{id}")
-    @ResponseBody
-    public ResponseEntity<String> updateMember(@PathVariable Long id, @RequestBody Member member) {
-        try {
-            memberService.updateMember(id, member);
-            return ResponseEntity.ok("Membre modifié avec succès");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erreur: " + e.getMessage());
-        }
-    }
+    // ======================== GESTION DES EMPRUNTS ========================
 
-    @GetMapping("/admin/medias/new")
-    public String showAddMediaForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping("/loans")
+    public String getLoansPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return "redirect:/login";
         }
-
-        model.addAttribute("media", new Book());
+        model.addAttribute("loans", loanService.getAllLoans());
         model.addAttribute("userLogin", userDetails.getUsername());
-        return "media-form";
+        return "loans";
     }
 
-    @PostMapping("/admin/medias")
-    public String addMedia(@ModelAttribute Book book, @AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping("/loans/new")
+    public String getNewLoanPage(Model model) {
+        model.addAttribute("loan", new Loan());
+        return "loan-form";
+    }
+
+    @PostMapping("/loans")
+    public String saveLoan(@ModelAttribute Loan loan) {
+        loanService.createLoan(loan);
+        return "redirect:/loans";
+    }
+
+    @GetMapping("/returns")
+    public String getReturnsPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return "redirect:/login";
         }
-        customBookService.createBook(book);
-        return "redirect:/admin#medias";
+        model.addAttribute("userLogin", userDetails.getUsername());
+        return "returns";
     }
+
+    // ======================== ADMIN - EMPRUNTS ========================
 
     @GetMapping("/admin/loans/new")
     public String showAddLoanForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -248,15 +207,11 @@ public class WebAppController {
     }
 
     @PostMapping("/admin/loans")
-    public String addLoan(@ModelAttribute Loan loan, @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return "redirect:/login";
-        }
+    public String addLoan(@ModelAttribute Loan loan) {
         loanService.createLoan(loan);
         return "redirect:/admin#loans";
     }
 
-    //  RETOURNER UN EMPRUNT
     @PutMapping("/admin/loans/return/{id}")
     @ResponseBody
     public ResponseEntity<String> returnLoan(@PathVariable Long id) {
@@ -269,7 +224,6 @@ public class WebAppController {
         }
     }
 
-    //  SUPPRIMER UN EMPRUNT
     @DeleteMapping("/admin/loans/delete/{id}")
     @ResponseBody
     public ResponseEntity<String> deleteLoan(@PathVariable Long id) {
@@ -282,22 +236,36 @@ public class WebAppController {
         }
     }
 
+    // ======================== ADMIN - MEDIAS ========================
+
+    @GetMapping("/admin/medias/new")
+    public String showAddMediaForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("media", new Book());
+        model.addAttribute("userLogin", userDetails.getUsername());
+        return "media-form";
+    }
+
+    @PostMapping("/admin/medias")
+    public String addMedia(@ModelAttribute Book book) {
+        customBookService.createBook(book);
+        return "redirect:/admin#medias";
+    }
+
     @GetMapping("/admin/medias/edit/{id}")
     public String showEditMediaForm(@PathVariable Long id, Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
             return "redirect:/login";
         }
-        Book book = customBookService.getBookById(id);
-        model.addAttribute("media", book);
+        model.addAttribute("media", customBookService.getBookById(id));
         model.addAttribute("userLogin", userDetails.getUsername());
-        return "media-form-edit";  // ← Nouveau fichier
+        return "media-form-edit";
     }
 
     @PostMapping("/admin/medias/update/{id}")
-    public String updateMedia(@PathVariable Long id, @ModelAttribute Book book, @AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return "redirect:/login";
-        }
+    public String updateMedia(@PathVariable Long id, @ModelAttribute Book book) {
         customBookService.updateBook(id, book);
         return "redirect:/admin#medias";
     }
@@ -311,6 +279,37 @@ public class WebAppController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur: " + e.getMessage());
+        }
+    }
+
+    // ======================== API - EMPRUNTS ========================
+
+    @PostMapping("/api/loans")
+    @ResponseBody
+    public ResponseEntity<?> borrowMedia(@RequestBody Loan loan) {
+        try {
+            Loan created = loanService.createLoan(loan);
+            return ResponseEntity.ok(created);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/api/loans/return/{bookId}")
+    @ResponseBody
+    public ResponseEntity<?> returnMedia(@PathVariable Long bookId) {
+        try {
+            // Trouve l'emprunt actif pour ce livre
+            List<Loan> loans = loanService.getAllLoans();
+            Loan activeLoan = loans.stream()
+                    .filter(l -> l.getBookId().equals(bookId) && "BORROWED".equals(l.getStatus()))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("Aucun emprunt actif pour ce livre"));
+
+            loanService.returnLoan(activeLoan.getId());
+            return ResponseEntity.ok("Retour effectué");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 }
