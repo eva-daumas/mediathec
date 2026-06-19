@@ -222,6 +222,7 @@ public class WebAppController {
         if (userDetails == null) {
             return "redirect:/login";
         }
+
         model.addAttribute("media", new Book());
         model.addAttribute("userLogin", userDetails.getUsername());
         return "media-form";
