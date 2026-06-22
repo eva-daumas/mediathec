@@ -37,8 +37,10 @@
     </div>
 </nav>
 
-<!-- Hero Section -->
+<!-- ===== CONTENU PRINCIPAL ===== -->
 <div class="container">
+
+    <!-- Hero Section -->
     <div class="hero-section">
         <div class="hero-content">
             <h1>Bienvenue sur Mediathec</h1>
@@ -57,7 +59,7 @@
     </div>
 
     <!-- ==================== CATALOGUE DES MÉDIAS ==================== -->
-    <h2 class="section-title">📚 Catalogue des médias</h2>
+    <h2 class="section-title"> Catalogue des médias</h2>
     <p class="section-subtitle" style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 30px;">Parcourez notre collection et empruntez vos livres préférés</p>
 
     <div class="media-grid">
@@ -96,24 +98,28 @@
 
                 <!-- Actions -->
                 <div class="media-actions">
-                    <!-- Bouton Emprunter (visible si disponible) -->
-                    <button th:if="${media.available}"
-                            class="btn btn-primary btn-sm"
-                            th:onclick="'borrowMedia(' + ${media.id} + ')'">
-                        <i class="fas fa-hand-holding-heart"></i> Emprunter
-                    </button>
+                    <th:block th:with="isBorrowedByUser = ${borrowedMediaIds != null and borrowedMediaIds.contains(media.id)}">
 
-                    <!-- Bouton Retourner (visible si emprunté) -->
-                    <button th:if="${!media.available}"
-                            class="btn btn-secondary btn-sm"
-                            th:onclick="'returnMedia(' + ${media.id} + ')'">
-                        <i class="fas fa-undo-alt"></i> Retourner
-                    </button>
+                        <!-- Bouton EMPRUNTER (si disponible ET non emprunté par l'utilisateur) -->
+                        <button th:if="${media.available and !isBorrowedByUser}"
+                                class="btn btn-primary btn-sm"
+                                th:onclick="'borrowMedia(' + ${media.id} + ')'">
+                            <i class="fas fa-hand-holding-heart"></i> Emprunter
+                        </button>
 
-                    <!-- Message si emprunté -->
-                    <span th:if="${!media.available}" class="text-muted" style="font-size: 13px; display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.5);">
-                        <i class="fas fa-user"></i> Déjà emprunté
-                    </span>
+                        <!-- Bouton RETOURNER (si emprunté par l'utilisateur) -->
+                        <button th:if="${media.available and !isBorrowedByUser}"
+                                class="btn btn-secondary btn-sm"
+                                th:onclick="'returnMedia(' + ${media.id} + ')'">
+                            <i class="fas fa-hand-holding-heart"></i> Retourner
+                        </button>
+
+                        <!-- Message si emprunté par un autre utilisateur -->
+                        <span th:if="${!media.available and !isBorrowedByUser}"
+                              class="text-muted" style="font-size: 13px; display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.5);">
+                            <i class="fas fa-hand-holding-heart"></i> Déjà emprunté
+                        </span>
+                    </th:block>
                 </div>
             </div>
         </div>
@@ -125,7 +131,8 @@
             <p style="color: rgba(255,255,255,0.4);">Revenez plus tard pour découvrir notre catalogue.</p>
         </div>
     </div>
-</div>
+
+</div> <!-- ===== FIN DE .container ===== -->
 
 <!-- Footer -->
 <footer class="footer">
@@ -133,6 +140,8 @@
         <p>© 2024 Mediathec - Plateforme de gestion d'emprunts de médias</p>
         <p class="text-muted">Sécurisé · Conforme RGPD · Données hébergées en France</p>
     </div>
+
+
 </footer>
 
 <!-- ==================== JAVASCRIPT ==================== -->
@@ -146,8 +155,8 @@
     function borrowMedia(mediaId) {
         if (!confirm('Confirmer l\'emprunt de ce média ?')) return;
 
-        // 🔧 À adapter : récupérer l'ID du membre connecté depuis le backend
-        const memberId = 1;
+        // Récupérer l'ID du membre depuis le modèle (via un champ caché ou attribut)
+        const memberId = document.getElementById('currentMemberId')?.value || 1;
 
         fetch('/api/loans', {
             method: 'POST',
@@ -174,14 +183,19 @@
             });
     }
 
+    // ============================================================
+    // 🔽 FONCTION RETOURNER 🔽
+    // ============================================================
     function returnMedia(mediaId) {
         if (!confirm('Confirmer le retour de ce média ?')) return;
+
+        const csrfToken = getCsrfToken();
 
         fetch('/api/loans/return/' + mediaId, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': getCsrfToken()
+                'X-CSRF-TOKEN': csrfToken
             }
         })
             .then(response => {
@@ -197,6 +211,8 @@
                 alert('❌ Erreur lors du retour');
             });
     }
+    // ============================================================
 </script>
+
 </body>
 </html>

@@ -6,18 +6,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "loan-service", url = "http://localhost:8087")
+@FeignClient(name = "loan-service", url = "${loan.service.url:http://localhost:8087}")
 public interface LoanFeignClient {
 
-    @GetMapping("/api/getAll")
+    @GetMapping("/loans")
     List<Loan> getAllLoans();
 
-    @PostMapping("/add")
+    @GetMapping("/loans/member/{memberId}")
+    List<Loan> getLoansByMemberId(@PathVariable("memberId") Long memberId);
+
+    @PostMapping("/loans")
     Loan createLoan(@RequestBody Loan loan);
 
-    @PutMapping("/api/return/{id}")
+    @PutMapping("/loans/return/{id}")
     void returnLoan(@PathVariable("id") Long id);
 
-    @DeleteMapping("/api/delete/{id}")
+    @DeleteMapping("/loans/{id}")
     void deleteLoan(@PathVariable("id") Long id);
 }

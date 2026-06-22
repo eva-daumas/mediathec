@@ -2,68 +2,73 @@ package com.mediathec.loanService.controller;
 
 import com.mediathec.loanService.entity.Loan;
 import com.mediathec.loanService.service.LoanService;
-import jakarta.validation.Valid;
-
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-
+@RequestMapping("/loans")
 public class LoanController {
 
-    private final LoanService loanService;
+    @Autowired
+    private LoanService loanService;
 
-    // Constructeur
-    public LoanController(LoanService loanService) {
-        this.loanService = loanService;
+    // ============================================
+    // GET - Récupérer tous les emprunts
+    // ============================================
+    @GetMapping
+    public ResponseEntity<List<Loan>> getAllLoans() {
+        List<Loan> loans = loanService.getAllLoans();
+        return ResponseEntity.ok(loans);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<Loan> addLoan(@RequestBody Loan loan) {
-        try {
-            Loan savedLoan = loanService.save(loan);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedLoan);
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
-        }
+    // ============================================
+    // GET - Récupérer un emprunt par ID
+    // ============================================
+    @GetMapping("/{id}")
+    public ResponseEntity<Loan> getLoanById(@PathVariable Long id) {
+        Loan loan = loanService.getLoanById(id);
+        return ResponseEntity.ok(loan);
     }
 
-    @GetMapping("/api/findByMemberId/{memberId}")
-    public List<Loan> findLoansByMemberId(@PathVariable Long memberId) {
-        return loanService.findByMemberId(memberId);
+    // ============================================
+    // GET - Récupérer les emprunts d'un membre
+    // ============================================
+    @GetMapping("/member/{memberId}")
+    public ResponseEntity<List<Loan>> getLoansByMemberId(@PathVariable Long memberId) {
+        List<Loan> loans = loanService.getLoansByMemberId(memberId);
+        return ResponseEntity.ok(loans);
     }
 
-    @GetMapping("/api/findByBookId/{bookId}")
-    public List<Loan> findLoansByBookId(@PathVariable Long bookId) {
-        return loanService.findByBookId(bookId);
+    // ============================================
+    // POST - Créer un emprunt
+    // ============================================
+    @PostMapping
+    public ResponseEntity<Loan> createLoan(@RequestBody Loan loan) {
+        Loan createdLoan = loanService.createLoan(loan);
+        return ResponseEntity.ok(createdLoan);
     }
 
-    @GetMapping("/api/getAll")
-    public List<Loan> getAllLoans() {
-        return loanService.findAll();
-    }
-
-    @GetMapping("/api/findById/{id}")
-    public Loan findLoanById(@PathVariable Long id) {
-        return loanService.findById(id);
-    }
-
-    @PutMapping("/api/return/{id}")
+    // ============================================
+    // PUT - Retourner un emprunt
+    // ============================================
+    @PutMapping("/return/{id}")
     public ResponseEntity<Loan> returnLoan(@PathVariable Long id) {
         Loan returnedLoan = loanService.returnLoan(id);
-        if (returnedLoan != null) {
-            return ResponseEntity.ok(returnedLoan);
+        if (returnedLoan == null) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(returnedLoan);
     }
 
-    @DeleteMapping("/api/delete/{id}")
+    // ============================================
+    // DELETE - Supprimer un emprunt
+    // ============================================
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLoan(@PathVariable Long id) {
-        loanService.delete(id);
+        loanService.deleteLoan(id);
         return ResponseEntity.noContent().build();
     }
 }

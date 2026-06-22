@@ -15,7 +15,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class WebAppController {
@@ -35,10 +37,38 @@ public class WebAppController {
 
     @GetMapping({"/", "/home"})
     public String getHomePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        // Récupérer tous les médias
+        List<Book> medias = customBookService.getAllBooks();
+        model.addAttribute("medias", medias);
+
+        // Initialiser la liste des IDs empruntés (vide par défaut)
+        List<Long> borrowedMediaIds = new ArrayList<>();
+
         if (userDetails != null) {
-            model.addAttribute("userLogin", userDetails.getUsername());
+            String email = userDetails.getUsername();
+            model.addAttribute("userLogin", email);
+
+            try {
+                Member member = memberService.getMemberByEmail(email);
+                if (member != null) {
+                    model.addAttribute("currentMemberId", member.getId());
+
+                    // 🔥 Récupérer les IDs des médias empruntés par l'utilisateur
+                    List<Loan> userLoans = loanService.getLoansByMemberId(member.getId());
+                    borrowedMediaIds = userLoans.stream()
+                            .filter(loan -> "BORROWED".equals(loan.getStatus()))
+                            .map(Loan::getBookId)
+                            .collect(Collectors.toList());
+                }
+            } catch (Exception e) {
+                // Si le service n'est pas disponible, on continue avec une liste vide
+                System.out.println("Erreur lors de la récupération des emprunts: " + e.getMessage());
+            }
         }
-        model.addAttribute("medias", customBookService.getAllBooks());
+
+        // 🔥 AJOUTER LA LISTE DANS LE MODÈLE (TOUJOURS)
+        model.addAttribute("borrowedMediaIds", borrowedMediaIds);
+
         return "home";
     }
 
@@ -69,10 +99,17 @@ public class WebAppController {
         String email = userDetails.getUsername();
         Member member = memberService.getMemberByEmail(email);
 
-        // Si admin, rediriger vers admin
         if (member != null && "ADMIN".equals(member.getRole())) {
             return "redirect:/admin";
         }
+
+        // Récupérer les emprunts de l'utilisateur
+        List<Loan> userLoans = loanService.getLoansByMemberId(member.getId());
+        List<Long> borrowedMediaIds = userLoans.stream()
+                .filter(loan -> "BORROWED".equals(loan.getStatus()))
+                .map(Loan::getBookId)
+                .collect(Collectors.toList());
+        model.addAttribute("borrowedMediaIds", borrowedMediaIds);
 
         model.addAttribute("member", member);
         model.addAttribute("userLogin", member.getUsername());
@@ -168,8 +205,23 @@ public class WebAppController {
         if (userDetails == null) {
             return "redirect:/login";
         }
-        model.addAttribute("loans", loanService.getAllLoans());
-        model.addAttribute("userLogin", userDetails.getUsername());
+
+        String email = userDetails.getUsername();
+        model.addAttribute("userLogin", email);
+
+        try {
+            Member member = memberService.getMemberByEmail(email);
+            if (member != null) {
+                // ✅ Récupérer UNIQUEMENT les emprunts de CE membre
+                List<Loan> loans = loanService.getLoansByMemberId(member.getId());
+                model.addAttribute("loans", loans);
+            } else {
+                model.addAttribute("loans", new ArrayList<>());
+            }
+        } catch (Exception e) {
+            model.addAttribute("loans", new ArrayList<>());
+        }
+
         return "loans";
     }
 
@@ -190,7 +242,23 @@ public class WebAppController {
         if (userDetails == null) {
             return "redirect:/login";
         }
-        model.addAttribute("userLogin", userDetails.getUsername());
+
+        String email = userDetails.getUsername();
+        model.addAttribute("userLogin", email);
+
+        try {
+            Member member = memberService.getMemberByEmail(email);
+            if (member != null) {
+                // ✅ Récupérer UNIQUEMENT les emprunts de CE membre
+                List<Loan> loans = loanService.getLoansByMemberId(member.getId());
+                model.addAttribute("loans", loans);
+            } else {
+                model.addAttribute("loans", new ArrayList<>());
+            }
+        } catch (Exception e) {
+            model.addAttribute("loans", new ArrayList<>());
+        }
+
         return "returns";
     }
 

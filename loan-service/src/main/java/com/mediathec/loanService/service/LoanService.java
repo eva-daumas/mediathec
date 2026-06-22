@@ -1,10 +1,7 @@
 package com.mediathec.loanService.service;
 
-import com.mediathec.loanService.client.BookFeignClient;
-import com.mediathec.loanService.client.MemberFeignClient;
 import com.mediathec.loanService.entity.Loan;
 import com.mediathec.loanService.repository.LoanRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,51 +9,29 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-
 public class LoanService {
 
-    private final LoanRepository loanRepository;
-
-
-    @Autowired  // ← AJOUTE CES INJECTIONS
-    private MemberFeignClient memberFeignClient;
-
     @Autowired
-    private BookFeignClient bookFeignClient;
+    private LoanRepository loanRepository;
 
-    // Constructeur
-    public LoanService(LoanRepository loanRepository) {
-        this.loanRepository = loanRepository;
-    }
-
-    public Loan save(Loan loan) {
-        loan.setLoanDate(LocalDateTime.now());
-        loan.setStatus("BORROWED");
-        return loanRepository.save(loan);
-    }
-
-    public List<Loan> findAll() {
+    public List<Loan> getAllLoans() {
         return loanRepository.findAll();
     }
 
-    public Loan update(Loan newLoanData) {
-        return loanRepository.save(newLoanData);
+    public Loan getLoanById(Long id) {
+        return loanRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Emprunt non trouvé"));
     }
 
-    public void delete(Long id) {
-        loanRepository.deleteById(id);
-    }
-
-    public Loan findById(Long id) {
-        return loanRepository.findById(id).orElse(null);
-    }
-
-    public List<Loan> findByMemberId(Long memberId) {
+    // Récupérer les emprunts d'un membre (UN SEUL)
+    public List<Loan> getLoansByMemberId(Long memberId) {
         return loanRepository.findByMemberId(memberId);
     }
 
-    public List<Loan> findByBookId(Long bookId) {
-        return loanRepository.findByBookId(bookId);
+    public Loan createLoan(Loan loan) {
+        loan.setLoanDate(LocalDateTime.now());
+        loan.setStatus("BORROWED");
+        return loanRepository.save(loan);
     }
 
     public Loan returnLoan(Long id) {
@@ -67,5 +42,9 @@ public class LoanService {
             return loanRepository.save(loan);
         }
         return null;
+    }
+
+    public void deleteLoan(Long id) {
+        loanRepository.deleteById(id);
     }
 }

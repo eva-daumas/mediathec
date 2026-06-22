@@ -5,6 +5,7 @@ import com.mediathec.webApp.service.client.LoanFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,14 +22,20 @@ public class LoanService {
         return loanFeignClient.createLoan(loan);
     }
 
-    //  RETOURNER UN EMPRUNT
     public void returnLoan(Long id) {
-        // Appeler loan-service pour retourner l'emprunt
         loanFeignClient.returnLoan(id);
     }
 
-    //  SUPPRIMER UN EMPRUNT
     public void deleteLoan(Long id) {
         loanFeignClient.deleteLoan(id);
+    }
+
+
+    public List<Loan> getLoansByMemberId(Long memberId) {
+        try {
+            return loanFeignClient.getLoansByMemberId(memberId);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
     }
 }
