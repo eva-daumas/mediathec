@@ -14,8 +14,7 @@
             <span>Mediathec</span>
         </a>
         <div class="nav-links">
-            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
-            <a th:href="@{/returns}" class="nav-link active">Retours</a>
+
             <div th:if="${userLogin != null}">
                 <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
                 <a th:href="@{/profile}" class="nav-link">Mon profil</a>
@@ -33,63 +32,7 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="page-header">
-        <h1>Gestion des retours</h1>
-        <p th:if="${loans != null}" class="text-muted">Total : <span th:text="${loans.size()}">0</span> emprunt(s)</p>
-    </div>
 
-    <div class="table-container">
-        <div class="table-responsive">
-            <table class="table table-striped" id="loansTable">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Média</th>
-                    <th>Date d'emprunt</th>
-                    <th>Date de retour</th>
-                    <th>Statut</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="loan : ${loans}">
-                    <td th:text="${loan.id}">1</td>
-                    <td th:text="${loan.bookId}">Livre #1</td>
-                    <td th:text="${loan.loanDate}">2026-06-17</td>
-                    <td th:text="${loan.returnDate}">-</td>
-                    <td>
-                        <span class="badge" th:class="${loan.status == 'BORROWED'} ? 'badge-borrowed' : 'badge-returned'">
-                            <span th:text="${loan.status == 'BORROWED'} ? 'En cours' : 'Retourné'">BORROWED</span>
-                        </span>
-                    </td>
-                    <td>
-                        <button th:if="${loan.status == 'BORROWED'}"
-                                class="btn btn-sm btn-success"
-                                th:data-id="${loan.id}"
-                                onclick="returnLoan(this.getAttribute('data-id'))">
-                            <i class="fas fa-undo-alt"></i> Retourner
-                        </button>
-                        <span th:unless="${loan.status == 'BORROWED'}" class="text-muted">
-                            <i class="fas fa-check-circle" style="color: #28a745;"></i> Retourné
-                        </span>
-                    </td>
-                </tr>
-                <tr th:if="${loans == null or loans.isEmpty()}">
-                    <td colspan="6" class="text-center">
-                        <div class="empty-state">
-                            <h1>Gestion des emprunts</h1>
-                            <a th:href="@{/returns.html/new}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Retour
-                            </a>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
 <footer class="footer">
     <div class="container">

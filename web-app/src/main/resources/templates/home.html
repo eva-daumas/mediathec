@@ -57,7 +57,7 @@
     </div>
 
     <!-- ==================== CATALOGUE DES MÉDIAS ==================== -->
-    <h2 class="section-title">📚 Catalogue des médias</h2>
+    <h2 class="section-title"> Catalogue des médias</h2>
     <p class="section-subtitle" style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 30px;">Parcourez notre collection et empruntez vos livres préférés</p>
 
     <div class="media-grid">
@@ -98,14 +98,14 @@
                 <div class="media-actions">
                     <th:block th:with="isBorrowedByUser = ${borrowedMediaIds != null and borrowedMediaIds.contains(media.id)}">
 
-                        <!-- 🔥 Bouton EMPRUNTER (uniquement si connecté) -->
+                        <!--  Bouton EMPRUNTER (uniquement si connecté) -->
                         <button th:if="${userLogin != null and media.available and !isBorrowedByUser}"
                                 class="btn btn-primary btn-sm"
                                 th:onclick="'borrowMedia(' + ${media.id} + ')'">
                             <i class="fas fa-hand-holding-heart"></i> Emprunter
                         </button>
 
-                        <!-- 🔥 Bouton RETOURNER (uniquement si connecté ET emprunté par l'utilisateur) -->
+                        <!--  Bouton RETOURNER (uniquement si connecté ET emprunté par l'utilisateur) -->
                         <button th:if="${userLogin != null and media.available and !isBorrowedByUser}"
                                 class="btn btn-secondary btn-sm"
                                 th:onclick="'returnMedia(' + ${media.id} + ')'">
@@ -171,18 +171,18 @@
         })
             .then(response => {
                 if (response.ok) {
-                    alert('✅ Emprunt effectué avec succès !');
+                    alert(' Emprunt effectué avec succès !');
                     localStorage.setItem('loanUpdated', 'true');
                     localStorage.setItem('loanAction', 'borrow');
                     localStorage.setItem('loanBookId', mediaId);
                     window.location.reload();
                 } else {
-                    response.text().then(text => alert('❌ Erreur: ' + text));
+                    response.text().then(text => alert(' Erreur: ' + text));
                 }
             })
             .catch(error => {
                 console.error('Erreur:', error);
-                alert('❌ Erreur lors de l\'emprunt');
+                alert(' Erreur lors de l\'emprunt');
             });
     }
 
@@ -200,18 +200,18 @@
         })
             .then(response => {
                 if (response.ok) {
-                    alert('✅ Retour effectué avec succès !');
+                    alert(' Retour effectué avec succès !');
                     localStorage.setItem('loanUpdated', 'true');
                     localStorage.setItem('loanAction', 'return');
                     localStorage.setItem('loanBookId', mediaId);
                     window.location.reload();
                 } else {
-                    response.text().then(text => alert('❌ Erreur: ' + text));
+                    response.text().then(text => alert(' Erreur: ' + text));
                 }
             })
             .catch(error => {
                 console.error('Erreur:', error);
-                alert('❌ Erreur lors du retour');
+                alert(' Erreur lors du retour');
             });
     }
 </script>
