@@ -57,7 +57,7 @@
     </div>
 
     <!-- ==================== CATALOGUE DES MÉDIAS ==================== -->
-    <h2 class="section-title"> Catalogue des médias</h2>
+    <h2 class="section-title">📚 Catalogue des médias</h2>
     <p class="section-subtitle" style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 30px;">Parcourez notre collection et empruntez vos livres préférés</p>
 
     <div class="media-grid">
@@ -96,27 +96,32 @@
 
                 <!-- Actions -->
                 <div class="media-actions">
-
                     <th:block th:with="isBorrowedByUser = ${borrowedMediaIds != null and borrowedMediaIds.contains(media.id)}">
 
-                        <!-- Bouton EMPRUNTER (si disponible ET non emprunté par l'utilisateur) -->
-                        <button th:if="${media.available and !isBorrowedByUser}"
+                        <!-- 🔥 Bouton EMPRUNTER (uniquement si connecté) -->
+                        <button th:if="${userLogin != null and media.available and !isBorrowedByUser}"
                                 class="btn btn-primary btn-sm"
                                 th:onclick="'borrowMedia(' + ${media.id} + ')'">
                             <i class="fas fa-hand-holding-heart"></i> Emprunter
                         </button>
 
-                        <!-- Bouton RETOURNER (si emprunté par l'utilisateur) -->
-                        <button th:if="${media.available and !isBorrowedByUser}"
+                        <!-- 🔥 Bouton RETOURNER (uniquement si connecté ET emprunté par l'utilisateur) -->
+                        <button th:if="${userLogin != null and media.available and !isBorrowedByUser}"
                                 class="btn btn-secondary btn-sm"
                                 th:onclick="'returnMedia(' + ${media.id} + ')'">
                             <i class="fas fa-hand-holding-heart"></i> Retourner
                         </button>
 
-                        <!-- Message si emprunté par un autre utilisateur -->
-                        <span th:if="${!media.available and !isBorrowedByUser}"
+                        <!-- Message si emprunté par un autre utilisateur (uniquement si connecté) -->
+                        <span th:if="${userLogin != null and !media.available and !isBorrowedByUser}"
                               class="text-muted" style="font-size: 13px; display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.5);">
-                            <i class="fas fa-hand-holding-heart"></i> Déjà emprunté
+                            <i class="fas fa-user"></i> Déjà emprunté
+                        </span>
+
+                        <!-- 🔥 Message si non connecté -->
+                        <span th:if="${userLogin == null}"
+                              class="text-muted" style="font-size: 13px; display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.4);">
+                            <i class="fas fa-lock"></i> Connectez-vous pour emprunter
                         </span>
                     </th:block>
                 </div>
@@ -132,16 +137,12 @@
     </div>
 </div> <!-- ===== FIN DE .container ===== -->
 
-
-
 <!-- Footer -->
 <footer class="footer">
     <div class="container">
         <p>© 2024 Mediathec - Plateforme de gestion d'emprunts de médias</p>
         <p class="text-muted">Sécurisé · Conforme RGPD · Données hébergées en France</p>
     </div>
-
-
 </footer>
 
 <!-- ==================== JAVASCRIPT ==================== -->
@@ -171,11 +172,9 @@
             .then(response => {
                 if (response.ok) {
                     alert('✅ Emprunt effectué avec succès !');
-                    // 🔥 Sauvegarder l'événement dans localStorage
                     localStorage.setItem('loanUpdated', 'true');
                     localStorage.setItem('loanAction', 'borrow');
                     localStorage.setItem('loanBookId', mediaId);
-                    // 🔥 Recharger la page pour voir les changements
                     window.location.reload();
                 } else {
                     response.text().then(text => alert('❌ Erreur: ' + text));
@@ -202,11 +201,9 @@
             .then(response => {
                 if (response.ok) {
                     alert('✅ Retour effectué avec succès !');
-                    // 🔥 Sauvegarder l'événement dans localStorage
                     localStorage.setItem('loanUpdated', 'true');
                     localStorage.setItem('loanAction', 'return');
                     localStorage.setItem('loanBookId', mediaId);
-                    // 🔥 Recharger la page pour voir les changements
                     window.location.reload();
                 } else {
                     response.text().then(text => alert('❌ Erreur: ' + text));
