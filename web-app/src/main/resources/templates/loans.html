@@ -15,8 +15,7 @@
             <span>Mediathec</span>
         </a>
         <div class="nav-links">
-            <a th:href="@{/loans}" class="nav-link active">Emprunts</a>
-            <a th:href="@{/returns}" class="nav-link">Retours</a>
+
             <div th:if="${userLogin != null}">
                 <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
                 <a th:href="@{/profile}" class="nav-link">Mon profil</a>
@@ -35,10 +34,7 @@
 </nav>
 
 <div class="container">
-    <div class="page-header">
-        <h1>Mes emprunts</h1>
-        <p th:if="${loans != null}" class="text-muted">Total : <span th:text="${loans.size()}">0</span> emprunt(s)</p>
-    </div>
+
 
     <div class="table-container">
         <div class="table-responsive">
@@ -79,9 +75,13 @@
                 <tr th:if="${loans == null or loans.isEmpty()}">
                     <td colspan="6" class="text-center">
                         <div class="empty-state">
-                            <i class="fas fa-book fa-3x"></i>
-                            <p>Vous n'avez aucun emprunt en cours</p>
-                            <a th:href="@{/home}" class="btn btn-primary">Parcourir le catalogue</a>
+                            <i class="fas fa-book fa-3x" style="color: rgba(255,255,255,0.2); margin-bottom: 15px;"></i>
+                            <h3 style="color: rgba(255,255,255,0.6);">Aucun emprunt</h3>
+                            <p style="color: rgba(255,255,255,0.4);">Vous n'avez pas encore d'emprunt</p>
+                            <a th:href="@{/home}" class="btn btn-primary" style="margin-top: 15px;">
+                                <i class="fas fa-search"></i> Parcourir le catalogue
+                            </a>
+
                         </div>
                     </td>
                 </tr>
@@ -91,6 +91,8 @@
     </div>
 </div>
 
+
+
 <footer class="footer">
     <div class="container">
         <p>© 2024 Mediathec - Plateforme de gestion d'emprunts de médias</p>
@@ -98,6 +100,9 @@
 </footer>
 
 <script>
+    // ============================================================
+    // 🔽 FONCTION RETOURNER 🔽
+    // ============================================================
     function returnLoan(id) {
         if (!confirm('Confirmer le retour de cet emprunt ?')) return;
 
@@ -113,6 +118,8 @@
             .then(response => {
                 if (response.ok) {
                     alert('✅ Retour effectué avec succès !');
+                    // Stocker l'événement pour le temps réel
+                    localStorage.setItem('loanUpdated', 'true');
                     window.location.reload();
                 } else {
                     alert('❌ Erreur lors du retour');
@@ -123,6 +130,46 @@
                 alert('❌ Erreur lors du retour');
             });
     }
+
+    // ============================================================
+    // 🔽 FILTRE EN TEMPS RÉEL 🔽
+    // ============================================================
+    function filterLoans(event, filter) {
+        var rows = document.querySelectorAll('#loansTable tbody tr[data-status]');
+
+        rows.forEach(function(row) {
+            var status = row.getAttribute('data-status');
+
+            if (filter === 'all') {
+                row.style.display = '';
+            } else if (filter === 'borrowed' && status === 'BORROWED') {
+                row.style.display = '';
+            } else if (filter === 'returned' && status === 'RETURNED') {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        var btns = document.querySelectorAll('.tab-btn');
+        btns.forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        if (event && event.target) {
+            event.target.classList.add('active');
+        }
+    }
+
+    // ============================================================
+    // 🔥 RAFRAÎCHISSEMENT AUTOMATIQUE (temps réel) 🔥
+    // ============================================================
+    setInterval(function() {
+        const loanUpdated = localStorage.getItem('loanUpdated');
+        if (loanUpdated === 'true') {
+            localStorage.removeItem('loanUpdated');
+            location.reload();
+        }
+    }, 3000); // Vérifie toutes les 3 secondes
 </script>
 
 </body>

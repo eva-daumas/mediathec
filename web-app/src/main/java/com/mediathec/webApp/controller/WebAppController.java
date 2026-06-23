@@ -39,12 +39,11 @@ public class WebAppController {
     public String getHomePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         // Récupérer tous les médias
         List<Book> medias = customBookService.getAllBooks();
-        model.addAttribute("medias", medias);
+        model.addAttribute("medias", medias);   // ← TOUJOURS présents
 
-        // Initialiser la liste des IDs empruntés (vide par défaut)
         List<Long> borrowedMediaIds = new ArrayList<>();
 
-        if (userDetails != null) {
+        if (userDetails != null) {   // ← SEULEMENT SI CONNECTÉ
             String email = userDetails.getUsername();
             model.addAttribute("userLogin", email);
 
@@ -52,8 +51,6 @@ public class WebAppController {
                 Member member = memberService.getMemberByEmail(email);
                 if (member != null) {
                     model.addAttribute("currentMemberId", member.getId());
-
-                    // 🔥 Récupérer les IDs des médias empruntés par l'utilisateur
                     List<Loan> userLoans = loanService.getLoansByMemberId(member.getId());
                     borrowedMediaIds = userLoans.stream()
                             .filter(loan -> "BORROWED".equals(loan.getStatus()))
@@ -61,14 +58,11 @@ public class WebAppController {
                             .collect(Collectors.toList());
                 }
             } catch (Exception e) {
-                // Si le service n'est pas disponible, on continue avec une liste vide
-                System.out.println("Erreur lors de la récupération des emprunts: " + e.getMessage());
+                System.out.println("Erreur: " + e.getMessage());
             }
         }
 
-        // 🔥 AJOUTER LA LISTE DANS LE MODÈLE (TOUJOURS)
         model.addAttribute("borrowedMediaIds", borrowedMediaIds);
-
         return "home";
     }
 
@@ -212,13 +206,17 @@ public class WebAppController {
         try {
             Member member = memberService.getMemberByEmail(email);
             if (member != null) {
-                // ✅ Récupérer UNIQUEMENT les emprunts de CE membre
+                // 🔥 DEBUG : Afficher l'ID du membre
+                System.out.println("🔍 Membre connecté : " + email + " (ID: " + member.getId() + ")");
+
                 List<Loan> loans = loanService.getLoansByMemberId(member.getId());
                 model.addAttribute("loans", loans);
+                System.out.println("🔍 Emprunts trouvés : " + loans.size());
             } else {
                 model.addAttribute("loans", new ArrayList<>());
             }
         } catch (Exception e) {
+            System.err.println("❌ Erreur: " + e.getMessage());
             model.addAttribute("loans", new ArrayList<>());
         }
 
@@ -249,13 +247,15 @@ public class WebAppController {
         try {
             Member member = memberService.getMemberByEmail(email);
             if (member != null) {
-                // ✅ Récupérer UNIQUEMENT les emprunts de CE membre
+                // 🔥 Récupérer UNIQUEMENT les emprunts de CE membre
                 List<Loan> loans = loanService.getLoansByMemberId(member.getId());
                 model.addAttribute("loans", loans);
+                System.out.println("🔍 Retours trouvés pour " + email + " : " + loans.size());
             } else {
                 model.addAttribute("loans", new ArrayList<>());
             }
         } catch (Exception e) {
+            System.err.println("❌ Erreur: " + e.getMessage());
             model.addAttribute("loans", new ArrayList<>());
         }
 

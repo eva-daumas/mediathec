@@ -34,7 +34,7 @@ public class LoanController {
     }
 
     // ============================================
-    // GET - Récupérer les emprunts d'un membre
+    // GET - Récupérer les emprunts d'un membres
     // ============================================
     @GetMapping("/member/{memberId}")
     public ResponseEntity<List<Loan>> getLoansByMemberId(@PathVariable Long memberId) {

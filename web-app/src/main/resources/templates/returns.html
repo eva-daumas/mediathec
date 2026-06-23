@@ -39,9 +39,6 @@
         <p th:if="${loans != null}" class="text-muted">Total : <span th:text="${loans.size()}">0</span> emprunt(s)</p>
     </div>
 
-    <!-- ===== FILTRES ===== -->
-
-
     <div class="table-container">
         <div class="table-responsive">
             <table class="table table-striped" id="loansTable">
@@ -56,7 +53,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="loan : ${loans}" data-status="${loan.status}">
+                <tr th:each="loan : ${loans}">
                     <td th:text="${loan.id}">1</td>
                     <td th:text="${loan.bookId}">Livre #1</td>
                     <td th:text="${loan.loanDate}">2026-06-17</td>
@@ -67,7 +64,10 @@
                         </span>
                     </td>
                     <td>
-                        <button th:if="${loan.status == 'BORROWED'}" class="btn btn-sm btn-success" th:onclick="'returnLoan(' + ${loan.id} + ')'">
+                        <button th:if="${loan.status == 'BORROWED'}"
+                                class="btn btn-sm btn-success"
+                                th:data-id="${loan.id}"
+                                onclick="returnLoan(this.getAttribute('data-id'))">
                             <i class="fas fa-undo-alt"></i> Retourner
                         </button>
                         <span th:unless="${loan.status == 'BORROWED'}" class="text-muted">
@@ -78,8 +78,10 @@
                 <tr th:if="${loans == null or loans.isEmpty()}">
                     <td colspan="6" class="text-center">
                         <div class="empty-state">
-                            <i class="fas fa-undo-alt fa-3x"></i>
-                            <p>Aucun emprunt à retourner</p>
+                            <h1>Gestion des emprunts</h1>
+                            <a th:href="@{/returns.html/new}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Retour
+                            </a>
                         </div>
                     </td>
                 </tr>
@@ -96,6 +98,27 @@
 </footer>
 
 <script>
+    let autoRefreshEnabled = true;
+
+    function startAutoRefresh() {
+        if (!autoRefreshEnabled) return;
+        setTimeout(() => {
+            if (document.hidden) {
+                startAutoRefresh();
+                return;
+            }
+            const loanUpdated = localStorage.getItem('loanUpdated');
+            if (loanUpdated === 'true') {
+                localStorage.removeItem('loanUpdated');
+                window.location.reload();
+            } else {
+                startAutoRefresh();
+            }
+        }, 5000);
+    }
+
+    startAutoRefresh();
+
     function returnLoan(id) {
         if (!confirm('Confirmer le retour de cet emprunt ?')) return;
 
@@ -110,7 +133,7 @@
         })
             .then(response => {
                 if (response.ok) {
-                    alert('✅ Retour effectué avec succès !');
+                    localStorage.setItem('loanUpdated', 'true');
                     window.location.reload();
                 } else {
                     alert('❌ Erreur lors du retour');
@@ -121,33 +144,6 @@
                 alert('❌ Erreur lors du retour');
             });
     }
-
-    function filterLoans(event, filter) {
-        var rows = document.querySelectorAll('#loansTable tbody tr[data-status]');
-
-        rows.forEach(function(row) {
-            var status = row.getAttribute('data-status');
-
-            if (filter === 'all') {
-                row.style.display = '';
-            } else if (filter === 'borrowed' && status === 'BORROWED') {
-                row.style.display = '';
-            } else if (filter === 'returned' && status === 'RETURNED') {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
-
-        var btns = document.querySelectorAll('.tab-btn');
-        btns.forEach(function(btn) {
-            btn.classList.remove('active');
-        });
-        if (event && event.target) {
-            event.target.classList.add('active');
-        }
-    }
 </script>
-
 </body>
 </html>

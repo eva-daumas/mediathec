@@ -18,8 +18,6 @@
             <span>Mediathec</span>
         </a>
         <div class="nav-links">
-            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
-            <a th:href="@{/returns}" class="nav-link">Retours</a>
             <div th:if="${userLogin != null}">
                 <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
                 <a th:href="@{/profile}" class="nav-link">Mon profil</a>
@@ -98,6 +96,7 @@
 
                 <!-- Actions -->
                 <div class="media-actions">
+
                     <th:block th:with="isBorrowedByUser = ${borrowedMediaIds != null and borrowedMediaIds.contains(media.id)}">
 
                         <!-- Bouton EMPRUNTER (si disponible ET non emprunté par l'utilisateur) -->
@@ -131,8 +130,9 @@
             <p style="color: rgba(255,255,255,0.4);">Revenez plus tard pour découvrir notre catalogue.</p>
         </div>
     </div>
-
 </div> <!-- ===== FIN DE .container ===== -->
+
+
 
 <!-- Footer -->
 <footer class="footer">
@@ -155,7 +155,6 @@
     function borrowMedia(mediaId) {
         if (!confirm('Confirmer l\'emprunt de ce média ?')) return;
 
-        // Récupérer l'ID du membre depuis le modèle (via un champ caché ou attribut)
         const memberId = document.getElementById('currentMemberId')?.value || 1;
 
         fetch('/api/loans', {
@@ -172,6 +171,11 @@
             .then(response => {
                 if (response.ok) {
                     alert('✅ Emprunt effectué avec succès !');
+                    // 🔥 Sauvegarder l'événement dans localStorage
+                    localStorage.setItem('loanUpdated', 'true');
+                    localStorage.setItem('loanAction', 'borrow');
+                    localStorage.setItem('loanBookId', mediaId);
+                    // 🔥 Recharger la page pour voir les changements
                     window.location.reload();
                 } else {
                     response.text().then(text => alert('❌ Erreur: ' + text));
@@ -183,9 +187,6 @@
             });
     }
 
-    // ============================================================
-    // 🔽 FONCTION RETOURNER 🔽
-    // ============================================================
     function returnMedia(mediaId) {
         if (!confirm('Confirmer le retour de ce média ?')) return;
 
@@ -201,6 +202,11 @@
             .then(response => {
                 if (response.ok) {
                     alert('✅ Retour effectué avec succès !');
+                    // 🔥 Sauvegarder l'événement dans localStorage
+                    localStorage.setItem('loanUpdated', 'true');
+                    localStorage.setItem('loanAction', 'return');
+                    localStorage.setItem('loanBookId', mediaId);
+                    // 🔥 Recharger la page pour voir les changements
                     window.location.reload();
                 } else {
                     response.text().then(text => alert('❌ Erreur: ' + text));
@@ -211,7 +217,6 @@
                 alert('❌ Erreur lors du retour');
             });
     }
-    // ============================================================
 </script>
 
 </body>

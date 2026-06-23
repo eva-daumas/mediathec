@@ -1,7 +1,6 @@
 package com.mediathec.webApp.config;
 
 import com.mediathec.webApp.service.CustomUserDetailsService;
-import com.mediathec.webApp.service.CustomUserDetailsService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,8 +22,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(request -> request
-                        .requestMatchers("/css/style.css", "/images/**", "/signup", "/login", "/home").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")  // ← NOUVEAU : /admin réservé aux ADMIN
+                        // ============================================================
+                        // 🔥 PERMETTRE L'ACCÈS AUX RESSOURCES STATIQUES 🔥
+                        // ============================================================
+                        .requestMatchers("/css/**", "/images/**", "/assets/**", "/js/**").permitAll()
+                        .requestMatchers("/", "/home", "/signup", "/login").permitAll()
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")

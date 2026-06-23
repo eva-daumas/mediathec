@@ -35,6 +35,7 @@ public class LoanService {
         try {
             return loanFeignClient.getLoansByMemberId(memberId);
         } catch (Exception e) {
+            System.err.println("❌ Erreur FeignClient: " + e.getMessage());
             return new ArrayList<>();
         }
     }
