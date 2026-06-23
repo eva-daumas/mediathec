@@ -33,63 +33,7 @@
     </div>
 </nav>
 
-<div class="container">
 
-
-    <div class="table-container">
-        <div class="table-responsive">
-            <table class="table table-striped" id="loansTable">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Média</th>
-                    <th>Date d'emprunt</th>
-                    <th>Date limite</th>
-                    <th>Statut</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="loan : ${loans}">
-                    <td th:text="${loan.id}">1</td>
-                    <td th:text="${loan.bookId}">Livre #1</td>
-                    <td th:text="${loan.loanDate}">2026-06-17</td>
-                    <td th:text="${loan.returnDate}">-</td>
-                    <td>
-                        <span class="badge" th:class="${loan.status == 'BORROWED'} ? 'badge-borrowed' : 'badge-returned'">
-                            <span th:text="${loan.status == 'BORROWED'} ? 'En cours' : 'Retourné'">BORROWED</span>
-                        </span>
-                    </td>
-                    <td>
-                        <!-- Bouton RETOURNER (seulement si emprunt en cours) -->
-                        <button th:if="${loan.status == 'BORROWED'}"
-                                class="btn btn-sm btn-success"
-                                th:onclick="'returnLoan(' + ${loan.id} + ')'">
-                            <i class="fas fa-undo-alt"></i> Retourner
-                        </button>
-                        <span th:unless="${loan.status == 'BORROWED'}" class="text-muted">
-                            <i class="fas fa-check-circle" style="color: #28a745;"></i> Déjà retourné
-                        </span>
-                    </td>
-                </tr>
-                <tr th:if="${loans == null or loans.isEmpty()}">
-                    <td colspan="6" class="text-center">
-                        <div class="empty-state">
-                            <i class="fas fa-book fa-3x" style="color: rgba(255,255,255,0.2); margin-bottom: 15px;"></i>
-                            <h3 style="color: rgba(255,255,255,0.6);">Aucun emprunt</h3>
-                            <p style="color: rgba(255,255,255,0.4);">Vous n'avez pas encore d'emprunt</p>
-                            <a th:href="@{/home}" class="btn btn-primary" style="margin-top: 15px;">
-                                <i class="fas fa-search"></i> Parcourir le catalogue
-                            </a>
-
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
 
 
