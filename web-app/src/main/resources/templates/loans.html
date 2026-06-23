@@ -3,118 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mediathec - Mes emprunts</title>
+    <title>Mes emprunts</title>
+
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
+
 <nav class="navbar">
     <div class="container nav-container">
+
         <a th:href="@{/}" class="nav-brand">
-            <span>Mediathec</span>
+            Mediathec
         </a>
+
         <div class="nav-links">
 
             <div th:if="${userLogin != null}">
-                <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
-                <a th:href="@{/profile}" class="nav-link">Mon profil</a>
-                <form th:action="@{/logout}" method="post" style="display: inline;">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                    <button type="submit" class="btn-outline" style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 8px 16px; font-size: 16px;">
-                        Se déconnecter
-                    </button>
-                </form>
+                <span>
+                    Bonjour,
+                    <span th:text="${userLogin}"></span>
+                </span>
+
+                <a th:href="@{/profile}">
+                    Mon profil
+                </a>
             </div>
-            <div th:unless="${userLogin != null}">
-                <a th:href="@{/login}" class="btn-outline">Se connecter</a>
-            </div>
+
         </div>
     </div>
 </nav>
 
+<div class="container">
 
+    <h2>Mes emprunts</h2>
 
+    <table class="data-table">
 
+        <thead>
+        <tr>
+            <th>ID Emprunt</th>
+            <th>ID Livre</th>
+            <th>Date emprunt</th>
+            <th>Date retour</th>
+            <th>Statut</th>
+        </tr>
+        </thead>
 
-<footer class="footer">
-    <div class="container">
-        <p>© 2024 Mediathec - Plateforme de gestion d'emprunts de médias</p>
-    </div>
-</footer>
+        <tbody>
 
-<script>
-    // ============================================================
-    //  FONCTION RETOURNER
-    // ============================================================
-    function returnLoan(id) {
-        if (!confirm('Confirmer le retour de cet emprunt ?')) return;
+        <tr th:each="loan : ${loans}">
 
-        const csrfToken = document.querySelector('input[name="_csrf"]')?.value || '';
+            <td th:text="${loan.id}"></td>
 
-        fetch('/loans/return/' + id, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert('✅ Retour effectué avec succès !');
-                    // Stocker l'événement pour le temps réel
-                    localStorage.setItem('loanUpdated', 'true');
-                    window.location.reload();
-                } else {
-                    alert('❌ Erreur lors du retour');
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert('❌ Erreur lors du retour');
-            });
-    }
+            <td th:text="${loan.bookId}"></td>
 
-    // ============================================================
-    // 🔽 FILTRE EN TEMPS RÉEL 🔽
-    // ============================================================
-    function filterLoans(event, filter) {
-        var rows = document.querySelectorAll('#loansTable tbody tr[data-status]');
+            <td th:text="${loan.loanDate}"></td>
 
-        rows.forEach(function(row) {
-            var status = row.getAttribute('data-status');
+            <td th:text="${loan.returnDate}"></td>
 
-            if (filter === 'all') {
-                row.style.display = '';
-            } else if (filter === 'borrowed' && status === 'BORROWED') {
-                row.style.display = '';
-            } else if (filter === 'returned' && status === 'RETURNED') {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
-            }
-        });
+            <td th:text="${loan.status}"></td>
 
-        var btns = document.querySelectorAll('.tab-btn');
-        btns.forEach(function(btn) {
-            btn.classList.remove('active');
-        });
-        if (event && event.target) {
-            event.target.classList.add('active');
-        }
-    }
+        </tr>
 
-    // ============================================================
-    // 🔥 RAFRAÎCHISSEMENT AUTOMATIQUE (temps réel) 🔥
-    // ============================================================
-    setInterval(function() {
-        const loanUpdated = localStorage.getItem('loanUpdated');
-        if (loanUpdated === 'true') {
-            localStorage.removeItem('loanUpdated');
-            location.reload();
-        }
-    }, 3000); // Vérifie toutes les 3 secondes
-</script>
+        <tr th:if="${loans == null || #lists.isEmpty(loans)}">
+            <td colspan="5">
+                Aucun emprunt trouvé
+            </td>
+        </tr>
+
+        </tbody>
+
+    </table>
+
+</div>
 
 </body>
 </html>

@@ -195,7 +195,9 @@ public class WebAppController {
     // ======================== GESTION DES EMPRUNTS ========================
 
     @GetMapping("/loans")
-    public String getLoansPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String getLoansPage(Model model,
+                               @AuthenticationPrincipal UserDetails userDetails) {
+
         if (userDetails == null) {
             return "redirect:/login";
         }
@@ -204,19 +206,39 @@ public class WebAppController {
         model.addAttribute("userLogin", email);
 
         try {
-            Member member = memberService.getMemberByEmail(email);
-            if (member != null) {
-                // 🔥 DEBUG : Afficher l'ID du membre
-                System.out.println("🔍 Membre connecté : " + email + " (ID: " + member.getId() + ")");
 
-                List<Loan> loans = loanService.getLoansByMemberId(member.getId());
-                model.addAttribute("loans", loans);
-                System.out.println("🔍 Emprunts trouvés : " + loans.size());
-            } else {
+            Member member = memberService.getMemberByEmail(email);
+
+            if (member == null) {
                 model.addAttribute("loans", new ArrayList<>());
+                return "loans";
             }
+
+            System.out.println("====================================");
+            System.out.println("Utilisateur connecté : " + email);
+            System.out.println("Member ID : " + member.getId());
+            System.out.println("====================================");
+
+            List<Loan> loans =
+                    loanService.getAllLoans();
+
+            System.out.println("Nombre d'emprunts trouvés : " + loans.size());
+
+            for (Loan loan : loans) {
+                System.out.println(
+                        "Loan ID=" + loan.getId()
+                                + " BookID=" + loan.getBookId()
+                                + " MemberID=" + loan.getMemberId()
+                                + " Status=" + loan.getStatus()
+                );
+            }
+
+            model.addAttribute("loans", loans);
+
         } catch (Exception e) {
-            System.err.println("❌ Erreur: " + e.getMessage());
+
+            e.printStackTrace();
+
             model.addAttribute("loans", new ArrayList<>());
         }
 

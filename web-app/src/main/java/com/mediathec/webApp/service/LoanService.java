@@ -30,12 +30,29 @@ public class LoanService {
         loanFeignClient.deleteLoan(id);
     }
 
-
+    // ============================================================
+    // 🔥 VERSION AVEC LOGS POUR DÉBOGUER 🔥
+    // ============================================================
     public List<Loan> getLoansByMemberId(Long memberId) {
         try {
-            return loanFeignClient.getLoansByMemberId(memberId);
+            System.out.println("========================================");
+            System.out.println("🔍 LoanService.getLoansByMemberId()");
+            System.out.println("🔍 memberId reçu : " + memberId);
+
+            List<Loan> loans = loanFeignClient.getLoansByMemberId(memberId);
+
+            System.out.println("🔍 Emprunts reçus du FeignClient : " + (loans != null ? loans.size() : 0));
+            if (loans != null && !loans.isEmpty()) {
+                for (Loan loan : loans) {
+                    System.out.println("   - ID: " + loan.getId() + ", memberId: " + loan.getMemberId() + ", status: " + loan.getStatus());
+                }
+            }
+            System.out.println("========================================");
+
+            return loans;
         } catch (Exception e) {
             System.err.println("❌ Erreur FeignClient: " + e.getMessage());
+            e.printStackTrace();
             return new ArrayList<>();
         }
     }

@@ -15,6 +15,7 @@ public interface LoanFeignClient {
     @GetMapping("/loans/member/{memberId}")
     List<Loan> getLoansByMemberId(@PathVariable("memberId") Long memberId);
 
+
     @PostMapping("/loans")
     Loan createLoan(@RequestBody Loan loan);
 
