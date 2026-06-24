@@ -1,6 +1,6 @@
 package com.mediathec.webApp.service.client;
 
-import com.mediathec.webApp.model.Book;
+import com.mediathec.webApp.entity.Book;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -29,6 +29,8 @@ public interface BookFeignClient {
     @PutMapping("/api/update/{id}")
     Book updateBook(@PathVariable("id") Long id, @RequestBody Book book);
 
+    @PostMapping("api/updateAvailability/{id}")
+    Book updateAvailability(@PathVariable Long id, @RequestParam boolean available);
 
     @DeleteMapping("/api/delete/{id}")
     void deleteBook(@PathVariable("id") Long id);

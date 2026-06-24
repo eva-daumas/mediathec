@@ -14,9 +14,13 @@
         <a th:href="@{/}" class="nav-brand"><span>Mediathec</span></a>
         <div class="nav-links">
 
+            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
+
+            <a th:href="@{/returns}" class="nav-link">Retours</a>
 
             <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
             <a th:href="@{/profile}" class="nav-link active">Mon profil</a>
+
 
             <form th:action="@{/logout}" method="post" style="display: inline;">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />

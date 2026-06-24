@@ -1,8 +1,8 @@
 package com.mediathec.webApp.controller;
 
-import com.mediathec.webApp.model.Book;
-import com.mediathec.webApp.model.Loan;
-import com.mediathec.webApp.model.Member;
+import com.mediathec.webApp.entity.Book;
+import com.mediathec.webApp.entity.Loan;
+import com.mediathec.webApp.entity.Member;
 import com.mediathec.webApp.service.CustomBookService;
 import com.mediathec.webApp.service.LoanService;
 import com.mediathec.webApp.service.MemberService;
@@ -26,7 +26,6 @@ public class WebAppController {
     private final LoanService loanService;
     private final CustomBookService customBookService;
 
-    @Autowired
     public WebAppController(MemberService memberService, LoanService loanService, CustomBookService customBookService) {
         this.memberService = memberService;
         this.loanService = loanService;
@@ -379,6 +378,7 @@ public class WebAppController {
     public ResponseEntity<?> borrowMedia(@RequestBody Loan loan) {
         try {
             Loan created = loanService.createLoan(loan);
+            customBookService.updateAvailability(created.getBookId(), false);
             return ResponseEntity.ok(created);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -397,6 +397,7 @@ public class WebAppController {
                     .orElseThrow(() -> new RuntimeException("Aucun emprunt actif pour ce livre"));
 
             loanService.returnLoan(activeLoan.getId());
+            customBookService.updateAvailability(activeLoan.getBookId(), true);
             return ResponseEntity.ok("Retour effectué");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());

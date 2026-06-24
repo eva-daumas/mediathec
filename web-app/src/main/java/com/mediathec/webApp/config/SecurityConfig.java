@@ -23,7 +23,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(request -> request
                         // ============================================================
-                        // 🔥 PERMETTRE L'ACCÈS AUX RESSOURCES STATIQUES 🔥
+                        //          PERMETTRE L'ACCÈS AUX RESSOURCES STATIQUES
                         // ============================================================
                         .requestMatchers("/css/**", "/images/**", "/assets/**", "/js/**").permitAll()
                         .requestMatchers("/", "/home", "/signup", "/login").permitAll()

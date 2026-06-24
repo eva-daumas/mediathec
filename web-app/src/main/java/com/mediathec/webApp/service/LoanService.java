@@ -1,6 +1,6 @@
 package com.mediathec.webApp.service;
 
-import com.mediathec.webApp.model.Loan;
+import com.mediathec.webApp.entity.Loan;
 import com.mediathec.webApp.service.client.LoanFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,13 +31,13 @@ public class LoanService {
     }
 
     // ============================================================
-    // 🔥 VERSION AVEC LOGS POUR DÉBOGUER 🔥
+    //             VERSION AVEC LOGS POUR DÉBOGUER
     // ============================================================
     public List<Loan> getLoansByMemberId(Long memberId) {
         try {
             System.out.println("========================================");
-            System.out.println("🔍 LoanService.getLoansByMemberId()");
-            System.out.println("🔍 memberId reçu : " + memberId);
+            System.out.println("LoanService.getLoansByMemberId()");
+            System.out.println("memberId reçu : " + memberId);
 
             List<Loan> loans = loanFeignClient.getLoansByMemberId(memberId);
 
@@ -51,7 +51,7 @@ public class LoanService {
 
             return loans;
         } catch (Exception e) {
-            System.err.println("❌ Erreur FeignClient: " + e.getMessage());
+            System.err.println(" Erreur FeignClient: " + e.getMessage());
             e.printStackTrace();
             return new ArrayList<>();
         }

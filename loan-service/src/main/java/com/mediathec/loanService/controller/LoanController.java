@@ -2,7 +2,7 @@ package com.mediathec.loanService.controller;
 
 import com.mediathec.loanService.entity.Loan;
 import com.mediathec.loanService.service.LoanService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,9 +10,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/loans")
+@AllArgsConstructor
 public class LoanController {
 
-    @Autowired
     private LoanService loanService;
 
     // ============================================

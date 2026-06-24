@@ -1,7 +1,6 @@
-package com.mediathec.webApp.model;
+package com.mediathec.webApp.entity;
 
 import jakarta.validation.constraints.*;
-import java.time.LocalDate;
 
 public class Member {
 

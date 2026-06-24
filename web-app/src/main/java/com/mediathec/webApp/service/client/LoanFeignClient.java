@@ -1,6 +1,6 @@
 package com.mediathec.webApp.service.client;
 
-import com.mediathec.webApp.model.Loan;
+import com.mediathec.webApp.entity.Loan;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

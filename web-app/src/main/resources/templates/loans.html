@@ -20,6 +20,8 @@
         </a>
 
         <div class="nav-links">
+            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
+            <a th:href="@{/returns}" class="nav-link">Retours</a>
 
             <div th:if="${userLogin != null}">
                 <span>

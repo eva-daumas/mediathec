@@ -67,7 +67,7 @@ public class BookController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/api/updateAvailability/{id}")
+    @PostMapping("/api/updateAvailability/{id}")
     public ResponseEntity<Book> updateAvailability(@PathVariable Long id, @RequestParam boolean available) {
         Book updatedBook = bookService.updateAvailability(id, available);
         return updatedBook != null ? ResponseEntity.ok(updatedBook) : ResponseEntity.notFound().build();

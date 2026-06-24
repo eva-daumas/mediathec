@@ -1,6 +1,6 @@
 package com.mediathec.webApp.service;
 
-import com.mediathec.webApp.model.Book;
+import com.mediathec.webApp.entity.Book;
 import com.mediathec.webApp.service.client.BookFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +39,8 @@ public class CustomBookService {
     public Book updateBook(Long id, Book book) {
         return bookFeignClient.updateBook(id, book);
     }
+
+    public Book updateAvailability(Long id, boolean available) { return bookFeignClient.updateAvailability(id, available); }
 
     public void deleteBook(Long id) {
         bookFeignClient.deleteBook(id);

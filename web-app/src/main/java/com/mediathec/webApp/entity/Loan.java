@@ -1,4 +1,4 @@
-package com.mediathec.webApp.model;
+package com.mediathec.webApp.entity;
 
 public class Loan {
     private Long id;
