@@ -15,7 +15,7 @@
 <nav class="navbar">
     <div class="container nav-container">
 
-        <a th:href="@{/}" class="nav-brand">
+        <a th:href="@{/home}" class="nav-brand">
             Mediathec
         </a>
 
@@ -46,8 +46,8 @@
 
         <thead>
         <tr>
-            <th>ID Emprunt</th>
-            <th>ID Livre</th>
+            <th>Catégorie</th>
+            <th>Titre</th>
             <th>Date emprunt</th>
             <th>Date retour</th>
             <th>Statut</th>
@@ -56,21 +56,15 @@
 
         <tbody>
 
-        <tr th:each="loan : ${loans}">
-
-            <td th:text="${loan.id}"></td>
-
-            <td th:text="${loan.bookId}"></td>
-
-            <td th:text="${loan.loanDate}"></td>
-
-            <td th:text="${loan.returnDate}"></td>
-
-            <td th:text="${loan.status}"></td>
-
+        <tr th:each="borrowedMedia : ${borrowedMedias}">
+            <td th:text="${borrowedMedia.category}"></td>
+            <td th:text="${borrowedMedia.title}"></td>
+            <td th:text="${borrowedMedia.loanDate}"></td>
+            <td th:text="${borrowedMedia.returnDate}"></td>
+            <td th:text="${borrowedMedia.status}"></td>
         </tr>
 
-        <tr th:if="${loans == null || #lists.isEmpty(loans)}">
+        <tr th:if="${borrowedMedias == null || #lists.isEmpty(borrowedMedias)}">
             <td colspan="5">
                 Aucun emprunt trouvé
             </td>
@@ -81,6 +75,9 @@
     </table>
 
 </div>
-
+<!-- ==================== JAVASCRIPT ==================== -->
+<script th:src="@{/js/returns.js}"></script>
 </body>
 </html>
+
+

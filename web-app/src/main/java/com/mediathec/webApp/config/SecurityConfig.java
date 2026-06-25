@@ -26,13 +26,13 @@ public class SecurityConfig {
                         //          PERMETTRE L'ACCÈS AUX RESSOURCES STATIQUES
                         // ============================================================
                         .requestMatchers("/css/**", "/images/**", "/assets/**", "/js/**").permitAll()
-                        .requestMatchers("/", "/home", "/signup", "/login").permitAll()
+                        .requestMatchers("/home", "/signup", "/login").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/profile", true)
+                        .defaultSuccessUrl("/profile", true) //todo: actuellement un utilisateur authentifié est dirigé vers sa page profile, est-ce pertinent ? page home ?
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")

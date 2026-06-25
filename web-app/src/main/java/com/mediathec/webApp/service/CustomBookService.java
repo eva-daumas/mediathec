@@ -1,6 +1,6 @@
 package com.mediathec.webApp.service;
 
-import com.mediathec.webApp.entity.Book;
+import com.mediathec.webApp.dto.BookDto;
 import com.mediathec.webApp.service.client.BookFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,35 +12,35 @@ public class CustomBookService {
     @Autowired
     private BookFeignClient bookFeignClient;
 
-    public List<Book> getAllBooks() {
+    public List<BookDto> getAllBooks() {
         return bookFeignClient.getAllBooks();
     }
 
-    public Book getBookById(Long id) {
+    public BookDto getBookById(Long id) {
         return bookFeignClient.getBookById(id);
     }
 
-    public List<Book> getBooksByCategory(String category) {
+    public List<BookDto> getBooksByCategory(String category) {
         return bookFeignClient.getBooksByCategory(category);
     }
 
-    public List<Book> searchBooks(String keyword) {
+    public List<BookDto> searchBooks(String keyword) {
         return bookFeignClient.searchBooks(keyword);
     }
 
-    public List<Book> getAvailableBooks() {
+    public List<BookDto> getAvailableBooks() {
         return bookFeignClient.getAvailableBooks();
     }
 
-    public Book createBook(Book book) {
+    public BookDto createBook(BookDto book) {
         return bookFeignClient.createBook(book);
     }
 
-    public Book updateBook(Long id, Book book) {
+    public BookDto updateBook(Long id, BookDto book) {
         return bookFeignClient.updateBook(id, book);
     }
 
-    public Book updateAvailability(Long id, boolean available) { return bookFeignClient.updateAvailability(id, available); }
+    public BookDto updateAvailability(Long id, boolean available) { return bookFeignClient.updateAvailability(id, available); }
 
     public void deleteBook(Long id) {
         bookFeignClient.deleteBook(id);

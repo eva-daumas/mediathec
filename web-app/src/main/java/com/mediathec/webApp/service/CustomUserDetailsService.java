@@ -1,6 +1,6 @@
 package com.mediathec.webApp.service;
 
-import com.mediathec.webApp.entity.Member;
+import com.mediathec.webApp.dto.MemberDto;
 import com.mediathec.webApp.service.client.MemberFeignClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
@@ -17,16 +17,16 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Member member = memberFeignClient.getMemberByEmail(email);
+        MemberDto memberDto = memberFeignClient.getMemberByEmail(email);
 
-        if (member == null) {
-            throw new UsernameNotFoundException("Member not found with email: " + email);
+        if (memberDto == null) {
+            throw new UsernameNotFoundException("MemberDto not found with email: " + email);
         }
 
         return User.builder()
-                .username(member.getEmail())
-                .password(member.getPassword())
-                .roles(member.getRole())
+                .username(memberDto.getEmail())
+                .password(memberDto.getPassword())
+                .roles(memberDto.getRole())
                 .build();
     }
 }

@@ -1,6 +1,6 @@
 package com.mediathec.webApp.service.client;
 
-import com.mediathec.webApp.entity.Book;
+import com.mediathec.webApp.dto.BookDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -9,28 +9,28 @@ import java.util.List;
 public interface BookFeignClient {
 
     @GetMapping("/api/getAll")
-    List<Book> getAllBooks();
+    List<BookDto> getAllBooks();
 
     @GetMapping("/api/findById/{id}")
-    Book getBookById(@PathVariable("id") Long id);
+    BookDto getBookById(@PathVariable("id") Long id);
 
     @GetMapping("/api/findByCategory/{category}")
-    List<Book> getBooksByCategory(@PathVariable("category") String category);
+    List<BookDto> getBooksByCategory(@PathVariable("category") String category);
 
     @GetMapping("/api/search")
-    List<Book> searchBooks(@RequestParam("keyword") String keyword);
+    List<BookDto> searchBooks(@RequestParam("keyword") String keyword);
 
     @GetMapping("/api/available")
-    List<Book> getAvailableBooks();
+    List<BookDto> getAvailableBooks();
 
     @PostMapping("/add")
-    Book createBook(@RequestBody Book book);
+    BookDto createBook(@RequestBody BookDto book);
 
     @PutMapping("/api/update/{id}")
-    Book updateBook(@PathVariable("id") Long id, @RequestBody Book book);
+    BookDto updateBook(@PathVariable("id") Long id, @RequestBody BookDto book);
 
     @PostMapping("api/updateAvailability/{id}")
-    Book updateAvailability(@PathVariable Long id, @RequestParam boolean available);
+    BookDto updateAvailability(@PathVariable Long id, @RequestParam boolean available);
 
     @DeleteMapping("/api/delete/{id}")
     void deleteBook(@PathVariable("id") Long id);

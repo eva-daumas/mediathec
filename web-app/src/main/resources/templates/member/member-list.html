@@ -16,8 +16,8 @@
             <span>Mediathec</span>
         </a>
         <div class="nav-links">
-            <a th:href="@{/members}" class="nav-link active">Mes membres</a>
-            <a th:href="@{/loans}" class="nav-link">Emprunts</a>
+            <a th:href="@{/memberDtos}" class="nav-link active">Mes membres</a>
+            <a th:href="@{/loanDtos}" class="nav-link">Emprunts</a>
             <div th:if="${userLogin != null}">
                 <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
                 <a th:href="@{/logout}" class="btn-outline">Se déconnecter</a>
@@ -34,7 +34,7 @@
     <div class="page-header">
         <h1>Liste des membres</h1>
         <div class="header-actions">
-            <a th:href="@{/members/new}" class="btn btn-primary">
+            <a th:href="@{/memberDtos/new}" class="btn btn-primary">
                 <i class="fas fa-user-plus"></i> Nouveau membre
             </a>
         </div>
@@ -42,7 +42,7 @@
 
     <!-- Search Bar -->
     <div class="search-section">
-        <form th:action="@{/members/search}" method="get" class="search-form">
+        <form th:action="@{/memberDtos/search}" method="get" class="search-form">
             <div class="search-group">
                 <input type="text" name="keyword" class="form-control" placeholder="Rechercher un membre..." th:value="${keyword}">
                 <button type="submit" class="btn btn-primary">
@@ -50,7 +50,7 @@
                 </button>
             </div>
             <div class="filter-group">
-                <a th:href="@{/members}" class="btn btn-outline">Tous</a>
+                <a th:href="@{/memberDtos}" class="btn btn-outline">Tous</a>
             </div>
         </form>
     </div>
@@ -70,24 +70,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="member : ${members}">
-                    <td th:text="${member.id}">1</td>
-                    <td th:text="${member.username}">Jean Dupont</td>
-                    <td th:text="${member.email}">jean.dupont@email.com</td>
+                <tr th:each="memberDto : ${memberDtos}">
+                    <td th:text="${memberDto.id}">1</td>
+                    <td th:text="${memberDto.username}">Jean Dupont</td>
+                    <td th:text="${memberDto.email}">jean.dupont@email.com</td>
                     <td>
-                            <span class="badge" th:text="${member.role}" th:classappend="${member.role == 'ADMIN'} ? 'badge-admin' : 'badge-user'">
+                            <span class="badge" th:text="${memberDto.role}" th:classappend="${memberDto.role == 'ADMIN'} ? 'badge-admin' : 'badge-user'">
                                 USER
                             </span>
                     </td>
-                    <td th:text="${member.createdAt}">16/06/2026 10:00</td>                    <td>
+                    <td th:text="${memberDto.createdAt}">16/06/2026 10:00</td>                    <td>
                         <div class="action-buttons">
-                            <a th:href="@{/members/{id}(id=${member.id})}" class="btn btn-sm btn-info" title="Voir">
+                            <a th:href="@{/memberDtos/{id}(id=${memberDto.id})}" class="btn btn-sm btn-info" title="Voir">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a th:href="@{/members/{id}/edit(id=${member.id})}" class="btn btn-sm btn-warning" title="Modifier">
+                            <a th:href="@{/memberDtos/{id}/edit(id=${memberDto.id})}" class="btn btn-sm btn-warning" title="Modifier">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <button class="btn btn-sm btn-danger" title="Supprimer" th:onclick="'deleteMember(' + ${member.id} + ')'">
+                            <button class="btn btn-sm btn-danger" title="Supprimer" th:onclick="'deleteMember(' + ${memberDto.id} + ')'">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -98,7 +98,7 @@
                         <div class="empty-state">
                             <i class="fas fa-users fa-3x"></i>
                             <p>Aucun membre trouvé</p>
-                            <a th:href="@{/members/new}" class="btn btn-primary">Ajouter un membre</a>
+                            <a th:href="@{/memberDtos/new}" class="btn btn-primary">Ajouter un membre</a>
                         </div>
                     </td>
                 </tr>
@@ -112,15 +112,15 @@
         <nav aria-label="Page navigation">
             <ul class="pagination">
                 <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled' : ''">
-                    <a class="page-link" th:href="@{/members(page=${currentPage - 1}, size=${pageSize})}" aria-label="Précédent">
+                    <a class="page-link" th:href="@{/memberDtos(page=${currentPage - 1}, size=${pageSize})}" aria-label="Précédent">
                         <span aria-hidden="true">&laquo;</span>
                     </a>
                 </li>
                 <li class="page-item" th:each="page : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${page == currentPage} ? 'active' : ''">
-                    <a class="page-link" th:href="@{/members(page=${page}, size=${pageSize})}" th:text="${page + 1}">1</a>
+                    <a class="page-link" th:href="@{/memberDtos(page=${page}, size=${pageSize})}" th:text="${page + 1}">1</a>
                 </li>
                 <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''">
-                    <a class="page-link" th:href="@{/members(page=${currentPage + 1}, size=${pageSize})}" aria-label="Suivant">
+                    <a class="page-link" th:href="@{/memberDtos(page=${currentPage + 1}, size=${pageSize})}" aria-label="Suivant">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
                 </li>
@@ -137,30 +137,7 @@
     </div>
 </footer>
 
-<!-- JavaScript pour la suppression -->
-<script>
-    function deleteMember(id) {
-        if (confirm('Êtes-vous sûr de vouloir supprimer ce membre ?')) {
-            fetch('/members/' + id, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('input[name="_csrf"]')?.value || ''
-                }
-            })
-                .then(response => {
-                    if (response.ok) {
-                        window.location.reload();
-                    } else {
-                        alert('Erreur lors de la suppression du membre');
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur:', error);
-                    alert('Erreur lors de la suppression du membre');
-                });
-        }
-    }
-</script>
+<!-- ==================== JAVASCRIPT ==================== -->
+<script th:src="@{/js/member-list.js}"></script>
 </body>
 </html>

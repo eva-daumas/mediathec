@@ -1,6 +1,6 @@
 package com.mediathec.webApp.service.client;
 
-import com.mediathec.webApp.entity.Member;
+import com.mediathec.webApp.dto.MemberDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,19 +10,19 @@ import java.util.List;
 public interface MemberFeignClient {
 
     @GetMapping("/api/members/email/{email}")
-    Member getMemberByEmail(@PathVariable("email") String email);
+    MemberDto getMemberByEmail(@PathVariable("email") String email);
 
     @PostMapping("/add")
-    Member createMember(@RequestBody Member member);
+    MemberDto createMember(@RequestBody MemberDto memberDto);
 
     @GetMapping("/api/getAll")
-    List<Member> getAllMembers();
+    List<MemberDto> getAllMembers();
 
     @PutMapping("/api/update/{id}")
-    Member updateMember(@PathVariable("id") Long id, @RequestBody Member member);
+    MemberDto updateMember(@PathVariable("id") Long id, @RequestBody MemberDto memberDto);
 
     @GetMapping("/api/findById/{id}")
-    Member getMemberById(@PathVariable("id") Long id);
+    MemberDto getMemberById(@PathVariable("id") Long id);
 
     @DeleteMapping("/api/delete/{id}")
     void deleteMember(@PathVariable("id") Long id);

@@ -28,7 +28,7 @@
             </div>
 
             <form th:action="@{/login}" method="post">
-                <!-- Token CSRF pour la sécurité -->
+                <!-- Token CSRF pour la sécurité --><!--todo: csrf géré nativement par SpringSecurity-->
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                 <div class="form-group">
@@ -39,21 +39,21 @@
                 <div class="form-group">
                     <label class="form-label">Mot de passe</label>
                     <input type="password" name="password" class="form-control" placeholder="••••••••" required>
-                    <div class="text-right" style="text-align: right; margin-top: 8px;">
+                    <div class="text-right" style="text-align: right; margin-top: 8px;"><!--todo: style => css-->
                         <a th:href="@{/forgot-password}" class="text-primary" style="color: #2c7da0; font-size: 13px;">Mot de passe oublié ?</a>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <button class="btn btn-primary" type="submit" style="width: 100%;">
+                    <button class="btn btn-primary" type="submit" style="width: 100%;"><!--todo: style => css-->
                         <i class="fas fa-sign-in-alt"></i> Se connecter
                     </button>
                 </div>
 
-                <div class="text-center" style="text-align: center; margin-top: 20px;">
-                    <p class="text-muted" style="color: #78909c;">
+                <div class="text-center" style="text-align: center; margin-top: 20px;"><!--todo: style => css-->
+                    <p class="text-muted" style="color: #78909c;"><!--todo: style => css-->
                         Pas encore de compte ?
-                        <a th:href="@{/signup}" class="text-primary" style="color: #2c7da0; text-decoration: none; font-weight: 600;">Créer un compte</a>
+                        <a th:href="@{/signup}" class="text-primary" style="color: #2c7da0; text-decoration: none; font-weight: 600;">Créer un compte</a><!--todo: style => css-->
                     </p>
                 </div>
             </form>

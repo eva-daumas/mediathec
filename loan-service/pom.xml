@@ -11,9 +11,9 @@
     </parent>
 
     <groupId>com.mediathec</groupId>
-    <artifactId>loan-service</artifactId>
+    <artifactId>loanDto-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>loan-service</name>
+    <name>loanDto-service</name>
 
     <properties>
         <java.version>17</java.version>
@@ -84,7 +84,7 @@
                 <version>3.3.2</version>
                 <configuration>
                     <to>
-                        <image>evadaumas/mediathec/loan-service/${project.artifactId}</image>
+                        <image>evadaumas/mediathec/loanDto-service/${project.artifactId}</image>
                     </to>
                     <container>
                         <mainClass>com.mediathec.loanService.LoanServiceApplication</mainClass>

@@ -7,14 +7,15 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap"
+          rel="stylesheet">
 </head>
 <body>
 
 <!-- Navigation -->
 <nav class="navbar">
     <div class="container nav-container">
-        <a th:href="@{/}" class="nav-brand">
+        <a th:href="@{/home}" class="nav-brand">
             <span>Mediathec</span>
         </a>
         <div class="nav-links">
@@ -22,8 +23,10 @@
                 <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
                 <p hidden="hidden" th:text="${currentMemberId}" id="currentMemberId"></p>
                 <a th:href="@{/profile}" class="nav-link">Mon profil</a>
-                <form th:action="@{/logout}" method="post" style="display: inline;">
-                    <button type="submit" class="btn-outline" style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 8px 16px; font-size: 16px;">
+                <form th:action="@{/logout}" method="post" style="display: inline;"><!--todo: style => css-->
+                    <button type="submit" class="btn-outline"
+                            style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 8px 16px; font-size: 16px;">
+                        <!--todo: style => css-->
                         Se déconnecter
                     </button>
                 </form>
@@ -52,20 +55,24 @@
 
     <!-- ==================== CATALOGUE DES LIVRES ==================== -->
     <h2 class="section-title"> Catalogue des livres</h2>
-    <p class="section-subtitle" style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 30px;">Parcourez notre collection et empruntez vos livres préférés</p>
+    <p class="section-subtitle" style="text-align: center; color: rgba(255,255,255,0.6); margin-bottom: 30px;">Parcourez
+        <!--todo: style => css-->
+        notre collection et empruntez vos livres préférés</p>
 
     <div class="media-grid">
         <!-- Carte d'un média -->
-        <div class="media-card" th:each="media : ${medias}" style="position: relative;">
+        <div class="media-card" th:each="media : ${medias}" style="position: relative;"><!--todo: style => css-->
             <!-- IMAGE DE COUVERTURE -->
             <div class="media-image">
                 <img th:if="${media.coverImage}"
                      th:src="${media.coverImage}"
                      th:alt="'Couverture de ' + ${media.title}"
-                     style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;" />
+                     style="width: 100%; height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;"/>
+                <!--todo: style => css-->
                 <div th:unless="${media.coverImage}"
                      style="width: 100%; height: 200px; background: linear-gradient(135deg, #1a1a2e, #2d2d44); display: flex; align-items: center; justify-content: center; border-radius: 12px 12px 0 0;">
-                    <i class="fas fa-book fa-4x" style="color: rgba(255,255,255,0.15);"></i>
+                    <!--todo: style => css-->
+                    <i class="fas fa-book fa-4x" style="color: rgba(255,255,255,0.15);"></i><!--todo: style => css-->
                 </div>
                 <!-- Statut en badge sur l'image (visible uniquement si connecté) -->
                 <div class="media-status" th:if="${userLogin != null}">
@@ -94,7 +101,8 @@
 
                 <!-- Actions -->
                 <div class="media-actions">
-                    <th:block th:with="isBorrowedByUser = ${borrowedMediaIds != null and borrowedMediaIds.contains(media.id)}">
+                    <th:block
+                            th:with="isBorrowedByUser = ${borrowedMediaIds != null and borrowedMediaIds.contains(media.id)}">
 
                         <!--  Bouton EMPRUNTER (uniquement si connecté) -->
                         <button th:if="${userLogin != null and media.available and !isBorrowedByUser}"
@@ -103,16 +111,17 @@
                             <i class="fas fa-hand-holding-heart"></i> Emprunter
                         </button>
 
-                        <!--  Bouton RETOURNER (uniquement si connecté ET emprunté par l'utilisateur) -->
-                        <button th:if="${userLogin != null and media.available and !isBorrowedByUser}"
-                                class="btn btn-secondary btn-sm"
-                                th:onclick="'returnMedia(' + ${media.id} + ')'">
-                            <i class="fas fa-hand-holding-heart"></i> Retourner
-                        </button>
+                        <!--                        &lt;!&ndash;  Bouton RETOURNER (uniquement si connecté ET emprunté par l'utilisateur) &ndash;&gt;-->
+                        <!--                        <button th:if="${userLogin != null and media.available and !isBorrowedByUser}"-->
+                        <!--                                class="btn btn-secondary btn-sm"-->
+                        <!--                                th:onclick="'returnMedia(' + ${media.id} + ')'">-->
+                        <!--                            <i class="fas fa-hand-holding-heart"></i> Retourner-->
+                        <!--                        </button>-->
 
                         <!-- Message si emprunté par un autre utilisateur (uniquement si connecté) -->
                         <span th:if="${userLogin != null and !media.available and !isBorrowedByUser}"
-                              class="text-muted" style="font-size: 13px; display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.5);">
+                              class="text-muted"
+                              style="font-size: 13px; display: flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.5);"><!--todo: style => css-->
                             <i class="fas fa-user"></i> Déjà emprunté
                         </span>
 
@@ -120,9 +129,12 @@
                         <!--  Bouton de connexion pour non connecté -->
                         <a th:if="${userLogin == null}"
                            th:href="@{/login}"
-                           class="badge" style="font-size: 13px; display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: white; box-shadow: 0 0 20px rgba(108, 92, 231, 0.3); padding: 5px 16px; border-radius: 50px; text-decoration: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
+                           class="badge"
+
+                           style="font-size: 13px; display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, #6c5ce7, #a29bfe); color: white; box-shadow: 0 0 20px rgba(108, 92, 231, 0.3); padding: 5px 16px; border-radius: 50px; text-decoration: none; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;"
                            onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 30px rgba(108, 92, 231, 0.5)';"
                            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 0 20px rgba(108, 92, 231, 0.3)';">
+                            <!--todo: style => css-->
                             <i class="fas fa-lock"></i> Connectez-vous
                         </a>
                     </th:block>
@@ -131,10 +143,15 @@
         </div>
 
         <!-- Message si aucun média -->
-        <div th:if="${medias == null or medias.isEmpty()}" class="empty-state" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.03); border-radius: 20px; border: 2px dashed rgba(255,255,255,0.08);">
+        <div th:if="${medias == null or medias.isEmpty()}" class="empty-state"
+             style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: rgba(255,255,255,0.03); border-radius: 20px; border: 2px dashed rgba(255,255,255,0.08);">
+            <!--todo: style => css-->
             <i class="fas fa-book-open fa-4x" style="color: rgba(255,255,255,0.15); margin-bottom: 16px;"></i>
+            <!--todo: style => css-->
             <h3 style="color: rgba(255,255,255,0.6); font-weight: 600;">Aucun média disponible</h3>
+            <!--todo: style => css-->
             <p style="color: rgba(255,255,255,0.4);">Revenez plus tard pour découvrir notre catalogue.</p>
+            <!--todo: style => css-->
         </div>
     </div>
 </div> <!-- ===== FIN DE .container ===== -->
@@ -147,76 +164,10 @@
     </div>
 </footer>
 
+
 <!-- ==================== JAVASCRIPT ==================== -->
-<script>
-    // Récupérer le token CSRF
-    function getCsrfToken() {
-        var tokenInput = document.querySelector('input[name="_csrf"]');
-        return tokenInput ? tokenInput.value : '';
-    }
-
-    function borrowMedia(mediaId) {
-        if (!confirm('Confirmer l\'emprunt de ce média ?')) return;
-
-        const memberId = document.getElementById('currentMemberId')?.innerText || null;
-
-        fetch('/api/loans', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': getCsrfToken()
-            },
-            body: JSON.stringify({
-                memberId: memberId,
-                bookId: mediaId
-            })
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert(' Emprunt effectué avec succès !');
-                    localStorage.setItem('loanUpdated', 'true');
-                    localStorage.setItem('loanAction', 'borrow');
-                    localStorage.setItem('loanBookId', mediaId);
-                    window.location.reload();
-                } else {
-                    response.text().then(text => alert(' Erreur: ' + text));
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert(' Erreur lors de l\'emprunt');
-            });
-    }
-
-    function returnMedia(mediaId) {
-        if (!confirm('Confirmer le retour de ce média ?')) return;
-
-        const csrfToken = getCsrfToken();
-
-        fetch('/api/loans/return/' + mediaId, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': csrfToken
-            }
-        })
-            .then(response => {
-                if (response.ok) {
-                    alert(' Retour effectué avec succès !');
-                    localStorage.setItem('loanUpdated', 'true');
-                    localStorage.setItem('loanAction', 'return');
-                    localStorage.setItem('loanBookId', mediaId);
-                    window.location.reload();
-                } else {
-                    response.text().then(text => alert(' Erreur: ' + text));
-                }
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert(' Erreur lors du retour');
-            });
-    }
-</script>
-
+<script th:src="@{/js/home.js}"></script>
 </body>
 </html>
+
+

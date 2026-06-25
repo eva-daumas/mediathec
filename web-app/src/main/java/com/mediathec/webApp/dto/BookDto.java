@@ -1,11 +1,11 @@
-package com.mediathec.webApp.entity;
+package com.mediathec.webApp.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @JsonSerialize
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Book {
+public class BookDto {
     private Long id;
     private String title;
     private String author;
@@ -14,10 +14,10 @@ public class Book {
     private String coverImage;
     private boolean available;
 
-    public Book() {
+    public BookDto() {
     }
 
-    public Book(Long id, String title, String author, String category, String description, String coverImage, boolean available) {
+    public BookDto(Long id, String title, String author, String category, String description, String coverImage, boolean available) {
         this.id = id;
         this.title = title;
         this.author = author;

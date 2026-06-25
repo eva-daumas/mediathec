@@ -6,7 +6,7 @@ function getCsrfToken() {
 function borrowMedia(mediaId) {
     if (!confirm('Confirmer l\'emprunt de ce média ?')) return;
 
-    const memberId = document.getElementById('currentMemberId')?.value || 1;
+    const memberId = document.getElementById('currentMemberId')?.innerText || null;
 
     fetch('/api/loans', {
         method: 'POST',

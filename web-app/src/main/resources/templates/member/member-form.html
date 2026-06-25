@@ -9,7 +9,7 @@
 <body>
 <div class="container">
   <h1>Nouveau membre</h1>
-  <form th:action="@{/members}" th:object="${member}" method="post">
+  <form th:action="@{/memberDtos}" th:object="${memberDto}" method="post">
     <div class="form-group">
       <label>Nom complet</label>
       <input type="text" th:field="*{username}" class="form-control" required>
@@ -23,7 +23,7 @@
       <input type="password" th:field="*{password}" class="form-control" required>
     </div>
     <button type="submit" class="btn btn-primary">Créer</button>
-    <a th:href="@{/members}" class="btn btn-outline">Annuler</a>
+    <a th:href="@{/memberDtos}" class="btn btn-outline">Annuler</a>
   </form>
 </div>
 </body>

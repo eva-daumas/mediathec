@@ -11,7 +11,7 @@
 
 <nav class="navbar">
     <div class="container nav-container">
-        <a th:href="@{/}" class="nav-brand">
+        <a th:href="@{/home}" class="nav-brand">
             <span>Mediathec</span>
         </a>
         <div class="nav-links">
@@ -20,8 +20,9 @@
             </a>
             <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
             <form th:action="@{/logout}" method="post" style="display: inline;">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-                <button type="submit" class="btn-outline" style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 8px 16px; font-size: 16px;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" class="btn-outline"
+                        style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 8px 16px; font-size: 16px;">
                     Se déconnecter
                 </button>
             </form>
@@ -40,18 +41,18 @@
                 <p>Créez un nouvel emprunt</p>
             </div>
             <div class="auth-body">
-                <form th:action="@{/admin/loans}" th:object="${loan}" method="post">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <form th:action="@{/admin/loanDto}" th:object="${loanDto}" method="post">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
                     <div class="form-group">
                         <label class="form-label">ID du membre *</label>
-                        <input type="number" th:field="*{memberId}" class="form-control" required min="1" />
+                        <input type="number" th:field="*{memberId}" class="form-control" required min="1"/>
                         <small class="form-text">Entrez l'ID du membre (ex: 1, 2, 3...)</small>
                     </div>
 
                     <div class="form-group">
                         <label class="form-label">ID du média *</label>
-                        <input type="number" th:field="*{bookId}" class="form-control" required min="1" />
+                        <input type="number" th:field="*{bookId}" class="form-control" required min="1"/>
                         <small class="form-text">Entrez l'ID du média (ex: 1, 2, 3...)</small>
                     </div>
 

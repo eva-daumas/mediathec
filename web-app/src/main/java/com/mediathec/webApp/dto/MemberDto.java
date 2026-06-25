@@ -1,8 +1,8 @@
-package com.mediathec.webApp.entity;
+package com.mediathec.webApp.dto;
 
 import jakarta.validation.constraints.*;
 
-public class Member {
+public class MemberDto {
 
     private Long id;
 
@@ -21,11 +21,11 @@ public class Member {
     private String createdAt;
 
     // Constructeur par défaut
-    public Member() {
+    public MemberDto() {
     }
 
     // Constructeur avec paramètres
-    public Member(Long id, String username, String password, String email, String role) {
+    public MemberDto(Long id, String username, String password, String email, String role) {
         this.id = id;
         this.username = username;
         this.password = password;

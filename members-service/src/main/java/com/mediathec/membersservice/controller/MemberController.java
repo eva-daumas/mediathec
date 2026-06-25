@@ -2,6 +2,7 @@ package com.mediathec.membersservice.controller;
 
 import com.mediathec.membersservice.entity.Member;
 import com.mediathec.membersservice.service.MemberService;
+//todo: penses à nettoyer tes import inutilisés
 import jakarta.validation.Valid;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -23,9 +24,7 @@ public class MemberController {
 
     @PostMapping("/add")
     public Member addMember(@RequestBody Member member) {
-
-            return memberService.save(member);
-
+        return memberService.save(member);
     }
 
     @GetMapping("/api/members/email/{email}")

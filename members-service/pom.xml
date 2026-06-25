@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.mediathec</groupId>
-	<artifactId>members-service</artifactId>
+	<artifactId>memberDtos-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>members-service</name>
-	<description>members-service</description>
+	<name>memberDtos-service</name>
+	<description>memberDtos-service</description>
 	<url/>
 	<licenses>
 		<license/>

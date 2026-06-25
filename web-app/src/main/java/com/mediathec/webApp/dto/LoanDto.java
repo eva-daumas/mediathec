@@ -1,6 +1,6 @@
-package com.mediathec.webApp.entity;
+package com.mediathec.webApp.dto;
 
-public class Loan {
+public class LoanDto {
     private Long id;
     private Long memberId;
     private Long bookId;
