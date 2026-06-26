@@ -20,6 +20,12 @@ public class MemberController {
 
     }
 
+
+
+    @GetMapping("/login")
+    public String getLoginPage() {
+        return "signin";
+    }
     @GetMapping("/members")
     public String getMembersPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {

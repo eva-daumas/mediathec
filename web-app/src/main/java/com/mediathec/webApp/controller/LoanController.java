@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class LoanController {
@@ -29,6 +30,32 @@ public class LoanController {
             this.loanService = loanService;
             this.customBookService = customBookService;
         }
+
+    @GetMapping("/profile")
+    public String getProfilePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+        String email = userDetails.getUsername();
+        MemberDto memberDto = memberService.getMemberByEmail(email);
+
+        if (memberDto != null && "ADMIN".equals(memberDto.getRole())) {
+            return "redirect:/admin";
+        }
+
+        // Récupérer les emprunts de l'utilisateur
+        List<LoanDto> userLoanDtos = loanService.getLoansByMemberId(memberDto.getId());
+        List<Long> borrowedMediaIds = userLoanDtos.stream()
+                .filter(loanDto -> "BORROWED".equals(loanDto.getStatus()))
+                .map(LoanDto::getBookId)
+                .collect(Collectors.toList());
+        model.addAttribute("borrowedMediaIds", borrowedMediaIds);
+
+        model.addAttribute("member", memberDto);
+        model.addAttribute("userLogin", memberDto.getUsername());
+        return "profile";
+    }
+
     @GetMapping("/loans")
     public String getLoansPage(Model model,
                                @AuthenticationPrincipal UserDetails userDetails) {
