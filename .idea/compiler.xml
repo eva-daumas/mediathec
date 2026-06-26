@@ -8,8 +8,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="web-app" />
+        <module name="memberDtos-service" />
         <module name="book-service" />
         <module name="members-service" />
+        <module name="loanDto-service" />
         <module name="loan-service" />
       </profile>
     </annotationProcessing>
@@ -21,7 +23,9 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="book-service" options="-parameters" />
       <module name="loan-service" options="-parameters" />
+      <module name="loanDto-service" options="-parameters" />
       <module name="member-service" options="-parameters" />
+      <module name="memberDtos-service" options="-parameters" />
       <module name="members-service" options="-parameters" />
       <module name="web-app" options="-parameters" />
     </option>

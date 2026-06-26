@@ -22,13 +22,13 @@
             <div th:if="${userLogin != null}">
                 <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
                 <p hidden="hidden" th:text="${currentMemberId}" id="currentMemberId"></p>
-                <a th:href="@{/profile}" class="nav-link">Mon profil</a>
-                <form th:action="@{/logout}" method="post" style="display: inline;"><!--todo: style => css-->
-                    <button type="submit" class="btn-outline"
-                            style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 8px 16px; font-size: 16px;">
-                        <!--todo: style => css-->
-                        Se déconnecter
-                    </button>
+                <!--TODO: ajouter une balise a pour la gestion de "mon profil" et "dashboard admin" -->
+                <!-- utilise th:if & th:unless avec la bonne condition à tester  -->
+                <a th:href="@{/profile}" class="nav-link" th:if="${memberRole == 'ADMIN'}">Dashboard Admin</a>
+                <a th:href="@{/profile}" class="nav-link" th:unless="${memberRole == 'ADMIN'}">Mon profil</a>
+
+                <form th:action="@{/logout}" method="post" class="logout-form-inline">
+                    <button type="submit" class="logout-btn-nav">Se déconnecter</button>
                 </form>
             </div>
 
