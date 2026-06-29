@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/profile", true) //todo: actuellement un utilisateur authentifié est dirigé vers sa page profile, est-ce pertinent ? page home ?
+                        .defaultSuccessUrl("/home", true)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/logout")

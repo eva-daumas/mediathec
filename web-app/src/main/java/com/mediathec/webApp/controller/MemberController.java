@@ -26,6 +26,11 @@ public class MemberController {
     public String getLoginPage() {
         return "signin";
     }
+    @GetMapping("/signup")
+    public String getSignUpPage(Model model) {
+        model.addAttribute("member", new MemberDto());
+        return "signup";
+    }
     @GetMapping("/members")
     public String getMembersPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {

@@ -44,6 +44,7 @@ public class BookController {
                 MemberDto memberDto = memberService.getMemberByEmail(email);
                 if (memberDto != null) {
                     model.addAttribute("currentMemberId", memberDto.getId());
+                    model.addAttribute("memberRole", memberDto.getRole());
                     List<LoanDto> userLoanDtos = loanService.getLoansByMemberId(memberDto.getId());
                     borrowedMediaIds = userLoanDtos.stream()
                             .filter(loanDto -> "BORROWED".equals(loanDto.getStatus()))

@@ -1,3 +1,7 @@
+// ============================================
+// UTILITAIRES
+// ============================================
+
 function getCsrfToken() {
     let tokenInput = document.getElementById('csrfToken');
     if (tokenInput) {
@@ -6,6 +10,10 @@ function getCsrfToken() {
     let csrf = document.querySelector('input[name="_csrf"]');
     return csrf ? csrf.value : '';
 }
+
+// ============================================
+// GESTION DES MODALES - ÉDITION
+// ============================================
 
 function openEditModal(button) {
     let id = button.getAttribute('data-id');
@@ -26,50 +34,9 @@ function closeEditModal() {
     document.getElementById('editModal').classList.remove('active');
 }
 
-document.getElementById('editForm').addEventListener('submit', function (e) {
-    e.preventDefault();
-    let id = document.getElementById('editId').value;
-    let username = document.getElementById('editUsername').value;
-    let email = document.getElementById('editEmail').value;
-    let role = document.getElementById('editRole').value;
-    let password = document.getElementById('editPassword').value;
-
-    let data = {
-        username: username,
-        email: email,
-        role: role
-    };
-    if (password) {
-        data.password = password;
-    }
-
-    let csrfToken = getCsrfToken();
-
-    fetch('/admin/members/update/' + id, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': csrfToken
-        },
-        body: JSON.stringify(data)
-    })
-        .then(function (response) {
-            if (response.ok) {
-                alert(' Membre modifié avec succès !');
-                closeEditModal();
-                location.reload();
-            } else {
-                alert(' Erreur lors de la modification (code: ' + response.status + ')');
-            }
-        })
-        .catch(function (error) {
-            alert(' Erreur de connexion: ' + error.message);
-        });
-});
-
-document.getElementById('editModal').addEventListener('click', function (e) {
-    if (e.target === this) closeEditModal();
-});
+// ============================================
+// GESTION DES MODALES - SUPPRESSION
+// ============================================
 
 function openDeleteModal(button) {
     let id = button.getAttribute('data-id');
@@ -85,6 +52,10 @@ function closeDeleteModal() {
     document.getElementById('deleteModal').classList.remove('active');
 }
 
+// ============================================
+// ACTIONS CRUD - MEMBRES
+// ============================================
+
 function confirmDelete() {
     let id = document.getElementById('deleteId').value;
     let csrfToken = getCsrfToken();
@@ -97,24 +68,37 @@ function confirmDelete() {
     })
         .then(function (response) {
             if (response.ok) {
-                alert(' Membre supprimé avec succès !');
+                alert('Membre supprimé avec succès !');
                 closeDeleteModal();
                 location.reload();
             } else {
-                alert(' Erreur lors de la suppression (code: ' + response.status + ')');
+                alert('Erreur lors de la suppression (code: ' + response.status + ')');
             }
         })
         .catch(function (error) {
-            alert(' Erreur de connexion: ' + error.message);
+            alert('Erreur de connexion: ' + error.message);
         });
 }
 
-document.getElementById('deleteModal').addEventListener('click', function (e) {
-    if (e.target === this) closeDeleteModal();
-});
+function updateMember(id, data) {
+    let csrfToken = getCsrfToken();
+
+    return fetch('/admin/members/update/' + id, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': csrfToken
+        },
+        body: JSON.stringify(data)
+    });
+}
+
+// ============================================
+// ACTIONS CRUD - EMPRUNTS
+// ============================================
 
 function returnLoan(id) {
-    if (confirm(' Confirmer le retour de l\'emprunt ID: ' + id + ' ?')) {
+    if (confirm('Confirmer le retour de l\'emprunt ID: ' + id + ' ?')) {
         let csrfToken = getCsrfToken();
 
         fetch('/admin/loans/return/' + id, {
@@ -126,20 +110,20 @@ function returnLoan(id) {
         })
             .then(function (response) {
                 if (response.ok) {
-                    alert(' Emprunt retourné avec succès !');
+                    alert('Emprunt retourné avec succès !');
                     location.reload();
                 } else {
-                    alert(' Erreur lors du retour (code: ' + response.status + ')');
+                    alert('Erreur lors du retour (code: ' + response.status + ')');
                 }
             })
             .catch(function (error) {
-                alert(' Erreur de connexion: ' + error.message);
+                alert('Erreur de connexion: ' + error.message);
             });
     }
 }
 
 function deleteLoan(id) {
-    if (confirm(' Supprimer l\'emprunt ID: ' + id + ' ?')) {
+    if (confirm('Supprimer l\'emprunt ID: ' + id + ' ?')) {
         let csrfToken = getCsrfToken();
 
         fetch('/admin/loans/delete/' + id, {
@@ -150,24 +134,28 @@ function deleteLoan(id) {
         })
             .then(function (response) {
                 if (response.ok) {
-                    alert(' Emprunt supprimé avec succès !');
+                    alert('Emprunt supprimé avec succès !');
                     location.reload();
                 } else {
-                    alert(' Erreur lors de la suppression (code: ' + response.status + ')');
+                    alert('Erreur lors de la suppression (code: ' + response.status + ')');
                 }
             })
             .catch(function (error) {
-                alert(' Erreur de connexion: ' + error.message);
+                alert('Erreur de connexion: ' + error.message);
             });
     }
 }
+
+// ============================================
+// ACTIONS CRUD - MÉDIAS
+// ============================================
 
 function editMedia(id) {
     window.location.href = '/admin/medias/edit/' + id;
 }
 
 function deleteMedia(id) {
-    if (confirm(' Supprimer le média ID: ' + id + ' ?')) {
+    if (confirm('Supprimer le média ID: ' + id + ' ?')) {
         let csrfToken = getCsrfToken();
 
         fetch('/admin/medias/delete/' + id, {
@@ -178,54 +166,27 @@ function deleteMedia(id) {
         })
             .then(function (response) {
                 if (response.ok) {
-                    alert(' Média supprimé avec succès !');
+                    alert('Média supprimé avec succès !');
                     location.reload();
                 } else {
-                    alert(' Erreur lors de la suppression (code: ' + response.status + ')');
+                    alert('Erreur lors de la suppression (code: ' + response.status + ')');
                 }
             })
             .catch(function (error) {
-                alert(' Erreur de connexion: ' + error.message);
+                alert('Erreur de connexion: ' + error.message);
             });
     }
 }
 
-document.querySelectorAll('.admin-nav a').forEach(function (link) {
-    link.addEventListener('click', function (e) {
-        if (!this.getAttribute('data-tab')) return;
-
-        e.preventDefault();
-        let tabId = this.getAttribute('data-tab');
-
-        document.querySelectorAll('.admin-nav a').forEach(function (l) {
-            l.classList.remove('active');
-        });
-        this.classList.add('active');
-
-        document.querySelectorAll('.admin-section').forEach(function (section) {
-            section.classList.remove('active');
-        });
-        document.getElementById(tabId).classList.add('active');
-
-        let titles = {
-            'dashboard': 'Tableau de bord',
-            'members': 'Gestion des membres',
-            'loans': 'Gestion des emprunts',
-            'medias': 'Catalogue des médias',
-            'stats': 'Statistiques'
-        };
-        let headerTitle = document.querySelector('.admin-main > .admin-header h1');
-        if (headerTitle) {
-            headerTitle.textContent = titles[tabId];
-        }
-    });
-});
+// ============================================
+// FILTRE DES EMPRUNTS
+// ============================================
 
 function filterLoans(event, filter) {
-    let rows = document.querySelectorAll('#loansTable tbody tr');
+    let rows = document.querySelectorAll('#loansTable tbody tr:not(.empty-row)');
     rows.forEach(function (row) {
         if (row.cells && row.cells[4]) {
-            let status = row.cells[4].innerText;
+            let status = row.cells[4].innerText.trim();
             if (filter === 'all') {
                 row.style.display = '';
             } else if (filter === 'current' && status === 'BORROWED') {
@@ -248,3 +209,143 @@ function filterLoans(event, filter) {
         event.target.classList.add('active');
     }
 }
+
+// ============================================
+// NAVIGATION PAR ONGLETS
+// ============================================
+
+function initTabs() {
+    document.querySelectorAll('.admin-nav a[data-tab]').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            let tabId = this.getAttribute('data-tab');
+
+            document.querySelectorAll('.admin-nav a').forEach(function (l) {
+                l.classList.remove('active');
+            });
+            this.classList.add('active');
+
+            document.querySelectorAll('.admin-section').forEach(function (section) {
+                section.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+
+            let titles = {
+                'dashboard': 'Tableau de bord',
+                'members': 'Gestion des membres',
+                'loans': 'Gestion des emprunts',
+                'medias': 'Catalogue des médias',
+                'stats': 'Statistiques'
+            };
+            let headerTitle = document.querySelector('.admin-main > .admin-header h1');
+            if (headerTitle) {
+                headerTitle.textContent = titles[tabId] || 'Tableau de bord';
+            }
+        });
+    });
+}
+
+// ============================================
+// INITIALISATION - TOUS LES ÉCOUTEURS D'ÉVÉNEMENTS
+// ============================================
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    // ---- Navigation par onglets ----
+    initTabs();
+
+    // ---- Formulaire d'édition ----
+    document.getElementById('editForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        let id = document.getElementById('editId').value;
+        let username = document.getElementById('editUsername').value;
+        let email = document.getElementById('editEmail').value;
+        let role = document.getElementById('editRole').value;
+        let password = document.getElementById('editPassword').value;
+
+        let data = {
+            username: username,
+            email: email,
+            role: role
+        };
+        if (password) {
+            data.password = password;
+        }
+
+        updateMember(id, data)
+            .then(function (response) {
+                if (response.ok) {
+                    alert('Membre modifié avec succès !');
+                    closeEditModal();
+                    location.reload();
+                } else {
+                    alert('Erreur lors de la modification (code: ' + response.status + ')');
+                }
+            })
+            .catch(function (error) {
+                alert('Erreur de connexion: ' + error.message);
+            });
+    });
+
+    // ---- Fermeture modale édition ----
+    document.getElementById('closeEditBtn').addEventListener('click', closeEditModal);
+    document.getElementById('editModal').addEventListener('click', function (e) {
+        if (e.target === this) closeEditModal();
+    });
+
+    // ---- Fermeture modale suppression ----
+    document.getElementById('closeDeleteBtn').addEventListener('click', closeDeleteModal);
+    document.getElementById('deleteModal').addEventListener('click', function (e) {
+        if (e.target === this) closeDeleteModal();
+    });
+
+    // ---- Confirmation suppression ----
+    document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+
+    // ---- Boutons d'édition des membres ----
+    document.querySelectorAll('.edit-member-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            openEditModal(this);
+        });
+    });
+
+    // ---- Boutons de suppression des membres ----
+    document.querySelectorAll('.delete-member-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            openDeleteModal(this);
+        });
+    });
+
+    // ---- Boutons de retour d'emprunt ----
+    document.querySelectorAll('.return-loan-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            let id = this.getAttribute('data-id');
+            returnLoan(id);
+        });
+    });
+
+    // ---- Boutons de suppression d'emprunt ----
+    document.querySelectorAll('.delete-loan-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            let id = this.getAttribute('data-id');
+            deleteLoan(id);
+        });
+    });
+
+    // ---- Boutons d'édition des médias ----
+    document.querySelectorAll('.edit-media-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            let id = this.getAttribute('data-id');
+            editMedia(id);
+        });
+    });
+
+    // ---- Boutons de suppression des médias ----
+    document.querySelectorAll('.delete-media-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            let id = this.getAttribute('data-id');
+            deleteMedia(id);
+        });
+    });
+
+});

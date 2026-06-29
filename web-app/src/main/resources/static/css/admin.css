@@ -487,6 +487,101 @@
 }
 
 /* ============================================
+   AJOUTS POUR CORRECTION DES TODOS
+   ============================================ */
+
+/* Suppression des styles inline */
+.admin-nav .logout-btn {
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    cursor: pointer;
+    width: 100%;
+    text-align: left;
+    padding: 12px 20px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.admin-nav .logout-btn:hover {
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
+}
+
+/* Message d'absence de données */
+.empty-row td {
+    text-align: center;
+}
+
+.empty-row td a {
+    color: #e94560;
+    text-decoration: none;
+}
+
+.empty-row td a:hover {
+    text-decoration: underline;
+}
+
+/* Message de confirmation suppression */
+.delete-warning {
+    color: #dc3545;
+    font-size: 14px;
+}
+
+/* Action buttons container */
+.media-card-actions {
+    margin-top: 15px;
+}
+
+/* Image du média */
+.media-image img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px 8px 0 0;
+}
+
+.media-image .no-image {
+    width: 100%;
+    height: 200px;
+    background: #2d2d44;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6c757d;
+    border-radius: 8px 8px 0 0;
+}
+
+.media-category-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(233, 69, 96, 0.9);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.media-image {
+    position: relative;
+}
+
+/* Espacement pour le tableau des stats */
+.stats-table-container {
+    margin-top: 30px;
+}
+
+/* Formulaire de déconnexion dans la sidebar */
+.logout-form {
+    display: inline;
+    width: 100%;
+}
+
+/* ============================================
    TABLETTES (min-width: 768px)
    ============================================ */
 @media (min-width: 768px) {

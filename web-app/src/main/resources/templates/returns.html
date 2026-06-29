@@ -20,13 +20,8 @@
             <div th:if="${userLogin != null}">
                 <span class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></span>
                 <a th:href="@{/profile}" class="nav-link">Mon profil</a>
-                <form th:action="@{/logout}" method="post" style="display: inline;">
-                    <!--todo: délocaliser les attributs style dans les balises html vers le(s) fichier(s) CSS -->
-                    <button type="submit" class="btn-outline"
-                            style="background: none; border: none; cursor: pointer; color: #dc3545; padding: 8px 16px; font-size: 16px;">
-                        <!--todo: idem style inline -> *.css -->
-                        Se déconnecter
-                    </button>
+                <form th:action="@{/logout}" method="post" class="logout-form-inline">
+                    <button type="submit" class="logout-btn-returns">Se déconnecter</button>
                 </form>
             </div>
             <div th:unless="${userLogin != null}">
@@ -59,8 +54,8 @@
                 <tbody>
                 <tr th:each="loan : ${loans}">
                     <td th:text="${loan.id}">1</td>
-                    <td th:text="${loan.memberId}">1</td>
-                    <td th:text="${loan.bookId}">1</td>
+                    <td th:text="${loan.username}">1</td>
+                    <td th:text="${loan.title}">1</td>
                     <td th:text="${loan.loanDate}">2026-06-17</td>
                     <td th:text="${loan.returnDate}">-</td>
                     <td>

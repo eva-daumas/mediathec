@@ -109,6 +109,21 @@ public class LoanController {
             if (memberDto != null) {
                 //  Récupérer UNIQUEMENT les emprunts de CE membre
                 List<LoanDto> loanDtos = loanService.getLoansByMemberId(memberDto.getId());
+
+                for (LoanDto loan : loanDtos) {
+                    // Récupérer le username du membre
+                    MemberDto member = memberService.getMemberById(loan.getMemberId());
+                    if (member != null) {
+                        loan.setUsername(member.getUsername());
+                    }
+
+                    // Récupérer le titre du livre
+                    BookDto book = customBookService.getBookById(loan.getBookId());
+                    if (book != null) {
+                        loan.setTitle(book.getTitle());
+                    }
+                }
+
                 model.addAttribute("loans", loanDtos);
                 System.out.println("🔍 Retours trouvés pour " + email + " : " + loanDtos.size());
             } else {
