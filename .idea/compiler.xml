@@ -10,9 +10,10 @@
         <module name="web-app" />
         <module name="memberDtos-service" />
         <module name="book-service" />
-        <module name="members-service" />
+        <module name="game-service" />
         <module name="loanDto-service" />
         <module name="loan-service" />
+        <module name="members-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -22,6 +23,7 @@
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="book-service" options="-parameters" />
+      <module name="game-service" options="-parameters" />
       <module name="loan-service" options="-parameters" />
       <module name="loanDto-service" options="-parameters" />
       <module name="member-service" options="-parameters" />

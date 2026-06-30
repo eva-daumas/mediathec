@@ -64,6 +64,24 @@ services:
     networks:
       - mediathec-network
 
+  game-service:
+    image: "evadaumas/mediathec-game-service:latest"
+    container_name: game-ms
+    ports:
+      - "8088:8088"
+    environment:
+      SPRING_APPLICATION_NAME: "game-service"
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mediathec-db:3306/mediathec_db"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "root"
+      SPRING_CLOUD_CONSUL_HOST: "consul"
+      SPRING_CLOUD_CONSUL_PORT: "8500"
+    depends_on:
+      - mediathec-db
+      - consul
+    networks:
+      - mediathec-network
+
   loan-service:
     image: "evadaumas/mediathec/loan-service/loan-service:latest"
     container_name: loan-ms
@@ -98,6 +116,7 @@ services:
       - members-service
       - book-service
       - loan-service
+      - game-service
     networks:
       - mediathec-network
 
