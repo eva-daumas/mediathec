@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//todo: découper la classe WebAppController en plusieurs petites classe, AdminController | MemberController | LoanController | BookController
 
 @Controller
 public class WebAppController {

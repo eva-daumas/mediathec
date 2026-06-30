@@ -1,7 +1,7 @@
 package com.mediathec.webApp.controller;
 
 import com.mediathec.webApp.dto.MemberDto;
-import com.mediathec.webApp.service.CustomBookService;
+
 import com.mediathec.webApp.service.MemberService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

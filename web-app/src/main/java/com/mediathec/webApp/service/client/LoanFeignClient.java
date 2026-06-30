@@ -15,7 +15,6 @@ public interface LoanFeignClient {
     @GetMapping("/loans/member/{memberId}")
     List<LoanDto> getLoansByMemberId(@PathVariable("memberId") Long memberId);
 
-
     @PostMapping("/loans")
     LoanDto createLoan(@RequestBody LoanDto loanDto);
 
@@ -24,4 +23,5 @@ public interface LoanFeignClient {
 
     @DeleteMapping("/loans/{id}")
     void deleteLoan(@PathVariable("id") Long id);
+
 }

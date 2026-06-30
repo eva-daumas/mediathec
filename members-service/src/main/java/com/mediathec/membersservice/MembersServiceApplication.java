@@ -1,11 +1,9 @@
 package com.mediathec.membersservice;
 
-import com.mediathec.membersservice.entity.Member;
-import com.mediathec.membersservice.service.MemberService;
-import org.springframework.boot.CommandLineRunner;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+
 
 @SpringBootApplication
 public class MembersServiceApplication {
@@ -31,13 +29,13 @@ public class MembersServiceApplication {
 //				memberService.save(admin);
 //
 //				System.out.println("========================================");
-//				System.out.println("✅ ADMIN CRÉÉ AVEC SUCCÈS !");
+//				System.out.println(" ADMIN CRÉÉ AVEC SUCCÈS !");
 //				System.out.println("   Email: admin1@email.com");
 //				System.out.println("   Mot de passe: 123");
 //				System.out.println("   Rôle: ADMIN");
 //				System.out.println("========================================");
 //			} else {
-//				System.out.println("ℹ️ L'admin existe déjà");
+//				System.out.println("ℹ L'admin existe déjà");
 //			}
 //		};
 //	}

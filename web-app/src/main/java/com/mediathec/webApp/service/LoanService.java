@@ -2,7 +2,6 @@ package com.mediathec.webApp.service;
 
 import com.mediathec.webApp.dto.LoanDto;
 import com.mediathec.webApp.service.client.LoanFeignClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -10,9 +9,13 @@ import java.util.List;
 
 @Service
 public class LoanService {
-//todo: constructeur pat autowired
-    @Autowired
-    private LoanFeignClient loanFeignClient;
+
+    private final LoanFeignClient loanFeignClient;
+
+    // Constructeur (injection par constructeur - meilleure pratique)
+    public LoanService(LoanFeignClient loanFeignClient) {
+        this.loanFeignClient = loanFeignClient;
+    }
 
     public List<LoanDto> getAllLoans() {
         return loanFeignClient.getAllLoans();

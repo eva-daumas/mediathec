@@ -2,10 +2,7 @@ package com.mediathec.membersservice.controller;
 
 import com.mediathec.membersservice.entity.Member;
 import com.mediathec.membersservice.service.MemberService;
-//todo: penses à nettoyer tes import inutilisés
-import jakarta.validation.Valid;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
