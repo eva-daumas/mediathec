@@ -4,6 +4,7 @@ public class LoanDto {
     private Long id;
     private Long memberId;
     private Long bookId;
+    private Long gameId;
     private String loanDate;
     private String returnDate;
     private String status;
@@ -33,7 +34,10 @@ public class LoanDto {
 
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
-}
 
+    public Long getGameId() { return gameId; }  // ← AJOUTER
+    public void setGameId(Long gameId) { this.gameId = gameId; }
+
+}
 
 

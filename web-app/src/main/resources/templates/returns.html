@@ -64,8 +64,10 @@
                             </span>
                     </td>
                     <td>
+                        <!-- ✅ CORRECTION : Utiliser gameId si présent, sinon bookId -->
                         <button th:if="${loan.status == 'BORROWED'}" class="btn btn-sm btn-success"
-                                th:onclick="'returnLoan(' + ${loan.bookId} + ')'">
+                                th:data-id="${loan.gameId != null ? loan.gameId : loan.bookId}"
+                                onclick="returnLoan(this.getAttribute('data-id'))">
                             <i class="fas fa-undo-alt"></i> Retourner
                         </button>
                         <span th:unless="${loan.status == 'BORROWED'}" class="text-muted">Déjà retourné</span>

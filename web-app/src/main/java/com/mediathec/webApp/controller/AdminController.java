@@ -1,9 +1,11 @@
 package com.mediathec.webApp.controller;
 
 import com.mediathec.webApp.dto.BookDto;
+import com.mediathec.webApp.dto.GameDto;
 import com.mediathec.webApp.dto.LoanDto;
 import com.mediathec.webApp.dto.MemberDto;
 import com.mediathec.webApp.service.CustomBookService;
+import com.mediathec.webApp.service.CustomGameService;
 import com.mediathec.webApp.service.LoanService;
 import com.mediathec.webApp.service.MemberService;
 import org.springframework.http.HttpStatus;
@@ -21,11 +23,13 @@ public class AdminController {
     private final MemberService memberService;
     private final LoanService loanService;
     private final CustomBookService customBookService;
+    private final CustomGameService customGameService;
 
-    public AdminController(MemberService memberService, LoanService loanService, CustomBookService customBookService) {
+    public AdminController(MemberService memberService, LoanService loanService, CustomBookService customBookService, CustomGameService customGameService) {
         this.memberService = memberService;
         this.loanService = loanService;
         this.customBookService = customBookService;
+        this.customGameService = customGameService;
     }
 
     @GetMapping("/admin")
@@ -45,6 +49,8 @@ public class AdminController {
         List<BookDto> medias = customBookService.getAllBooks();
         List<LoanDto> loanDtos = loanService.getAllLoans();
 
+        List<GameDto> games = customGameService.getAllGames();
+
         model.addAttribute("userLogin", memberDto.getUsername());
         model.addAttribute("members", memberDtos);
         model.addAttribute("medias", medias);
@@ -52,6 +58,8 @@ public class AdminController {
         model.addAttribute("totalMembers", memberDtos != null ? memberDtos.size() : 0);
         model.addAttribute("totalMedias", medias != null ? medias.size() : 0);
         model.addAttribute("totalLoans", loanDtos != null ? loanDtos.size() : 0);
+
+        model.addAttribute("games", games);
 
         return "admin";
     }
@@ -119,7 +127,30 @@ public class AdminController {
         if (userDetails == null) {
             return "redirect:/login";
         }
-        model.addAttribute("media", customBookService.getBookById(id));
+
+        // ✅ Vérifier si le média est un livre ou un jeu
+        BookDto book = customBookService.getBookById(id);
+        if (book != null) {
+            model.addAttribute("media", book);
+        } else {
+            // Si ce n'est pas un livre, essayer de récupérer un jeu
+            GameDto game = customGameService.getGameById(id);
+            if (game != null) {
+                // Convertir GameDto en BookDto pour le formulaire
+                BookDto gameAsBook = new BookDto();
+                gameAsBook.setId(game.getId());
+                gameAsBook.setTitle(game.getTitle());
+                gameAsBook.setAuthor(game.getAuthor());
+                gameAsBook.setCategory(game.getCategory());
+                gameAsBook.setDescription(game.getDescription());
+                gameAsBook.setCoverImage(game.getCoverImage());
+                gameAsBook.setAvailable(game.isAvailable());
+                model.addAttribute("media", gameAsBook);
+            } else {
+                model.addAttribute("media", new BookDto());  // Valeur par défaut
+            }
+        }
+
         model.addAttribute("userLogin", userDetails.getUsername());
         return "media-form-edit";
     }

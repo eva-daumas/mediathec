@@ -10,11 +10,10 @@
 </head>
 <body class="admin-body">
 
-
-
+<!-- MODAL EDIT -->
 <div class="modal-overlay" id="editModal">
     <div class="modal-box">
-        <h2> Modifier le membre</h2>
+        <h2>Modifier le membre</h2>
         <form id="editForm">
             <input type="hidden" id="editId"/>
             <div class="form-group">
@@ -44,6 +43,7 @@
     </div>
 </div>
 
+<!-- MODAL DELETE -->
 <div class="modal-overlay" id="deleteModal">
     <div class="modal-box">
         <h2>Supprimer le membre</h2>
@@ -52,11 +52,12 @@
         <input type="hidden" id="deleteId"/>
         <div class="modal-actions">
             <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Annuler</button>
-            <button type="button" class="btn btn-danger" onclick="confirmDelete()"> Supprimer</button>
+            <button type="button" class="btn btn-danger" onclick="confirmDelete()">Supprimer</button>
         </div>
     </div>
 </div>
 
+<!-- SIDEBAR -->
 <div class="admin-sidebar">
     <div class="admin-logo">
         <h2>Mediathec</h2>
@@ -79,10 +80,6 @@
             <i class="fas fa-database"></i>
             <span>Médias</span>
         </a>
-        <!--        <a href="#" data-tab="stats">-->
-        <!--            <i class="fas fa-chart-bar"></i>-->
-        <!--            <span>Statistiques</span>-->
-        <!--        </a>-->
         <a th:href="@{/home}">
             <i class="fas fa-home"></i>
             <span>Accueil</span>
@@ -96,6 +93,7 @@
     </div>
 </div>
 
+<!-- MAIN CONTENT -->
 <div class="admin-main">
 
     <div class="admin-header">
@@ -106,6 +104,7 @@
         </div>
     </div>
 
+    <!-- ==================== DASHBOARD ==================== -->
     <div id="dashboard" class="admin-section active">
         <div class="stats-grid">
             <div class="stat-card">
@@ -169,6 +168,7 @@
         </div>
     </div>
 
+    <!-- ==================== MEMBRES ==================== -->
     <div id="members" class="admin-section">
         <div class="admin-header">
             <h1>Gestion des membres</h1>
@@ -219,6 +219,7 @@
         </div>
     </div>
 
+    <!-- ==================== EMPRUNTS ==================== -->
     <div id="loans" class="admin-section">
         <div class="admin-header">
             <h1>Gestion des emprunts</h1>
@@ -226,7 +227,6 @@
                 <i class="fas fa-plus"></i> Nouvel emprunt
             </a>
         </div>
-
 
         <div class="admin-table">
             <table class="data-table" id="loansTable">
@@ -252,7 +252,8 @@
                               th:text="${loan.status}">-</span>
                     </td>
                     <td class="action-buttons">
-                        <button class="btn-sm btn-edit" th:data-id="${loan.id}"
+                        <button class="btn-sm btn-edit"
+                                th:data-id="${loan.gameId != null ? loan.gameId : loan.bookId}"
                                 onclick="returnLoan(this.getAttribute('data-id'))">
                             <i class="fas fa-undo-alt"></i> Retour
                         </button>
@@ -270,6 +271,7 @@
         </div>
     </div>
 
+    <!-- ==================== MÉDIAS ==================== -->
     <div id="medias" class="admin-section">
         <div class="admin-header">
             <h1>Catalogue des médias</h1>
@@ -278,21 +280,17 @@
             </a>
         </div>
 
+        <!-- ===== LIVRES ===== -->
+        <h2 class="section-title">Livres</h2>
         <div class="media-grid">
             <div class="media-card" th:each="media : ${medias}">
-                <!-- AFFICHER L'IMAGE -->
                 <div class="media-image">
-                    <img th:if="${media.coverImage}"
-                         th:src="${media.coverImage}"
-                         alt="Couverture"/>
-
+                    <img th:if="${media.coverImage}" th:src="${media.coverImage}" alt="Couverture"/>
                     <div th:unless="${media.coverImage}" class="no-image">
-
                         <i class="fas fa-book fa-3x"></i>
                     </div>
                     <span class="media-category-badge" th:text="${media.category}">Livre</span>
                 </div>
-
                 <div class="media-card-content">
                     <h3 class="media-title" th:text="${media.title}">-</h3>
                     <div class="media-meta">
@@ -301,12 +299,10 @@
                     </div>
                     <p class="media-description" th:text="${media.description}">-</p>
                     <div class="action-buttons media-card-actions">
-                        <button class="btn-sm btn-edit" th:data-id="${media.id}"
-                                onclick="editMedia(this.getAttribute('data-id'))">
+                        <button class="btn-sm btn-edit" th:data-id="${media.id}" onclick="editMedia(this.getAttribute('data-id'))">
                             <i class="fas fa-edit"></i> Modifier
                         </button>
-                        <button class="btn-sm btn-delete" th:data-id="${media.id}"
-                                onclick="deleteMedia(this.getAttribute('data-id'))">
+                        <button class="btn-sm btn-delete" th:data-id="${media.id}" onclick="deleteMedia(this.getAttribute('data-id'))">
                             <i class="fas fa-trash"></i> Supprimer
                         </button>
                     </div>
@@ -314,12 +310,48 @@
             </div>
             <div th:if="${medias == null or medias.isEmpty()}" class="media-card">
                 <div class="media-card-content">
-                    <p>Aucun média disponible</p>
+                    <p>Aucun livre disponible</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== JEUX ===== -->
+        <h2 class="section-title">Jeux</h2>
+        <div class="media-grid">
+            <div class="media-card" th:each="game : ${games}">
+                <div class="media-image">
+                    <img th:if="${game.coverImage}" th:src="${game.coverImage}" alt="Couverture"/>
+                    <div th:unless="${game.coverImage}" class="no-image">
+                        <i class="fas fa-gamepad fa-3x"></i>
+                    </div>
+                    <span class="media-category-badge" th:text="${game.category}">Jeu</span>
+                </div>
+                <div class="media-card-content">
+                    <h3 class="media-title" th:text="${game.title}">-</h3>
+                    <div class="media-meta">
+                        <span th:text="${game.category}">Type</span> |
+                        <span th:text="${game.author}">Auteur</span>
+                    </div>
+                    <p class="media-description" th:text="${game.description}">-</p>
+                    <div class="action-buttons media-card-actions">
+                        <button class="btn-sm btn-edit" th:data-id="${game.id}" onclick="editMedia(this.getAttribute('data-id'))">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="btn-sm btn-delete" th:data-id="${game.id}" onclick="deleteMedia(this.getAttribute('data-id'))">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${games == null or games.isEmpty()}" class="media-card">
+                <div class="media-card-content">
+                    <p>Aucun jeu disponible</p>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ==================== STATISTIQUES ==================== -->
     <div id="stats" class="admin-section">
         <div class="admin-header">
             <h1>Statistiques détaillées</h1>
@@ -387,12 +419,7 @@
     </div>
 </div>
 
-
 <!-- ==================== JAVASCRIPT ==================== -->
 <script th:src="@{/js/admin.js}"></script>
 </body>
 </html>
-
-
-
-

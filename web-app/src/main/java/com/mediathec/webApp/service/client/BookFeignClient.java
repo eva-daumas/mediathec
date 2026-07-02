@@ -3,6 +3,7 @@ package com.mediathec.webApp.service.client;
 import com.mediathec.webApp.dto.BookDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @FeignClient(name = "book-service", url = "http://localhost:8086")
@@ -29,7 +30,8 @@ public interface BookFeignClient {
     @PutMapping("/api/update/{id}")
     BookDto updateBook(@PathVariable("id") Long id, @RequestBody BookDto book);
 
-    @PostMapping("api/updateAvailability/{id}")
+
+    @PostMapping("/api/updateAvailability/{id}")
     BookDto updateAvailability(@PathVariable Long id, @RequestParam boolean available);
 
     @DeleteMapping("/api/delete/{id}")

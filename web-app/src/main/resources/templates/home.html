@@ -57,8 +57,8 @@
     <p class="section-subtitle">Parcourez notre collection et empruntez vos livres préférés</p>
 
     <div class="media-grid">
-        <!-- Carte d'un média -->
-        <div class="media-card media-card-relative" th:each="media : ${medias}">
+        <!-- Carte d'un livre -->
+        <div class="media-card media-card-relative" th:each="media : ${medias}" th:if="${media.category == 'Livre'}">
             <!-- IMAGE DE COUVERTURE -->
             <div class="media-image">
                 <img th:if="${media.coverImage}"
@@ -98,7 +98,8 @@
                         <!-- Bouton EMPRUNTER (uniquement si connecté) -->
                         <button th:if="${userLogin != null and media.available and !isBorrowedByUser}"
                                 class="btn btn-primary btn-sm borrow-btn"
-                                th:data-id="${media.id}">
+                                th:data-id="${media.id}"
+                                th:data-type="'book'">
                             <i class="fas fa-hand-holding-heart"></i> Emprunter
                         </button>
 
@@ -119,10 +120,10 @@
             </div>
         </div>
 
-        <!-- Message si aucun média -->
-        <div th:if="${medias == null or medias.isEmpty()}" class="empty-state">
+        <!-- Message si aucun livre -->
+        <div th:if="${#lists.isEmpty(medias.?[category == 'Livre'])}" class="empty-state">
             <i class="fas fa-book-open fa-4x"></i>
-            <h3>Aucun média disponible</h3>
+            <h3>Aucun livre disponible</h3>
             <p>Revenez plus tard pour découvrir notre catalogue.</p>
         </div>
     </div>
@@ -132,58 +133,42 @@
     <p class="section-subtitle">Parcourez notre collection et empruntez vos jeux préférés</p>
 
     <div class="media-grid">
-        <!-- Carte d'un média -->
-        <div class="media-card media-card-relative" th:each="media : ${medias}">
+        <div class="media-card media-card-relative" th:each="media : ${games}">
             <!-- IMAGE DE COUVERTURE -->
             <div class="media-image">
                 <img th:if="${media.coverImage}"
                      th:src="${media.coverImage}"
                      th:alt="'Couverture de ' + ${media.title}"/>
                 <div th:unless="${media.coverImage}" class="no-image-cover">
-                    <i class="fas fa-book fa-4x"></i>
+                    <i class="fas fa-gamepad fa-4x"></i>
                 </div>
-                <!-- Statut en badge sur l'image (visible uniquement si connecté) -->
                 <div class="media-status" th:if="${userLogin != null}">
-                    <span class="badge" th:class="${media.available} ? 'badge-available' : 'badge-borrowed'">
-                        <span th:text="${media.available} ? 'Disponible' : 'Emprunté'">Disponible</span>
-                    </span>
-                </div>
-                <!-- Statut "Non disponible" pour non connecté -->
-                <div class="media-status" th:unless="${userLogin != null}">
+                <span class="badge" th:class="${media.available} ? 'badge-available' : 'badge-borrowed'">
+                    <span th:text="${media.available} ? 'Disponible' : 'Emprunté'">Disponible</span>
+                </span>
                 </div>
             </div>
 
             <div class="media-card-content">
-                <!-- Titre -->
                 <h3 class="media-title" th:text="${media.title}">Titre du jeu</h3>
-
-                <!-- Métadonnées -->
                 <div class="media-meta">
                     <span><i class="fas fa-user"></i> <span th:text="${media.author}">Auteur</span></span>
                     <span><i class="fas fa-tag"></i> <span th:text="${media.category}">Catégorie</span></span>
                 </div>
-
-                <!-- Description -->
                 <p class="media-description" th:text="${media.description}">Description du jeu</p>
 
-                <!-- Actions -->
                 <div class="media-actions">
                     <th:block th:with="isBorrowedByUser = ${borrowedMediaIds != null and borrowedMediaIds.contains(media.id)}">
-
-                        <!-- Bouton EMPRUNTER (uniquement si connecté) -->
                         <button th:if="${userLogin != null and media.available and !isBorrowedByUser}"
                                 class="btn btn-primary btn-sm borrow-btn"
-                                th:data-id="${media.id}">
+                                th:data-id="${media.id}"
+                                th:data-type="'game'">
                             <i class="fas fa-hand-holding-heart"></i> Emprunter
                         </button>
-
-                        <!-- Message si emprunté par un autre utilisateur (uniquement si connecté) -->
                         <span th:if="${userLogin != null and !media.available and !isBorrowedByUser}"
                               class="already-borrowed">
-                            <i class="fas fa-user"></i> Déjà emprunté
-                        </span>
-
-                        <!-- Bouton de connexion pour non connecté -->
+                        <i class="fas fa-user"></i> Déjà emprunté
+                    </span>
                         <a th:if="${userLogin == null}"
                            th:href="@{/login}"
                            class="login-prompt">
@@ -194,10 +179,9 @@
             </div>
         </div>
 
-        <!-- Message si aucun média -->
-        <div th:if="${medias == null or medias.isEmpty()}" class="empty-state">
-            <i class="fas fa-book-open fa-4x"></i>
-            <h3>Aucun média disponible</h3>
+        <div th:if="${games == null or games.isEmpty()}" class="empty-state">
+            <i class="fas fa-gamepad fa-4x"></i>
+            <h3>Aucun jeu disponible</h3>
             <p>Revenez plus tard pour découvrir notre catalogue.</p>
         </div>
     </div>

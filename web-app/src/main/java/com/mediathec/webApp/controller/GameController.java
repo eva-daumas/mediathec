@@ -1,10 +1,9 @@
 package com.mediathec.webApp.controller;
 
-import com.mediathec.webApp.dto.BookDto;
+
 import com.mediathec.webApp.dto.GameDto;
 import com.mediathec.webApp.dto.LoanDto;
 import com.mediathec.webApp.dto.MemberDto;
-import com.mediathec.webApp.service.CustomBookService;
 import com.mediathec.webApp.service.CustomGameService;
 import com.mediathec.webApp.service.LoanService;
 import com.mediathec.webApp.service.MemberService;
@@ -19,30 +18,24 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-public class BookController {
+public class GameController {
     private final MemberService memberService;
     private final LoanService loanService;
-    private final CustomBookService customBookService;
     private final CustomGameService customGameService;
 
-    public BookController(MemberService memberService, LoanService loanService, CustomBookService customBookService, CustomGameService customGameService) {
+    public GameController(MemberService memberService, LoanService loanService, CustomGameService customGameService) {
         this.memberService = memberService;
         this.loanService = loanService;
-        this.customBookService = customBookService;
         this.customGameService = customGameService;
     }
 
-    @GetMapping({"/home"})
-    public String getHomePage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        // Récupérer tous les médias
-        List<BookDto> medias = customBookService.getAllBooks();
-        model.addAttribute("medias", medias);
-
+    @GetMapping({"/games"})
+    public String getGamesPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        // Récupérer tous les jeux
         List<GameDto> games = customGameService.getAllGames();
-        model.addAttribute("games", games);
+        model.addAttribute("games", games);   // ← TOUJOURS présents
 
-
-        List<Long> borrowedMediaIds = new ArrayList<>();
+        List<Long> borrowedGameIds = new ArrayList<>();
 
         if (userDetails != null) {   // ← SEULEMENT SI CONNECTÉ
             String email = userDetails.getUsername();
@@ -54,9 +47,9 @@ public class BookController {
                     model.addAttribute("currentMemberId", memberDto.getId());
                     model.addAttribute("memberRole", memberDto.getRole());
                     List<LoanDto> userLoanDtos = loanService.getLoansByMemberId(memberDto.getId());
-                    borrowedMediaIds = userLoanDtos.stream()
+                    borrowedGameIds = userLoanDtos.stream()
                             .filter(loanDto -> "BORROWED".equals(loanDto.getStatus()))
-                            .map(LoanDto::getBookId)
+                            .map(LoanDto::getGameId)
                             .collect(Collectors.toList());
                 }
             } catch (Exception e) {
@@ -64,8 +57,7 @@ public class BookController {
             }
         }
 
-        model.addAttribute("borrowedMediaIds", borrowedMediaIds);
-        return "home";
+        model.addAttribute("borrowedGameIds", borrowedGameIds);
+        return "games";
     }
 }
-

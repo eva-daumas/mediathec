@@ -1,5 +1,6 @@
 package com.mediathec.loanService.service;
 
+import com.mediathec.loanService.dto.LoanDto;
 import com.mediathec.loanService.entity.Loan;
 import com.mediathec.loanService.repository.LoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +35,19 @@ public class LoanService {
         return loanRepository.save(loan);
     }
 
+    public Loan createLoan(LoanDto loanDto) {
+        Loan loan = new Loan();
+        loan.setMemberId(loanDto.getMemberId());
+        loan.setBookId(loanDto.getBookId());
+        loan.setGameId(loanDto.getGameId());  // ← ✅ DOIT ÊTRE PRÉSENT
+        loan.setStatus("BORROWED");
+        loan.setLoanDate(LocalDateTime.now());
+        return loanRepository.save(loan);
+    }
+
     public Loan returnLoan(Long id) {
         Loan loan = loanRepository.findById(id).orElse(null);
-        if (loan != null && "BORROWED".equals(loan.getStatus())) {
+        if (loan != null) {
             loan.setStatus("RETURNED");
             loan.setReturnDate(LocalDateTime.now());
             return loanRepository.save(loan);

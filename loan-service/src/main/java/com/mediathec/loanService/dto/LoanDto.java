@@ -1,9 +1,10 @@
-package com.mediathec.loanService.dto;  // ← Package : com.mediathec.loanService.dto
+package com.mediathec.loanService.dto;
 
 public class LoanDto {
     private Long id;
     private Long memberId;
     private Long bookId;
+    private Long gameId;
     private String loanDate;
     private String returnDate;
     private String status;
@@ -26,4 +27,12 @@ public class LoanDto {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public Long getGameId() {
+        return gameId;
+    }
+
+    public void setGameId(Long gameId) {
+        this.gameId = gameId;
+    }
 }
