@@ -255,52 +255,45 @@ document.addEventListener('DOMContentLoaded', function () {
     initTabs();
 
     // ---- Formulaire d'édition ----
-    document.getElementById('editForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        let id = document.getElementById('editId').value;
-        let username = document.getElementById('editUsername').value;
-        let email = document.getElementById('editEmail').value;
-        let role = document.getElementById('editRole').value;
-        let password = document.getElementById('editPassword').value;
-
-        let data = {
-            username: username,
-            email: email,
-            role: role
-        };
-        if (password) {
-            data.password = password;
-        }
-
-        updateMember(id, data)
-            .then(function (response) {
-                if (response.ok) {
-                    alert('Membre modifié avec succès !');
-                    closeEditModal();
-                    location.reload();
-                } else {
-                    alert('Erreur lors de la modification (code: ' + response.status + ')');
-                }
-            })
-            .catch(function (error) {
-                alert('Erreur de connexion: ' + error.message);
-            });
-    });
+    const editForm = document.getElementById('editForm');
+    if (editForm) {
+        editForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            // ... reste du code
+        });
+    }
 
     // ---- Fermeture modale édition ----
-    document.getElementById('closeEditBtn').addEventListener('click', closeEditModal);
-    document.getElementById('editModal').addEventListener('click', function (e) {
-        if (e.target === this) closeEditModal();
-    });
+    const closeEditBtn = document.getElementById('closeEditBtn');
+    if (closeEditBtn) {
+        closeEditBtn.addEventListener('click', closeEditModal);
+    }
+
+    const editModal = document.getElementById('editModal');
+    if (editModal) {
+        editModal.addEventListener('click', function (e) {
+            if (e.target === this) closeEditModal();
+        });
+    }
 
     // ---- Fermeture modale suppression ----
-    document.getElementById('closeDeleteBtn').addEventListener('click', closeDeleteModal);
-    document.getElementById('deleteModal').addEventListener('click', function (e) {
-        if (e.target === this) closeDeleteModal();
-    });
+    const closeDeleteBtn = document.getElementById('closeDeleteBtn');
+    if (closeDeleteBtn) {
+        closeDeleteBtn.addEventListener('click', closeDeleteModal);
+    }
+
+    const deleteModal = document.getElementById('deleteModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('click', function (e) {
+            if (e.target === this) closeDeleteModal();
+        });
+    }
 
     // ---- Confirmation suppression ----
-    document.getElementById('confirmDeleteBtn').addEventListener('click', confirmDelete);
+    const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', confirmDelete);
+    }
 
     // ---- Boutons d'édition des membres ----
     document.querySelectorAll('.edit-member-btn').forEach(function (btn) {

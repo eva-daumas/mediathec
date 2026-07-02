@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -45,21 +46,34 @@ public class AdminController {
             return "redirect:/profile";
         }
 
-        List<MemberDto> memberDtos = memberService.getAllMembers();
-        List<BookDto> medias = customBookService.getAllBooks();
-        List<LoanDto> loanDtos = loanService.getAllLoans();
+        // 1. Récupérer les livres
+        List<BookDto> books = customBookService.getAllBooks();
 
+        // 2. Récupérer les jeux
         List<GameDto> games = customGameService.getAllGames();
 
+        // 3. Combiner livres ET jeux dans une liste "medias"
+        List<Object> medias = new ArrayList<>();
+        if (books != null) medias.addAll(books);
+        if (games != null) medias.addAll(games);
+
+        // 4. Récupérer les autres données
+        List<MemberDto> memberDtos = memberService.getAllMembers();
+        List<LoanDto> loanDtos = loanService.getAllLoans();
+
+        // 5. Calculer le total des médias (livres + jeux)
+        int totalMedias = (books != null ? books.size() : 0) + (games != null ? games.size() : 0);
+
+        // 6. Ajouter tout au modèle
         model.addAttribute("userLogin", memberDto.getUsername());
         model.addAttribute("members", memberDtos);
-        model.addAttribute("medias", medias);
+        model.addAttribute("medias", medias);        // Pour la compatibilité
+        model.addAttribute("books", books);          // Pour la section livres
+        model.addAttribute("games", games);          // Pour la section jeux
         model.addAttribute("allLoans", loanDtos);
         model.addAttribute("totalMembers", memberDtos != null ? memberDtos.size() : 0);
-        model.addAttribute("totalMedias", medias != null ? medias.size() : 0);
+        model.addAttribute("totalMedias", totalMedias);  // ← CORRIGÉ
         model.addAttribute("totalLoans", loanDtos != null ? loanDtos.size() : 0);
-
-        model.addAttribute("games", games);
 
         return "admin";
     }
