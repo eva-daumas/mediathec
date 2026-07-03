@@ -81,5 +81,23 @@ public class MemberController {
                     .body("Erreur: " + e.getMessage());
         }
     }
+    @GetMapping("/profile/edit")
+    public String showEditProfileForm(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return "redirect:/login";
+        }
+
+        String email = userDetails.getUsername();
+        MemberDto memberDto = memberService.getMemberByEmail(email);
+
+        // ✅ Vérifier que memberDto n'est pas null
+        if (memberDto == null) {
+            return "redirect:/profile?error=memberNotFound";
+        }
+
+        model.addAttribute("memberDto", memberDto);
+        model.addAttribute("userLogin", email);
+        return "member/member-edit";
+    }
 }
 
