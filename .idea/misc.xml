@@ -13,6 +13,8 @@
         <option value="$PROJECT_DIR$/game/game-service/pom.xml" />
         <option value="$PROJECT_DIR$/game-service/game-service/pom.xml" />
         <option value="$PROJECT_DIR$/game-service/pom.xml" />
+        <option value="$PROJECT_DIR$/movies/pom.xml" />
+        <option value="$PROJECT_DIR$/movie-service/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

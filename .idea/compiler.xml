@@ -13,11 +13,13 @@
         <module name="game-service" />
         <module name="loanDto-service" />
         <module name="loan-service" />
+        <module name="movie-service" />
         <module name="members-service" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="member-service" target="17" />
+      <module name="movies" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -29,6 +31,8 @@
       <module name="member-service" options="-parameters" />
       <module name="memberDtos-service" options="-parameters" />
       <module name="members-service" options="-parameters" />
+      <module name="movie-service" options="-parameters" />
+      <module name="movies" options="-parameters" />
       <module name="web-app" options="-parameters" />
     </option>
   </component>

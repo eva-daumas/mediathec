@@ -190,6 +190,60 @@
     <h2 class="section-title">Catalogue des films</h2>
     <p class="section-subtitle">Parcourez notre collection et empruntez vos films préférés</p>
 
+    <div class="media-grid">
+        <div class="media-card media-card-relative" th:each="media : ${movies}">
+            <!-- IMAGE DE COUVERTURE -->
+            <div class="media-image">
+                <img th:if="${media.coverImage}"
+                     th:src="${media.coverImage}"
+                     th:alt="'Couverture de ' + ${media.title}"/>
+                <div th:unless="${media.coverImage}" class="no-image-cover">
+                    <i class="fas fa-moviepad fa-4x"></i>
+                </div>
+                <div class="media-status" th:if="${userLogin != null}">
+                <span class="badge" th:class="${media.available} ? 'badge-available' : 'badge-borrowed'">
+                    <span th:text="${media.available} ? 'Disponible' : 'Emprunté'">Disponible</span>
+                </span>
+                </div>
+            </div>
+
+            <div class="media-card-content">
+                <h3 class="media-title" th:text="${media.title}">Titre du film</h3>
+                <div class="media-meta">
+                    <span><i class="fas fa-user"></i> <span th:text="${media.author}">Auteur</span></span>
+                    <span><i class="fas fa-tag"></i> <span th:text="${media.category}">Catégorie</span></span>
+                </div>
+                <p class="media-description" th:text="${media.description}">Description du film</p>
+
+                <div class="media-actions">
+                    <th:block th:with="isBorrowedByUser = ${borrowedMediaIds != null and borrowedMediaIds.contains(media.id)}">
+                        <button th:if="${userLogin != null and media.available and !isBorrowedByUser}"
+                                class="btn btn-primary btn-sm borrow-btn"
+                                th:data-id="${media.id}"
+                                th:data-type="'movie'">
+                            <i class="fas fa-hand-holding-heart"></i> Emprunter
+                        </button>
+                        <span th:if="${userLogin != null and !media.available and !isBorrowedByUser}"
+                              class="already-borrowed">
+                        <i class="fas fa-user"></i> Déjà emprunté
+                    </span>
+                        <a th:if="${userLogin == null}"
+                           th:href="@{/login}"
+                           class="login-prompt">
+                            <i class="fas fa-lock"></i> Connectez-vous
+                        </a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${movie == null or movie.isEmpty()}" class="empty-state">
+            <i class="fas fa-moviepad fa-4x"></i>
+            <h3>Aucun film disponible</h3>
+            <p>Revenez plus tard pour découvrir notre catalogue.</p>
+        </div>
+    </div>
+
 </div> <!-- ===== FIN DE .container ===== -->
 
 
