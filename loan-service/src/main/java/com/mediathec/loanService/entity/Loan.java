@@ -13,6 +13,7 @@ public class Loan {
 
     private Long bookId;
     private Long gameId;  // ← DOIT ÊTRE PRÉSENT
+    private Long movieId;
 
     @Column(nullable = false)
     private Long memberId;
@@ -24,10 +25,11 @@ public class Loan {
     public Loan() {}
 
     // ✅ CONSTRUCTEUR AVEC TOUS LES CHAMPS
-    public Loan(Long memberId, Long bookId, Long gameId, String status) {
+    public Loan(Long memberId, Long bookId, Long gameId, Long movieId, String status) {
         this.memberId = memberId;
         this.bookId = bookId;
         this.gameId = gameId;
+        this.movieId = movieId;
         this.status = status;
         this.loanDate = LocalDateTime.now();
     }
@@ -60,4 +62,7 @@ public class Loan {
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
+
+    public Long getMovieId() { return movieId; }  // ← AJOUTER
+    public void setMovieId(Long movieId) { this.movieId = movieId; }
 }

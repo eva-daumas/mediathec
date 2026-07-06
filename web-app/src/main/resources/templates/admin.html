@@ -311,7 +311,7 @@
             </div>
             <div th:if="${medias == null or medias.isEmpty()}" class="media-card">
                 <div class="media-card-content">
-                    <p>Aucun livre disponible</p>
+
                 </div>
             </div>
         </div>
@@ -346,7 +346,42 @@
             </div>
             <div th:if="${games == null or games.isEmpty()}" class="media-card">
                 <div class="media-card-content">
-                    <p>Aucun jeu disponible</p>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== FILMS ===== -->
+        <h2 class="section-title">Films</h2>
+        <div class="media-grid">
+            <div class="media-card" th:each="film : ${films}">
+                <div class="media-image">
+                    <img th:if="${film.coverImage}" th:src="${film.coverImage}" alt="Couverture"/>
+                    <div th:unless="${film.coverImage}" class="no-image">
+                        <i class="fas fa-filmpad fa-3x"></i>
+                    </div>
+                    <span class="media-category-badge" th:text="${film.category}">Film</span>
+                </div>
+                <div class="media-card-content">
+                    <h3 class="media-title" th:text="${film.title}">-</h3>
+                    <div class="media-meta">
+                        <span th:text="${film.category}">Type</span> |
+                        <span th:text="${film.author}">Auteur</span>
+                    </div>
+                    <p class="media-description" th:text="${film.description}">-</p>
+                    <div class="action-buttons media-card-actions">
+                        <button class="btn-sm btn-edit" th:data-id="${film.id}" onclick="editMedia(this.getAttribute('data-id'))">
+                            <i class="fas fa-edit"></i> Modifier
+                        </button>
+                        <button class="btn-sm btn-delete" th:data-id="${film.id}" onclick="deleteMedia(this.getAttribute('data-id'))">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${films == null or films.isEmpty()}" class="media-card">
+                <div class="media-card-content">
+
                 </div>
             </div>
         </div>

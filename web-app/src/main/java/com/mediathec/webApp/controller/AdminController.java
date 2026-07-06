@@ -1,13 +1,7 @@
 package com.mediathec.webApp.controller;
 
-import com.mediathec.webApp.dto.BookDto;
-import com.mediathec.webApp.dto.GameDto;
-import com.mediathec.webApp.dto.LoanDto;
-import com.mediathec.webApp.dto.MemberDto;
-import com.mediathec.webApp.service.CustomBookService;
-import com.mediathec.webApp.service.CustomGameService;
-import com.mediathec.webApp.service.LoanService;
-import com.mediathec.webApp.service.MemberService;
+import com.mediathec.webApp.dto.*;
+import com.mediathec.webApp.service.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,12 +19,14 @@ public class AdminController {
     private final LoanService loanService;
     private final CustomBookService customBookService;
     private final CustomGameService customGameService;
+    private final CustomMovieService customMovieService;
 
-    public AdminController(MemberService memberService, LoanService loanService, CustomBookService customBookService, CustomGameService customGameService) {
+    public AdminController(MemberService memberService, LoanService loanService, CustomBookService customBookService, CustomGameService customGameService, CustomMovieService customMovieService) {
         this.memberService = memberService;
         this.loanService = loanService;
         this.customBookService = customBookService;
         this.customGameService = customGameService;
+        this.customMovieService = customMovieService;
     }
 
     @GetMapping("/admin")
@@ -52,17 +48,23 @@ public class AdminController {
         // 2. Récupérer les jeux
         List<GameDto> games = customGameService.getAllGames();
 
+        // 3. Récupérer les films
+        List<MovieDto> movies = customMovieService.getAllMovies();
+
         // 3. Combiner livres ET jeux dans une liste "medias"
         List<Object> medias = new ArrayList<>();
         if (books != null) medias.addAll(books);
         if (games != null) medias.addAll(games);
+        if (movies != null) medias.addAll(movies);
 
         // 4. Récupérer les autres données
         List<MemberDto> memberDtos = memberService.getAllMembers();
         List<LoanDto> loanDtos = loanService.getAllLoans();
 
         // 5. Calculer le total des médias (livres + jeux)
-        int totalMedias = (books != null ? books.size() : 0) + (games != null ? games.size() : 0);
+        int totalMedias = (books != null ? books.size() : 0)
+        + (games != null ? games.size() : 0)
+        + (movies != null ? movies.size() : 0);
 
         // 6. Ajouter tout au modèle
         model.addAttribute("userLogin", memberDto.getUsername());
@@ -70,9 +72,10 @@ public class AdminController {
         model.addAttribute("medias", medias);        // Pour la compatibilité
         model.addAttribute("books", books);          // Pour la section livres
         model.addAttribute("games", games);          // Pour la section jeux
+        model.addAttribute("movies", movies);        // Pour la section films
         model.addAttribute("allLoans", loanDtos);
         model.addAttribute("totalMembers", memberDtos != null ? memberDtos.size() : 0);
-        model.addAttribute("totalMedias", totalMedias);  // ← CORRIGÉ
+        model.addAttribute("totalMedias", totalMedias);
         model.addAttribute("totalLoans", loanDtos != null ? loanDtos.size() : 0);
 
         return "admin";

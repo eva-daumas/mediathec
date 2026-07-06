@@ -43,7 +43,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Membre</th>
-                    <th>Livre</th>
+                    <th>Titre</th>
                     <th>Date d'emprunt</th>
                     <th>Date de retour</th>
                     <th>Statut</th>
@@ -66,7 +66,7 @@
                     <td>
                         <!-- ✅ CORRECTION : Utiliser gameId si présent, sinon bookId -->
                         <button th:if="${loan.status == 'BORROWED'}" class="btn btn-sm btn-success"
-                                th:data-id="${loan.gameId != null ? loan.gameId : loan.bookId}"
+                                th:data-id="${loan.gameId} != null ? ${loan.gameId} : (${loan.bookId} != null ? ${loan.bookId} : ${loan.movieId})"
                                 onclick="returnLoan(this.getAttribute('data-id'))">
                             <i class="fas fa-undo-alt"></i> Retourner
                         </button>

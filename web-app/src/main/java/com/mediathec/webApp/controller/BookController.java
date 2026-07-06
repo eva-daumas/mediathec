@@ -1,13 +1,7 @@
 package com.mediathec.webApp.controller;
 
-import com.mediathec.webApp.dto.BookDto;
-import com.mediathec.webApp.dto.GameDto;
-import com.mediathec.webApp.dto.LoanDto;
-import com.mediathec.webApp.dto.MemberDto;
-import com.mediathec.webApp.service.CustomBookService;
-import com.mediathec.webApp.service.CustomGameService;
-import com.mediathec.webApp.service.LoanService;
-import com.mediathec.webApp.service.MemberService;
+import com.mediathec.webApp.dto.*;
+import com.mediathec.webApp.service.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -24,12 +18,14 @@ public class BookController {
     private final LoanService loanService;
     private final CustomBookService customBookService;
     private final CustomGameService customGameService;
+    private final CustomMovieService customMovieService;
 
-    public BookController(MemberService memberService, LoanService loanService, CustomBookService customBookService, CustomGameService customGameService) {
+    public BookController(MemberService memberService, LoanService loanService, CustomBookService customBookService, CustomGameService customGameService, CustomMovieService customMovieService) {
         this.memberService = memberService;
         this.loanService = loanService;
         this.customBookService = customBookService;
         this.customGameService = customGameService;
+        this.customMovieService = customMovieService;
     }
 
     @GetMapping({"/home"})
@@ -40,6 +36,9 @@ public class BookController {
 
         List<GameDto> games = customGameService.getAllGames();
         model.addAttribute("games", games);
+
+        List<MovieDto> movies = customMovieService.getAllMovies();
+        model.addAttribute("movies", movies);
 
 
         List<Long> borrowedMediaIds = new ArrayList<>();
@@ -56,7 +55,13 @@ public class BookController {
                     List<LoanDto> userLoanDtos = loanService.getLoansByMemberId(memberDto.getId());
                     borrowedMediaIds = userLoanDtos.stream()
                             .filter(loanDto -> "BORROWED".equals(loanDto.getStatus()))
-                            .map(LoanDto::getBookId)
+                            .flatMap(loanDto -> {
+                                List<Long> ids = new ArrayList<>();
+                                if (loanDto.getBookId() != null) ids.add(loanDto.getBookId());
+                                if (loanDto.getGameId() != null) ids.add(loanDto.getGameId());
+                                if (loanDto.getMovieId() != null) ids.add(loanDto.getMovieId());
+                                return ids.stream();
+                            })
                             .collect(Collectors.toList());
                 }
             } catch (Exception e) {
@@ -68,4 +73,3 @@ public class BookController {
         return "home";
     }
 }
-

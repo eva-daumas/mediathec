@@ -25,13 +25,16 @@ function borrowMedia(mediaId, mediaType) {
         status: 'BORROWED'
     };
 
-    // Ajouter bookId OU gameId selon le type
+    // Ajouter bookId, gameId OU movieId selon le type
     if (mediaType === 'book') {
         loanData.bookId = parseInt(mediaId);
         console.log('📚 Emprunt d\'un livre ID:', mediaId);
     } else if (mediaType === 'game') {
         loanData.gameId = parseInt(mediaId);
         console.log('🎮 Emprunt d\'un jeu ID:', mediaId);
+    } else if (mediaType === 'movie') {  // ← AJOUTER CE CAS
+        loanData.movieId = parseInt(mediaId);
+        console.log('🎬 Emprunt d\'un film ID:', mediaId);
     } else {
         // Fallback: essayer bookId
         loanData.bookId = parseInt(mediaId);
@@ -73,11 +76,10 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.borrow-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
             let mediaId = this.getAttribute('data-id');
-            let mediaType = this.getAttribute('data-type'); // 'book' ou 'game'
+            let mediaType = this.getAttribute('data-type'); // 'book', 'game' ou 'movie'
 
             // Vérifier que mediaType est défini
             if (!mediaType) {
-                // Fallback: si le type n'est pas défini, regarder la catégorie dans un attribut
                 console.warn('⚠️ data-type manquant pour le média ID:', mediaId);
                 mediaType = 'book'; // Par défaut
             }

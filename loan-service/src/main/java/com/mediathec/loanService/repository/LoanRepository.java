@@ -17,5 +17,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
 
     List<Loan> findByGameId(Long gameId);
 
+    List<Loan> findByMovieId(Long movieId);
+
 
 }

@@ -39,7 +39,8 @@ public class LoanService {
         Loan loan = new Loan();
         loan.setMemberId(loanDto.getMemberId());
         loan.setBookId(loanDto.getBookId());
-        loan.setGameId(loanDto.getGameId());  // ← ✅ DOIT ÊTRE PRÉSENT
+        loan.setGameId(loanDto.getGameId());
+        loan.setMovieId(loanDto.getMovieId());
         loan.setStatus("BORROWED");
         loan.setLoanDate(LocalDateTime.now());
         return loanRepository.save(loan);

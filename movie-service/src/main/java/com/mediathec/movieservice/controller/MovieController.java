@@ -66,7 +66,7 @@ import java.util.List;
             return ResponseEntity.noContent().build();
         }
 
-        @PostMapping("/api/updateAvailability/{id}")
+        @PostMapping("/updateAvailability/{id}")
         public ResponseEntity<Movie> updateAvailability(@PathVariable Long id, @RequestParam boolean available) {
             Movie updatedMovie = movieService.updateAvailability(id, available);
             return updatedMovie != null ? ResponseEntity.ok(updatedMovie) : ResponseEntity.notFound().build();

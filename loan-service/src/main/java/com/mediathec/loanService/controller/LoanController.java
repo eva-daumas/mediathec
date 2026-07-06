@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/loans")
+@RequestMapping("/api/loans")
 @AllArgsConstructor
 public class LoanController {
 
     private final LoanService loanService;
 
-    // ✅ GET - Récupérer tous les emprunts
+    //  GET - Récupérer tous les emprunts
     @GetMapping
     public ResponseEntity<List<LoanDto>> getAllLoans() {
         List<Loan> loans = loanService.getAllLoans();
@@ -29,14 +29,14 @@ public class LoanController {
         return ResponseEntity.ok(loanDtos);
     }
 
-    // ✅ GET - Récupérer un emprunt par ID
+    //  GET - Récupérer un emprunt par ID
     @GetMapping("/{id}")
     public ResponseEntity<LoanDto> getLoanById(@PathVariable Long id) {
         Loan loan = loanService.getLoanById(id);
         return ResponseEntity.ok(convertToDto(loan));
     }
 
-    // ✅ GET - Récupérer les emprunts d'un membre
+    //  GET - Récupérer les emprunts d'un membre
     @GetMapping("/member/{memberId}")
     public ResponseEntity<List<LoanDto>> getLoansByMemberId(@PathVariable Long memberId) {
         List<Loan> loans = loanService.getLoansByMemberId(memberId);
@@ -46,13 +46,15 @@ public class LoanController {
         return ResponseEntity.ok(loanDtos);
     }
 
-    // ✅ POST - Créer un emprunt (CORRECTION : enlever le "/loans" en trop)
+    //  POST - Créer un emprunt (CORRECTION : enlever le "/loans" en trop)
     @PostMapping
     public ResponseEntity<Loan> createLoan(@RequestBody LoanDto loanDto) {
         Loan loan = new Loan();
         loan.setMemberId(loanDto.getMemberId());
         loan.setBookId(loanDto.getBookId());
         loan.setGameId(loanDto.getGameId());
+        loan.setMovieId(loanDto.getMovieId());
+
         loan.setStatus("BORROWED");
         loan.setLoanDate(LocalDateTime.now());
 
@@ -60,7 +62,7 @@ public class LoanController {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedLoan);
     }
 
-    // ✅ PUT - Retourner un emprunt
+    //  PUT - Retourner un emprunt
     @PutMapping("/return/{id}")
     public ResponseEntity<LoanDto> returnLoan(@PathVariable Long id) {
         Loan returnedLoan = loanService.returnLoan(id);
@@ -70,7 +72,7 @@ public class LoanController {
         return ResponseEntity.ok(convertToDto(returnedLoan));
     }
 
-    // ✅ DELETE - Supprimer un emprunt
+    //  DELETE - Supprimer un emprunt
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteLoan(@PathVariable Long id) {
         loanService.deleteLoan(id);
@@ -87,6 +89,8 @@ public class LoanController {
         dto.setMemberId(loan.getMemberId());
         dto.setBookId(loan.getBookId());
         dto.setGameId(loan.getGameId());
+        dto.setMovieId(loan.getMovieId());
+
         dto.setLoanDate(loan.getLoanDate() != null ? loan.getLoanDate().toString() : null);
         dto.setReturnDate(loan.getReturnDate() != null ? loan.getReturnDate().toString() : null);
         dto.setStatus(loan.getStatus());

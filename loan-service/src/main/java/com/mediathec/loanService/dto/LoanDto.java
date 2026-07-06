@@ -8,6 +8,7 @@ public class LoanDto {
     private String loanDate;
     private String returnDate;
     private String status;
+    private Long movieId;
 
     // Getters et Setters
     public Long getId() { return id; }
@@ -35,4 +36,8 @@ public class LoanDto {
     public void setGameId(Long gameId) {
         this.gameId = gameId;
     }
+
+    public Long getMovieId() { return movieId; }
+    public void setMovieId(Long movieId) { this.movieId = movieId; }
+
 }

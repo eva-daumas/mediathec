@@ -20,3 +20,4 @@ public interface BookRepository extends JpaRepository<Book, Long> {
     // Méthode pour getAvailableBooks
     List<Book> findByAvailableTrue();
 }
+

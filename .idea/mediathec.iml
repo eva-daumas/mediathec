@@ -284,5 +284,6 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-jpa:3.2.6" level="project" />
   </component>
 </module>

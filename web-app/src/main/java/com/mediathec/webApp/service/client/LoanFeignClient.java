@@ -1,3 +1,4 @@
+// Dans com.mediathec.webApp.service.client.LoanFeignClient.java
 package com.mediathec.webApp.service.client;
 
 import com.mediathec.webApp.dto.LoanDto;
@@ -6,22 +7,21 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name = "loan-service", url = "${loan.service.url:http://localhost:8087}")
+@FeignClient(name = "loan-service", url = "http://localhost:8087")  // ← Vérifier le port
 public interface LoanFeignClient {
 
-    @GetMapping("/loans")
+    @GetMapping("/api/loans")
     List<LoanDto> getAllLoans();
 
-    @GetMapping("/loans/member/{memberId}")
+    @GetMapping("/api/loans/member/{memberId}")
     List<LoanDto> getLoansByMemberId(@PathVariable("memberId") Long memberId);
 
-    @PostMapping("/loans")
+    @PostMapping("/api/loans")
     LoanDto createLoan(@RequestBody LoanDto loanDto);
 
-    @PutMapping("/loans/return/{id}")
+    @PutMapping("/api/loans/return/{id}")
     void returnLoan(@PathVariable("id") Long id);
 
-    @DeleteMapping("/loans/{id}")
+    @DeleteMapping("/api/loans/{id}")
     void deleteLoan(@PathVariable("id") Long id);
-
 }

@@ -5,10 +5,8 @@ import com.mediathec.webApp.dto.BorrowedMediaDto;
 import com.mediathec.webApp.dto.GameDto;
 import com.mediathec.webApp.dto.LoanDto;
 import com.mediathec.webApp.dto.MemberDto;
-import com.mediathec.webApp.service.CustomBookService;
-import com.mediathec.webApp.service.CustomGameService;
-import com.mediathec.webApp.service.LoanService;
-import com.mediathec.webApp.service.MemberService;
+import com.mediathec.webApp.dto.MovieDto;
+import com.mediathec.webApp.service.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,14 +25,16 @@ public class LoanController {
     private final LoanService loanService;
     private final CustomBookService customBookService;
     private final CustomGameService customGameService;
+    private final CustomMovieService customMovieService;
 
     public LoanController(MemberService memberService, LoanService loanService,
                           CustomBookService customBookService,
-                          CustomGameService customGameService) {
+                          CustomGameService customGameService, CustomMovieService customMovieService) {
         this.memberService = memberService;
         this.loanService = loanService;
         this.customBookService = customBookService;
         this.customGameService = customGameService;
+        this.customMovieService = customMovieService;
     }
 
     @GetMapping("/profile")
@@ -107,6 +107,22 @@ public class LoanController {
                     }
                 } catch (Exception e) {
                     borrowedMedia.setCategory("Jeu");
+                    borrowedMedia.setTitle("Erreur de chargement");
+                }
+            }
+            //  AJOUT POUR LES FILMS
+            else if (loanDto.getMovieId() != null) {
+                try {
+                    MovieDto movieDto = customMovieService.getMovieById(loanDto.getMovieId());
+                    if (movieDto != null) {
+                        borrowedMedia.setCategory(movieDto.getCategory());
+                        borrowedMedia.setTitle(movieDto.getTitle());
+                    } else {
+                        borrowedMedia.setCategory("Film");
+                        borrowedMedia.setTitle("Film non trouvé (ID: " + loanDto.getMovieId() + ")");
+                    }
+                } catch (Exception e) {
+                    borrowedMedia.setCategory("Film");
                     borrowedMedia.setTitle("Erreur de chargement");
                 }
             } else {
@@ -183,6 +199,19 @@ public class LoanController {
                         } catch (Exception e) {
                             loan.setTitle("Erreur chargement jeu");
                         }
+                    }
+                    //  AJOUT POUR LES FILMS
+                    else if (loan.getMovieId() != null) {
+                        try {
+                            MovieDto movie = customMovieService.getMovieById(loan.getMovieId());
+                            if (movie != null) {
+                                loan.setTitle(movie.getTitle());
+                            } else {
+                                loan.setTitle("Film non trouvé");
+                            }
+                        } catch (Exception e) {
+                            loan.setTitle("Erreur chargement film");
+                        }
                     } else {
                         loan.setTitle("Média inconnu");
                     }
@@ -216,17 +245,19 @@ public class LoanController {
             } else if (loanDto.getGameId() != null && loanDto.getGameId() > 0) {
                 // C'est un jeu
                 System.out.println("🎮 Emprunt d'un jeu ID: " + loanDto.getGameId());
-
-                //  NE PAS mettre gameId dans bookId !
-                //  Garder gameId dans gameId
                 LoanDto created = loanService.createLoan(loanDto);
-
-                // Mettre à jour la disponibilité
                 customGameService.updateAvailability(loanDto.getGameId(), false);
                 return ResponseEntity.ok(created);
 
+            } else if (loanDto.getMovieId() != null && loanDto.getMovieId() > 0) { // ← AJOUTE CES 4 LIGNES
+                // C'est un film
+                System.out.println("🎬 Emprunt d'un film ID: " + loanDto.getMovieId());
+                LoanDto created = loanService.createLoan(loanDto);
+                customMovieService.updateAvailability(loanDto.getMovieId(), false);
+                return ResponseEntity.ok(created);
+
             } else {
-                return ResponseEntity.badRequest().body(" Aucun média spécifié (bookId ou gameId requis)");
+                return ResponseEntity.badRequest().body(" Aucun média spécifié (bookId, gameId ou movieId requis)");
             }
 
         } catch (Exception e) {
@@ -243,22 +274,24 @@ public class LoanController {
             List<LoanDto> loanDtos = loanService.getAllLoans();
             LoanDto activeLoanDto = loanDtos.stream()
                     .filter(l -> (l.getBookId() != null && l.getBookId().equals(mediaId)) ||
-                            (l.getGameId() != null && l.getGameId().equals(mediaId)))
+                            (l.getGameId() != null && l.getGameId().equals(mediaId)) ||
+                            (l.getMovieId() != null && l.getMovieId().equals(mediaId))) // AJOUT film
                     .filter(l -> "BORROWED".equals(l.getStatus()))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Aucun emprunt actif pour ce média"));
 
             loanService.returnLoan(activeLoanDto.getId());
 
-            // ✅ Mettre à jour la disponibilité
+            //  Mettre à jour la disponibilité
             if (activeLoanDto.getGameId() != null) {
-                // C'est un jeu
                 customGameService.updateAvailability(activeLoanDto.getGameId(), true);
                 System.out.println("🎮 Retour du jeu ID: " + activeLoanDto.getGameId());
+            } else if (activeLoanDto.getMovieId() != null) { //  AJOUT film
+                customMovieService.updateAvailability(activeLoanDto.getMovieId(), true);
+                System.out.println(" Retour du film ID: " + activeLoanDto.getMovieId());
             } else if (activeLoanDto.getBookId() != null) {
-                // C'est un livre
                 customBookService.updateAvailability(activeLoanDto.getBookId(), true);
-                System.out.println("📚 Retour du livre ID: " + activeLoanDto.getBookId());
+                System.out.println(" Retour du livre ID: " + activeLoanDto.getBookId());
             }
 
             return ResponseEntity.ok("Retour effectué");
