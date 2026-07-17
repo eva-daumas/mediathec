@@ -28,17 +28,17 @@ function borrowMedia(mediaId, mediaType) {
     // Ajouter bookId, gameId OU movieId selon le type
     if (mediaType === 'book') {
         loanData.bookId = parseInt(mediaId);
-        console.log('📚 Emprunt d\'un livre ID:', mediaId);
+        console.log(' Emprunt d\'un livre ID:', mediaId);
     } else if (mediaType === 'game') {
         loanData.gameId = parseInt(mediaId);
-        console.log('🎮 Emprunt d\'un jeu ID:', mediaId);
+        console.log(' Emprunt d\'un jeu ID:', mediaId);
     } else if (mediaType === 'movie') {  // ← AJOUTER CE CAS
         loanData.movieId = parseInt(mediaId);
-        console.log('🎬 Emprunt d\'un film ID:', mediaId);
+        console.log(' Emprunt d\'un film ID:', mediaId);
     } else {
         // Fallback: essayer bookId
         loanData.bookId = parseInt(mediaId);
-        console.log('📚 Emprunt par défaut (bookId):', mediaId);
+        console.log(' Emprunt par défaut (bookId):', mediaId);
     }
 
     let csrfToken = getCsrfToken();
@@ -53,16 +53,16 @@ function borrowMedia(mediaId, mediaType) {
     })
         .then(function (response) {
             if (response.ok) {
-                alert('✅ Emprunt effectué avec succès !');
+                alert(' Emprunt effectué avec succès !');
                 location.reload();
             } else {
                 return response.text().then(function (text) {
-                    alert('❌ Erreur: ' + text);
+                    alert(' Erreur: ' + text);
                 });
             }
         })
         .catch(function (error) {
-            alert('❌ Erreur de connexion: ' + error.message);
+            alert(' Erreur de connexion: ' + error.message);
         });
 }
 
@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Vérifier que mediaType est défini
             if (!mediaType) {
-                console.warn('⚠️ data-type manquant pour le média ID:', mediaId);
+                console.warn(' data-type manquant pour le média ID:', mediaId);
                 mediaType = 'book'; // Par défaut
             }
 

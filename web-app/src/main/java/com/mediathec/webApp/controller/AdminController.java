@@ -145,7 +145,7 @@ public class AdminController {
             return "redirect:/login";
         }
 
-        // ✅ Vérifier si le média est un livre ou un jeu
+        // Vérifier si le média est un livre ou un jeu
         BookDto book = customBookService.getBookById(id);
         if (book != null) {
             model.addAttribute("media", book);

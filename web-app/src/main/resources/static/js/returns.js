@@ -12,15 +12,15 @@ function getCsrfToken() {
 }
 
 function returnLoan(mediaId) {
-    // ✅ Vérifier que mediaId n'est pas "null" ou null
+    //  Vérifier que mediaId n'est pas "null" ou null
     if (!mediaId || mediaId === 'null' || mediaId === 'undefined' || mediaId === '') {
-        alert('❌ Erreur: ID du média non valide');
+        alert(' Erreur: ID du média non valide');
         return;
     }
 
     const id = Number(mediaId);
     if (isNaN(id) || id <= 0) {
-        alert('❌ Erreur: ID du média invalide');
+        alert(' Erreur: ID du média invalide');
         return;
     }
 
@@ -39,16 +39,16 @@ function returnLoan(mediaId) {
     })
         .then(function (response) {
             if (response.ok) {
-                alert('✅ Retour effectué avec succès !');
+                alert(' Retour effectué avec succès !');
                 location.reload();
             } else {
                 return response.text().then(function (text) {
-                    alert('❌ Erreur: ' + text);
+                    alert(' Erreur: ' + text);
                 });
             }
         })
         .catch(function (error) {
-            alert('❌ Erreur de connexion: ' + error.message);
+            alert(' Erreur de connexion: ' + error.message);
         });
 }
 
