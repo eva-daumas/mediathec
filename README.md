@@ -33,6 +33,37 @@ Le projet est structuré en plusieurs microservices :
 *   **[`movie-service`](./movie-service)** : Gère le catalogue des films.
 *   **[`loan-service`](./loan-service)** : Gère les emprunts (création, retour, historique).
 
+## Tests
+
+Des tests unitaires ont été implémentés pour valider le bon fonctionnement des services métier.
+
+### BookServiceTest
+
+La classe `BookServiceTest` teste l'ensemble des fonctionnalités du service de gestion des livres :
+
+```
+| # | Méthode testée | Ce qui est vérifié |
+|---|----------------|-------------------|
+| 1 | `createBook()` | Le livre est sauvegardé avec `available = true` |
+| 2 | `getBookById()` | Récupération correcte des livres par leur ID |
+| 3 | `updateBook()` | Mise à jour partielle des champs |
+| 4 | `getAllBooks()` | Récupération de tous les livres |
+| 5 | `deleteBook()` | Suppression d'un livre |
+| 6 | `searchBooks()` | Recherche par titre (insensible à la casse) |
+| 7 | `getAvailableBooks()` | Filtrage des livres disponibles |
+| 8 | `updateAvailability()` | Changement du statut de disponibilité |
+| 9 | `getBooksByCategory()` | Filtrage par catégorie |
+| 10 | `findByTitle()` | Recherche exacte par titre |
+
+**Résultat :**  Tous les tests sont passés (verts).
+
+#### Exécuter les tests
+
+bash
+cd book-service
+mvn test
+```
+
 ## Arborescence du Répertoire
 
 ```
@@ -47,6 +78,7 @@ mediathec/
 │ │ ├── entity/
 │ │ ├── repository/
 │ │ └── service/
+│ ├── src/test/java/ # Tests unitaires (BookServiceTest)
 │ ├── src/main/resources/application.yml
 │ └── pom.xml
 ├── game-service/ # Microservice pour les jeux
