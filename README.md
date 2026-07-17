@@ -34,6 +34,8 @@ Le projet est structuré en plusieurs microservices :
 *   **[`loan-service`](./loan-service)** : Gère les emprunts (création, retour, historique).
 
 ## Arborescence du Répertoire
+
+```
 mediathec/
 ├── common-config.yml # Configuration partagée pour les microservices
 ├── docker-compose.yml # Fichier d'orchestration Docker
@@ -75,7 +77,7 @@ mediathec/
 │ │ └── js/
 │ └── templates/ # Pages HTML Thymeleaf
 └── pom.xml
-
+```
 
 ## Mise en Place
 
