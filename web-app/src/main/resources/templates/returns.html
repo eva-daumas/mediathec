@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-<nav class="navbar"> <!-- TODO: ici tu peux englober toute ta <nav> dans un <header> attention au CSS qui risque de casser -->
+<header>
+<nav class="navbar">
     <div class="container nav-container">
         <a th:href="@{/home}" class="nav-brand">
             <span>Mediathec</span>
@@ -30,8 +31,8 @@
         </div>
     </div>
 </nav>
-
-<div class="container"> <!-- TODO: la <div> peut être un <main>, pareil pour toutes les pages ayant cette structure -->
+    </header>
+<main class="container">
     <div class="page-header">
         <h1>Gestion des retours</h1>
     </div>
@@ -85,7 +86,7 @@
             </table>
         </div>
     </div>
-</div>
+</main>
 
 <footer class="footer">
     <div class="container">
