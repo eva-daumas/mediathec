@@ -10,7 +10,7 @@
           rel="stylesheet">
 </head>
 <body>
-<nav class="navbar">
+<nav class="navbar"> <!-- TODO: ici tu peux englober toute ta <nav> dans un <header> attention au CSS qui risque de casser -->
     <div class="container nav-container">
         <a th:href="@{/home}" class="nav-brand"><span>Mediathec</span></a>
         <div class="nav-links">
@@ -34,7 +34,7 @@
     </div>
 </nav>
 
-<div class="container">
+<div class="container"> <!-- TODO: la <div> peut être un <main>, pareil pour toutes les pages ayant cette structure -->
     <div class="profile-container">
         <div class="profile-header">
             <div class="profile-avatar">

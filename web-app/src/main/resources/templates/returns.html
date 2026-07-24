@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-<nav class="navbar">
+<nav class="navbar"> <!-- TODO: ici tu peux englober toute ta <nav> dans un <header> attention au CSS qui risque de casser -->
     <div class="container nav-container">
         <a th:href="@{/home}" class="nav-brand">
             <span>Mediathec</span>
@@ -31,7 +31,7 @@
     </div>
 </nav>
 
-<div class="container">
+<div class="container"> <!-- TODO: la <div> peut être un <main>, pareil pour toutes les pages ayant cette structure -->
     <div class="page-header">
         <h1>Gestion des retours</h1>
     </div>
@@ -64,7 +64,7 @@
                             </span>
                     </td>
                     <td>
-                        <!-- ✅ CORRECTION : Utiliser gameId si présent, sinon bookId -->
+                        <!--  CORRECTION : Utiliser gameId si présent, sinon bookId -->
                         <button th:if="${loan.status == 'BORROWED'}" class="btn btn-sm btn-success"
                                 th:data-id="${loan.gameId} != null ? ${loan.gameId} : (${loan.bookId} != null ? ${loan.bookId} : ${loan.movieId})"
                                 onclick="returnLoan(this.getAttribute('data-id'))">
