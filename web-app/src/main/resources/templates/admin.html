@@ -284,7 +284,7 @@
         <!-- ===== LIVRES ===== -->
         <h2 class="section-title">Livres</h2>
         <div class="media-grid">
-            <div class="media-card" th:each="media : ${medias}">
+            <div class="media-card" th:each="media : ${books}">
                 <div class="media-image">
                     <img th:if="${media.coverImage}" th:src="${media.coverImage}" alt="Couverture"/>
                     <div th:unless="${media.coverImage}" class="no-image">
@@ -354,7 +354,7 @@
         <!-- ===== FILMS ===== -->
         <h2 class="section-title">Films</h2>
         <div class="media-grid">
-            <div class="media-card" th:each="film : ${films}">
+            <div class="media-card" th:each="film : ${movies}">
                 <div class="media-image">
                     <img th:if="${film.coverImage}" th:src="${film.coverImage}" alt="Couverture"/>
                     <div th:unless="${film.coverImage}" class="no-image">
@@ -379,12 +379,13 @@
                     </div>
                 </div>
             </div>
-            <div th:if="${films == null or films.isEmpty()}" class="media-card">
+
                 <div class="media-card-content">
 
                 </div>
             </div>
         </div>
+    <p th:if="${movies == null or movies.isEmpty()}" class="empty-message">Aucun film disponible.</p>
     </div>
 
     <!-- ==================== STATISTIQUES ==================== -->
