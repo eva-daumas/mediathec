@@ -1443,3 +1443,18 @@ input[type="email"].form-control::placeholder {
         max-width: 520px;
     }
 }
+
+/* Adaptation pour le passage en ul / li dans la navigation */
+ul.nav-links {
+    list-style: none; /* Supprime les puces par défaut */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
+    margin: 0;
+}
+
+ul.nav-links li {
+    display: inline-flex;
+    align-items: center;
+}
