@@ -90,13 +90,13 @@ CREATE TABLE IF NOT EXISTS loans (
     loan_date   DATETIME,
     return_date DATETIME,
     status      VARCHAR(255)    DEFAULT 'BORROWED',
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
     FOREIGN KEY (member_id)
-    REFERENCES member(id)
+    REFERENCES member(id),
     FOREIGN KEY (book_id)
-    REFERENCES book(id)
+    REFERENCES book(id),
     FOREIGN KEY (game_id)
-    REFERENCES game(id)
+    REFERENCES game(id),
     FOREIGN KEY (movie_id)
     REFERENCES movie(id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
