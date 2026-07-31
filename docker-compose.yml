@@ -109,7 +109,6 @@ services:
       SPRING_APPLICATION_NAME: "web-app"
       SPRING_CLOUD_CONSUL_HOST: "consul"
       SPRING_CLOUD_CONSUL_PORT: "8500"
-      # --- MODIFICATIONS ICI ---
       SPRING_CLOUD_CONSUL_DISCOVERY_PREFER_IP_ADDRESS: "true"
     depends_on:
       - consul

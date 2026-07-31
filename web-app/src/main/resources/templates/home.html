@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="fr">  <!-- TODO: ajoute la langue dans la balise html -> lang="fr" -->
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,14 +18,14 @@
         <a th:href="@{/home}" class="nav-brand">
             <span>Mediathec</span>
         </a>
-        <ul class="nav-links"> <!-- TODO: balise <ul></ul> à la place de la div (si <ul> alors <li> plus bas -->
+        <ul class="nav-links">
             <li th:if="${userLogin != null}">
-                <p class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></p><!-- TODO: à l place de <span>(...)<span>(...)</span></span> <p>(...)<span>(...)</span></p> -->
+                <p class="user-greeting">Bonjour, <span th:text="${userLogin}"></span></p>
                 <p hidden="hidden" th:text="${currentMemberId}" id="currentMemberId"></p>
             </li>
 
             <li th:if="${userLogin != null}">
-                <a th:href="@{/profile}" class="nav-link" th:if="${memberRole == 'ADMIN'}">Dashboard Admin</a> <!-- TODO: enveloppe les lien <a></a> dans des <li> => <li><a></a></li> pour les deux liens -->
+                <a th:href="@{/profile}" class="nav-link" th:if="${memberRole == 'ADMIN'}">Dashboard Admin</a>
             </li>
 
             <li th:if="${userLogin != null}">
