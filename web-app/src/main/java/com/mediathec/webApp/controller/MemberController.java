@@ -90,7 +90,7 @@ public class MemberController {
         String email = userDetails.getUsername();
         MemberDto memberDto = memberService.getMemberByEmail(email);
 
-        // ✅ Vérifier que memberDto n'est pas null
+        //  Vérifier que memberDto n'est pas null
         if (memberDto == null) {
             return "redirect:/profile?error=memberNotFound";
         }

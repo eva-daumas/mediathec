@@ -249,7 +249,7 @@ public class LoanController {
                 customGameService.updateAvailability(loanDto.getGameId(), false);
                 return ResponseEntity.ok(created);
 
-            } else if (loanDto.getMovieId() != null && loanDto.getMovieId() > 0) { // ← AJOUTE CES 4 LIGNES
+            } else if (loanDto.getMovieId() != null && loanDto.getMovieId() > 0) {
                 // C'est un film
                 System.out.println("🎬 Emprunt d'un film ID: " + loanDto.getMovieId());
                 LoanDto created = loanService.createLoan(loanDto);
@@ -275,7 +275,7 @@ public class LoanController {
             LoanDto activeLoanDto = loanDtos.stream()
                     .filter(l -> (l.getBookId() != null && l.getBookId().equals(mediaId)) ||
                             (l.getGameId() != null && l.getGameId().equals(mediaId)) ||
-                            (l.getMovieId() != null && l.getMovieId().equals(mediaId))) // AJOUT film
+                            (l.getMovieId() != null && l.getMovieId().equals(mediaId)))
                     .filter(l -> "BORROWED".equals(l.getStatus()))
                     .findFirst()
                     .orElseThrow(() -> new RuntimeException("Aucun emprunt actif pour ce média"));

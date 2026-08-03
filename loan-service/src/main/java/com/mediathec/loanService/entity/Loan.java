@@ -24,7 +24,7 @@ public class Loan {
 
     public Loan() {}
 
-    // ✅ CONSTRUCTEUR AVEC TOUS LES CHAMPS
+    //  CONSTRUCTEUR AVEC TOUS LES CHAMPS
     public Loan(Long memberId, Long bookId, Long gameId, Long movieId, String status) {
         this.memberId = memberId;
         this.bookId = bookId;
@@ -41,7 +41,7 @@ public class Loan {
         }
     }
 
-    // ✅ TOUS LES GETTERS ET SETTERS
+    //  TOUS LES GETTERS ET SETTERS
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
