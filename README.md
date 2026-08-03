@@ -81,6 +81,10 @@ mediathec/
 │ ├── src/test/java/ # Tests unitaires (BookServiceTest)
 │ ├── src/main/resources/application.yml
 │ └── pom.xml
+├── crud-mongo/
+├── controller/StatController.java # Endpoints REST
+├── model/Stat.java # Document MongoDB
+└── repository/StatsRepository.java # Interface MongoRepository
 ├── game-service/ # Microservice pour les jeux
 ├── loan-service/ # Microservice pour les emprunts
 │ ├── src/main/java/com/mediathec/loanService/
@@ -150,8 +154,34 @@ Utilisateur : root
 
 Mot de passe : root
 
-Le schéma de la base de données sera automatiquement mis à jour par Hibernate (via la propriété spring.jpa.hibernate.ddl-auto=update).
+5.Le schéma de la base de données sera automatiquement mis à jour par Hibernate (via la propriété spring.jpa.hibernate.ddl-auto=update).
 
+## Service démonstration MongoDB (crud-mongo)
+
+En complément de l'architecture principale, j'ai développé un petit service de **démonstration** avec MongoDB pour illustrer ma capacité à travailler avec une base de données NoSQL.
+
+> Ce service n'est pas déployé en production avec les autres microservices. Il peut être lancé localement pour tester l'interaction entre Spring Boot et MongoDB.
+
+### Objectif
+
+Montrer que je sais :
+- Connecter une application Spring Boot à MongoDB
+- Créer des endpoints REST avec une base NoSQL
+- Utiliser une base de données différente de MySQL
+
+### Technologies
+
+- Spring Boot + Spring Data MongoDB
+- MongoDB (local ou via Docker)
+
+### Structure
+
+```
+crud-mongo/
+├── controller/StatController.java # Endpoints REST
+├── model/Stat.java # Document MongoDB
+└── repository/StatsRepository.java # Interface MongoRepository
+```
 
 Auteurs
 Eva Daumas
