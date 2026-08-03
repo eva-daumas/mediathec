@@ -17,6 +17,16 @@ services:
     networks:
       - mediathec-network
 
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: 123
+    ports:
+      - 27018:27017
+    networks:
+      - mediathec-network
   consul:
     image: hashicorp/consul:1.17
     container_name: consul
@@ -118,6 +128,9 @@ services:
       - game-service
     networks:
       - mediathec-network
+
+
+
 
 networks:
   mediathec-network:
