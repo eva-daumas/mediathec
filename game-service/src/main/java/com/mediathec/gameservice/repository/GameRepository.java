@@ -1,5 +1,6 @@
 package com.mediathec.gameservice.repository;
 
+
 import com.mediathec.gameservice.entity.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

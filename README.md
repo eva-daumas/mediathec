@@ -82,9 +82,12 @@ mediathec/
 │ ├── src/main/resources/application.yml
 │ └── pom.xml
 ├── crud-mongo/
+│ ├── src/main/java/com/mediathec/crud-mongo/
 ├── controller/StatController.java # Endpoints REST
 ├── model/Stat.java # Document MongoDB
 └── repository/StatsRepository.java # Interface MongoRepository
+├── src/main/resources/
+│ ├── application.yml
 ├── game-service/ # Microservice pour les jeux
 ├── loan-service/ # Microservice pour les emprunts
 │ ├── src/main/java/com/mediathec/loanService/
